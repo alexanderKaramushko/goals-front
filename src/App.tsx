@@ -3,8 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 
 import { goalsServiceApiClient } from 'shared/libs/api-client';
 
-import './App.css';
-
+import styles from './App.module.css';
+import { Background } from './Background';
 import Auth from './pages/auth';
 
 function App() {
@@ -16,11 +16,17 @@ function App() {
 
   return (
     <>
-      <Typography variant='h1'>{import.meta.env.VITE_APP_TITLE}</Typography>
-      <Auth />
-      <Typography variant='body1'>
-        {okResult.isSuccess && okResult.data.data}
-      </Typography>
+      <Background>
+        <div className={styles.root}>
+          <div className={styles.content}>
+            <Typography variant='h4'>{import.meta.env.VITE_APP_TITLE}</Typography>
+            <Auth />
+            <Typography variant='body1'>
+              {okResult.isSuccess && okResult.data.data}
+            </Typography>
+          </div>
+        </div>
+      </Background>
     </>
   );
 }

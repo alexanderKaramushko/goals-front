@@ -7,8 +7,6 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 
 import { queryClient } from 'shared/libs/query-client';
 
-import './index.css';
-
 import App from './App';
 import { theme } from './theme';
 

@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 
 const Auth = () => {
   return <>
-    <Button onClick={() => {
+    <Button size='large' onClick={() => {
       const url = new URL(import.meta.env.VITE_GOALS_AUTH_API);
 
       url.pathname = 'auth/google-oauth/login';

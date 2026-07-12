@@ -1,0 +1,23 @@
+.root {
+  overflow: hidden;
+  position: relative;
+}
+
+.svg {
+  filter: blur(1px);
+  height: 100%;
+  inset: 0;
+  opacity: 0.75;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+.flowLayer {
+  isolation: isolate;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
