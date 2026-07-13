@@ -1,34 +1,17 @@
+/* eslint-disable no-undef */
 const config = {
-  title: 'Goals Front Docs',
-  tagline: 'Project and product documentation',
-
-  url: 'http://localhost',
   baseUrl: '/',
-
-  onBrokenLinks: 'ignore',
-  onBrokenMarkdownLinks: 'warn',
-
   i18n: {
     defaultLocale: 'ru',
     locales: ['ru'],
   },
 
-  presets: [
-    [
-      'classic',
-      {
-        docs: {
-          sidebarPath: require.resolve('./sidebars.js'),
-          routeBasePath: '/',
-        },
-        blog: false,
-        theme: {
-          customCss: require.resolve('./src/css/custom.css'),
-        },
-      },
-    ],
-  ],
+  markdown: {
+    mermaid: true,
+  },
+  onBrokenLinks: 'ignore',
 
+  onBrokenMarkdownLinks: 'warn',
   plugins: [
     function removeIncompatibleWebpackProgressPlugin() {
       const isWebpackBarPlugin = (plugin) => {
@@ -39,47 +22,63 @@ const config = {
           constructorName === 'WebpackBarPlugin' ||
           Boolean(
             options &&
-              typeof options === 'object' &&
-              'name' in options &&
-              'color' in options &&
-              'reporter' in options &&
-              'reporters' in options,
+            typeof options === 'object' &&
+            'name' in options &&
+            'color' in options &&
+            'reporter' in options &&
+            'reporters' in options,
           )
         );
       };
 
       return {
-        name: 'remove-incompatible-webpack-progress-plugin',
         configureWebpack(webpackConfig) {
           const initialPlugins = webpackConfig.plugins ?? [];
-          const plugins = initialPlugins.filter(
-            (plugin) => !isWebpackBarPlugin(plugin),
-          );
+          const plugins = initialPlugins.filter((plugin) => !isWebpackBarPlugin(plugin));
 
           if (plugins.length === initialPlugins.length) {
             return {};
           }
 
           return {
-            plugins,
             mergeStrategy: { plugins: 'replace' },
+            plugins,
           };
         },
+        name: 'remove-incompatible-webpack-progress-plugin',
       };
     },
   ],
 
+  presets: [
+    [
+      'classic',
+      {
+        blog: false,
+        docs: {
+          routeBasePath: '/',
+          sidebarPath: require.resolve('./sidebars.js'),
+        },
+        theme: {
+          customCss: require.resolve('./src/css/custom.css'),
+        },
+      },
+    ],
+  ],
+
+  tagline: 'Project and product documentation',
+
   themeConfig: {
     navbar: {
+      items: [{ label: 'Документация', position: 'left', to: '/' }],
       title: 'Goals Front Docs',
-      items: [{ to: '/', label: 'Документация', position: 'left' }],
     },
   },
 
   themes: ['@docusaurus/theme-mermaid'],
-  markdown: {
-    mermaid: true,
-  },
+
+  title: 'Goals Front Docs',
+  url: 'http://localhost',
 };
 
 module.exports = config;

@@ -74,4 +74,3 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function IOSSwi
     />
   );
 });
-
