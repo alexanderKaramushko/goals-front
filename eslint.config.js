@@ -2,6 +2,7 @@ import js from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
+import perfectionist from 'eslint-plugin-perfectionist';
 import globals from 'globals';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
@@ -12,15 +13,14 @@ import tseslint from 'typescript-eslint';
 export default defineConfig([
   globalIgnores(['dist', 'node_modules', '*.json', '*.md']),
   {
-    files: ['**/*.{js,mjs,cjs}'],
     extends: [js.configs.recommended],
+    files: ['**/*.{js,mjs,cjs}'],
     languageOptions: {
       ecmaVersion: 2023,
       sourceType: 'module',
     },
   },
   {
-    files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       ...tseslint.configs.recommended,
@@ -30,6 +30,7 @@ export default defineConfig([
       reactHooks.configs.flat.recommended,
       reactRefresh.configs.vite,
     ],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2023,
       globals: {
@@ -46,27 +47,17 @@ export default defineConfig([
       'simple-import-sort': simpleImportSort,
     },
     rules: {
-      'no-use-before-define': 'off',
-      'no-unused-vars': 'off',
+      '@typescript-eslint/no-shadow': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
           args: 'after-used',
-          vars: 'all',
           ignoreRestSiblings: false,
+          vars: 'all',
         },
       ],
-      'no-shadow': 'off',
       '@typescript-eslint/no-use-before-define': 'error',
-      '@typescript-eslint/no-shadow': 'error',
-      'sort-keys': [
-        'error',
-        'asc',
-        {
-          caseSensitive: true,
-          natural: false,
-        },
-      ],
+      'implicit-arrow-linebreak': 'off',
       'import/extensions': [
         'error',
         'ignorePackages',
@@ -78,12 +69,14 @@ export default defineConfig([
           tsx: 'never',
         },
       ],
-      'implicit-arrow-linebreak': 'off',
-      'import/prefer-default-export': 'off',
       'import/no-unresolved': 'off',
+      'import/prefer-default-export': 'off',
       'linebreak-style': 'off',
       'no-console': 'error',
       'no-debugger': 'error',
+      'no-shadow': 'off',
+      'no-unused-vars': 'off',
+      'no-use-before-define': 'off',
     },
     settings: {
       'import/extensions': ['.ts', '.tsx', '.json'],
@@ -95,6 +88,21 @@ export default defineConfig([
           extensions: ['.js', '.ts', '.tsx'],
         },
       },
+    },
+  },
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
+    plugins: {
+      perfectionist,
+    },
+    rules: {
+      'perfectionist/sort-objects': [
+        'error',
+        {
+          order: 'asc',
+          type: 'alphabetical',
+        },
+      ],
     },
   },
   {
@@ -119,6 +127,15 @@ export default defineConfig([
   },
   {
     files: ['**/*.{jsx,tsx}'],
+    rules: {
+      'perfectionist/sort-jsx-props': [
+        'error',
+        {
+          order: 'asc',
+          type: 'alphabetical',
+        },
+      ],
+    },
     settings: {
       react: {
         version: 'detect',
