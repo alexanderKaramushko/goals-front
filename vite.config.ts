@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     resolve: {
-      alias: aliasRoots.flatMap((alias) => ([
+      alias: aliasRoots.flatMap((alias) => [
         {
           find: new RegExp(`^${alias}$`),
           replacement: path.resolve(__dirname, `./src/${alias}`),
@@ -19,7 +19,7 @@ export default defineConfig(({ mode }) => {
           find: new RegExp(`^${alias}/(.*)$`),
           replacement: path.resolve(__dirname, `./src/${alias}/$1`),
         },
-      ])),
+      ]),
     },
     server: {
       proxy: {
@@ -36,6 +36,6 @@ export default defineConfig(({ mode }) => {
           target: env.VITE_GOALS_AUTH_API,
         },
       },
-    }
+    },
   };
 });

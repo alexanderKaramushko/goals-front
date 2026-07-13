@@ -16,17 +16,12 @@ export function Background({ children }: MelkorBackgroundProps) {
       style={{
         background: `
           radial-gradient(circle at 18% 72%, ${alpha(theme.palette.primary.light, 0.15)}, transparent 40%),
-          radial-gradient(circle at 78% 32%, ${alpha(theme.palette.primary.light, 0.10)}, transparent 45%),
+          radial-gradient(circle at 78% 32%, ${alpha(theme.palette.primary.light, 0.1)}, transparent 45%),
           radial-gradient(circle at 45% 45%, ${alpha(theme.palette.secondary.light, 0.5)}, transparent 42%)
         `,
       }}
     >
-      <Box
-        component="svg"
-        viewBox="0 0 1440 900"
-        preserveAspectRatio="none"
-        className={styles.svg}
-      >
+      <Box component="svg" viewBox="0 0 1440 900" preserveAspectRatio="none" className={styles.svg}>
         <defs>
           <linearGradient
             id="flowLine"
@@ -36,48 +31,63 @@ export function Background({ children }: MelkorBackgroundProps) {
             x2="1"
             y2="0%"
           >
-            <stop
-              offset="0"
-              stopColor={alpha(theme.palette.primary.light, 0.6)}
-            />
+            <stop offset="0" stopColor={alpha(theme.palette.primary.light, 0.6)} />
 
-            <stop
-              offset="0.6"
-              stopColor={alpha(theme.palette.secondary.light, 0.6)}
-            />
+            <stop offset="0.6" stopColor={alpha(theme.palette.secondary.light, 0.6)} />
 
             <stop offset="0.7" stopColor={alpha(theme.palette.secondary.light, 0.3)} />
 
-            <stop
-              offset="0.9"
-              stopColor={alpha(theme.palette.primary.light, 0.3)}
-            />
+            <stop offset="0.9" stopColor={alpha(theme.palette.primary.light, 0.3)} />
           </linearGradient>
 
           <linearGradient id="flowLineFast" href="#flowLine">
-            <animateTransform attributeName="gradientTransform" type="translate" from="-0.5,0" to="0.1,0" dur="2s" repeatCount={1} fill='freeze' />
+            <animateTransform
+              attributeName="gradientTransform"
+              type="translate"
+              from="-0.5,0"
+              to="0.1,0"
+              dur="2s"
+              repeatCount={1}
+              fill="freeze"
+            />
           </linearGradient>
 
           <linearGradient id="flowLineMedium" href="#flowLine">
-            <animateTransform attributeName="gradientTransform" type="translate" from="-0.5,0" to="0.1,0" dur="4s" repeatCount={1} fill='freeze' />
+            <animateTransform
+              attributeName="gradientTransform"
+              type="translate"
+              from="-0.5,0"
+              to="0.1,0"
+              dur="4s"
+              repeatCount={1}
+              fill="freeze"
+            />
           </linearGradient>
 
           <linearGradient id="flowLineSlow" href="#flowLine">
-            <animateTransform attributeName="gradientTransform" type="translate" from="-0.5,0" to="0.1,0" dur="6s" repeatCount={1} fill='freeze' />
+            <animateTransform
+              attributeName="gradientTransform"
+              type="translate"
+              from="-0.5,0"
+              to="0.1,0"
+              dur="6s"
+              repeatCount={1}
+              fill="freeze"
+            />
           </linearGradient>
-    
-          <filter 
-            id="neonGlow" 
-            filterUnits="userSpaceOnUse" 
-            x="-30%" 
-            y="-30%" 
-            width="160%" 
+
+          <filter
+            id="neonGlow"
+            filterUnits="userSpaceOnUse"
+            x="-30%"
+            y="-30%"
+            width="160%"
             height="160%"
->
+          >
             <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blurWide" />
-  
+
             <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blurMid" />
-  
+
             <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blurCore" />
 
             <feMerge>
@@ -89,12 +99,12 @@ export function Background({ children }: MelkorBackgroundProps) {
             </feMerge>
           </filter>
 
-          <filter 
-            id="softBlur" 
-            filterUnits="userSpaceOnUse" 
-            x="-20%" 
-            y="-20%" 
-            width="140%" 
+          <filter
+            id="softBlur"
+            filterUnits="userSpaceOnUse"
+            x="-20%"
+            y="-20%"
+            width="140%"
             height="140%"
           >
             <feGaussianBlur stdDeviation="15" />
@@ -148,9 +158,7 @@ export function Background({ children }: MelkorBackgroundProps) {
         </g>
       </Box>
 
-      <Box className={styles.content}>
-        {children}
-      </Box>
+      <Box className={styles.content}>{children}</Box>
     </Box>
   );
 }

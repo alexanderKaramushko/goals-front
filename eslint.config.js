@@ -1,5 +1,6 @@
 import js from '@eslint/js';
 import { defineConfig, globalIgnores } from 'eslint/config';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import importPlugin from 'eslint-plugin-import';
 import globals from 'globals';
 import reactPlugin from 'eslint-plugin-react';
@@ -9,21 +10,13 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores([
-    'dist',
-    'node_modules',
-    '*.json',
-    '*.md',
-  ]),
+  globalIgnores(['dist', 'node_modules', '*.json', '*.md']),
   {
     files: ['**/*.{js,mjs,cjs}'],
     extends: [js.configs.recommended],
     languageOptions: {
       ecmaVersion: 2023,
       sourceType: 'module',
-    },
-    rules: {
-      semi: ['error', 'always'],
     },
   },
   {
@@ -66,56 +59,12 @@ export default defineConfig([
       'no-shadow': 'off',
       '@typescript-eslint/no-use-before-define': 'error',
       '@typescript-eslint/no-shadow': 'error',
-      'padding-line-between-statements': [
-        'error',
-        {
-          blankLine: 'always',
-          prev: '*',
-          next: 'block-like',
-        },
-        {
-          blankLine: 'always',
-          prev: 'block-like',
-          next: '*',
-        },
-        {
-          blankLine: 'always',
-          prev: ['const', 'let'],
-          next: ['block-like', 'expression'],
-        },
-      ],
-      'object-property-newline': 'error',
       'sort-keys': [
         'error',
         'asc',
         {
           caseSensitive: true,
           natural: false,
-        },
-      ],
-      'object-curly-newline': [
-        'error',
-        {
-          ObjectPattern: {
-            multiline: true,
-          },
-          ExportDeclaration: {
-            multiline: true,
-            minProperties: 3,
-          },
-        },
-      ],
-      'lines-between-class-members': [
-        'error',
-        'always',
-        {
-          exceptAfterSingleLine: true,
-        },
-      ],
-      'padded-blocks': [
-        'error',
-        {
-          classes: 'always',
         },
       ],
       'import/extensions': [
@@ -133,25 +82,8 @@ export default defineConfig([
       'import/prefer-default-export': 'off',
       'import/no-unresolved': 'off',
       'linebreak-style': 'off',
-      'max-len': [
-        'error',
-        {
-          code: 120,
-          ignoreStrings: true,
-          ignoreTemplateLiterals: true,
-          ignoreUrls: true,
-        },
-      ],
       'no-console': 'error',
       'no-debugger': 'error',
-      'no-multiple-empty-lines': [
-        'error',
-        {
-          max: 1,
-        },
-      ],
-      quotes: ['error', 'single'],
-      semi: ['error', 'always'],
     },
     settings: {
       'import/extensions': ['.ts', '.tsx', '.json'],
@@ -187,14 +119,11 @@ export default defineConfig([
   },
   {
     files: ['**/*.{jsx,tsx}'],
-    rules: {
-      'react/jsx-indent': ['error', 2],
-      'react/jsx-indent-props': ['error', 2],
-    },
     settings: {
       react: {
         version: 'detect',
       },
     },
   },
+  eslintConfigPrettier,
 ]);

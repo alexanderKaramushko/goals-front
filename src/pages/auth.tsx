@@ -1,17 +1,25 @@
 import { Button } from '@mui/material';
+import { motion } from 'motion/react';
 
 const Auth = () => {
-  return <>
-    <Button size='large' onClick={() => {
-      const url = new URL(import.meta.env.VITE_GOALS_AUTH_API);
+  return (
+    <motion.div>
+      <Button
+        size="large"
+        onClick={() => {
+          const url = new URL(import.meta.env.VITE_GOALS_AUTH_API);
 
-      url.pathname = 'auth/google-oauth/login';
+          url.pathname = 'auth/google-oauth/login';
 
-      url.searchParams.append('id', import.meta.env.VITE_APP_ID);
+          url.searchParams.append('id', import.meta.env.VITE_APP_ID);
 
-      window.open(url.toString(), '_self', 'noopener noreferrer');
-    }}>Войти</Button>
-  </>;
+          window.open(url.toString(), '_self', 'noopener noreferrer');
+        }}
+      >
+        Войти
+      </Button>
+    </motion.div>
+  );
 };
- 
+
 export default Auth;

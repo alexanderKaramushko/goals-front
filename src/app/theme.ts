@@ -27,10 +27,6 @@ export const theme = createTheme({
     divider: '#E3E5E8',
   },
   typography: {
-    fontFamily: [
-      '"Comic Sans MS"',
-      '"Comic Sans"',
-      'cursive',
-    ].join(','),
+    fontFamily: ['"Comic Sans MS"', '"Comic Sans"', 'cursive'].join(','),
   },
 });
