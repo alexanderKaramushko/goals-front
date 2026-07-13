@@ -1,0 +1,64 @@
+<svg width="261" height="148" viewBox="0 0 261 148" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="stemGradient" x1="130.5" y1="14" x2="130.5" y2="101" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#C9949A" stop-opacity="0.45"/>
+      <stop offset="0.38" stop-color="#A86C75" stop-opacity="0.82"/>
+      <stop offset="1" stop-color="#8F4F5C" stop-opacity="0.72"/>
+    </linearGradient>
+
+    <linearGradient id="leftLine" x1="0" y1="116.5" x2="91" y2="116.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#B3A6A4" stop-opacity="0"/>
+      <stop offset="0.75" stop-color="#A89796" stop-opacity="0.54"/>
+      <stop offset="1" stop-color="#A89796" stop-opacity="0.24"/>
+    </linearGradient>
+
+    <linearGradient id="rightLine" x1="170" y1="116.5" x2="261" y2="116.5" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#A89796" stop-opacity="0.24"/>
+      <stop offset="0.25" stop-color="#A89796" stop-opacity="0.54"/>
+      <stop offset="1" stop-color="#B3A6A4" stop-opacity="0"/>
+    </linearGradient>
+
+    <filter id="soft" x="94" y="2" width="73" height="112" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- bottom divider lines -->
+  <path d="M0 116.5H91" stroke="url(#leftLine)" stroke-width="1"/>
+  <path d="M170 116.5H261" stroke="url(#rightLine)" stroke-width="1"/>
+
+  <!-- center diamond -->
+  <path d="M130.5 110.4L136.5 116.5L130.5 122.6L124.5 116.5L130.5 110.4Z" stroke="#B99196" stroke-opacity="0.72" stroke-width="1.25"/>
+
+  <!-- upper symbol -->
+  <g filter="url(#soft)" stroke="url(#stemGradient)" stroke-linecap="round" stroke-linejoin="round">
+    <!-- main vertical spike -->
+    <path d="M130.5 14.5C130.5 30.2 130.5 48.1 130.5 66.2C130.5 80.6 130.5 92.7 130.5 100.5" stroke-width="1.7"/>
+
+    <!-- top spear and small crown fork -->
+    <path d="M130.5 14.5L127.9 31.5" stroke-width="1.15" opacity="0.72"/>
+    <path d="M130.5 14.5L133.2 31.2" stroke-width="1.15" opacity="0.72"/>
+    <path d="M130.5 32.5L121.7 42.2" stroke-width="1.55"/>
+    <path d="M130.5 32.5L139.4 42.2" stroke-width="1.55"/>
+
+    <!-- small upper side twigs -->
+    <path d="M121.7 42.2L118.5 35.2" stroke-width="1.1" opacity="0.8"/>
+    <path d="M139.4 42.2L142.6 35.2" stroke-width="1.1" opacity="0.8"/>
+
+    <!-- middle branches -->
+    <path d="M130.5 52.2C123.9 48.5 118.2 43.3 113.6 36.5" stroke-width="1.55"/>
+    <path d="M130.5 52.2C137.1 48.4 142.9 43.3 147.5 36.5" stroke-width="1.55"/>
+    <path d="M113.6 36.5L114.4 26.7" stroke-width="1.05" opacity="0.72"/>
+    <path d="M147.5 36.5L146.8 26.7" stroke-width="1.05" opacity="0.72"/>
+
+    <!-- lower branches -->
+    <path d="M130.5 68.3C120.6 62 112.8 54.2 106.7 44.8" stroke-width="1.65"/>
+    <path d="M130.5 68.3C140.2 62.1 148.2 54.2 154.3 44.8" stroke-width="1.65"/>
+    <path d="M106.7 44.8L99.9 49.6" stroke-width="1.15" opacity="0.8"/>
+    <path d="M154.3 44.8L161.1 49.6" stroke-width="1.15" opacity="0.8"/>
+
+    <!-- downward narrow tail -->
+    <path d="M130.5 78.3L125.2 90.4" stroke-width="1.15" opacity="0.72"/>
+    <path d="M130.5 78.3L135.8 90.4" stroke-width="1.15" opacity="0.72"/>
+  </g>
+</svg>

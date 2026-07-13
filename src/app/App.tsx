@@ -7,6 +7,8 @@ import { queryClient } from 'shared/libs/query-client';
 
 import AuthPage from 'pages/auth';
 
+import ResponsiveAppBar from 'widgets/app-bar/app-bar';
+
 import { theme } from './theme';
 
 const router = createBrowserRouter([
@@ -20,6 +22,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
+        <ResponsiveAppBar />
         <CssBaseline />
         <RouterProvider router={router} />
       </ThemeProvider>

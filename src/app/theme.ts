@@ -1,32 +1,55 @@
-/* eslint-disable sort-keys */
-import { createTheme } from '@mui/material';
+import { createTheme, type Shadows } from '@mui/material';
 
 export const theme = createTheme({
+  colorSchemes: {
+    dark: true,
+  },
   palette: {
+    background: {
+      default: '#F8F7F5',
+      paper: 'rgba(255, 255, 255, 0.72)',
+    },
+    divider: '#E3E5E8',
     mode: 'light',
     primary: {
-      main: '#7A1F3D',
-      light: '#A34A67',
-      dark: '#541229',
-      contrastText: '#FFFFFF',
+      contrastText: '#FFF7F8',
+      dark: '#7E2A38',
+      light: '#D98B96',
+      main: '#B85A67',
     },
     secondary: {
-      main: '#A7ADB5',
-      light: '#D7DBE0',
-      dark: '#737A84',
-      contrastText: '#1C1C1E',
-    },
-    background: {
-      default: '#F7F7F9',
-      paper: '#FFFFFF',
+      contrastText: '#3A3532',
+      dark: 'rgba(214, 205, 199, 0.82)',
+      light: 'rgba(255, 252, 249, 0.86)',
+      main: 'rgba(243, 238, 235, 0.7)',
     },
     text: {
       primary: '#1C1C1E',
       secondary: '#6E6E73',
     },
-    divider: '#E3E5E8',
   },
+  shadows: [
+    'none',
+    '0px 1px 2px rgba(47, 52, 58, 0.04)',
+    '0px 2px 6px rgba(47, 52, 58, 0.05)',
+    '0px 4px 12px rgba(47, 52, 58, 0.06)',
+    '0px 8px 24px rgba(47, 52, 58, 0.08)',
+    '0px 10px 30px rgba(47, 52, 58, 0.08)',
+    '0px 14px 40px rgba(47, 52, 58, 0.10)',
+    ...Array(18).fill('0px 18px 56px rgba(47, 52, 58, 0.12)'),
+  ] as Shadows,
   typography: {
-    fontFamily: ['"Comic Sans MS"', '"Comic Sans"', 'cursive'].join(','),
+    fontFamily: [
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
   },
 });
