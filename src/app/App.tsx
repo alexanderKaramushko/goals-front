@@ -1,11 +1,11 @@
 import { Typography } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 
+import { Background } from 'shared/components/Background/Background';
 import { goalsServiceApiClient } from 'shared/libs/api-client';
 
+import Auth from '../pages/auth';
 import styles from './App.module.css';
-import { Background } from './Background';
-import Auth from './pages/auth';
 
 function App() {
   const okResult = useQuery({

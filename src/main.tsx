@@ -7,8 +7,8 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 
 import { queryClient } from 'shared/libs/query-client';
 
-import App from './App';
-import { theme } from './theme';
+import App from './app/App';
+import { theme } from './app/theme';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
