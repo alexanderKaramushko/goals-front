@@ -11,6 +11,11 @@ export const goalsServiceApiClient = axios.create({
   headers: { 'Content-Type': 'application/json', 'x-user-timezone': dayjs.tz.guess() },
 });
 
+const goalsAuthBaseUrl = new URL(window.location.origin);
+
+goalsAuthBaseUrl.pathname = 'auth';
+
 export const goalsAuthApiClient = axios.create({
+  baseURL: goalsAuthBaseUrl.toString(),
   headers: { 'Content-Type': 'application/json' },
 });

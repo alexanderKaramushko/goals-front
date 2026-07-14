@@ -15,7 +15,7 @@ export const appRoutes = {
   },
 };
 
-export const techRoutes = {
+export const unauthorizedRoutes = {
   login: {
     Component: AuthPage,
     path: '/login',

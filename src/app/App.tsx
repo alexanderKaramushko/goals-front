@@ -5,25 +5,32 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import { queryClient } from 'shared/libs/query-client';
 
+import AppLayout from 'pages/layouts/app';
 import NavigationLayout from 'pages/layouts/navigation';
 
-import { appRoutes, techRoutes } from './routes';
+import { appRoutes, unauthorizedRoutes } from './routes';
 import { theme } from './theme';
 
 const router = createBrowserRouter([
   {
     children: [
       {
-        Component: appRoutes.app.Component,
-        path: appRoutes.app.path,
+        children: [
+          {
+            Component: appRoutes.app.Component,
+            path: appRoutes.app.path,
+          },
+          {
+            Component: appRoutes.users.Component,
+            path: appRoutes.users.path,
+          },
+        ],
+        Component: AppLayout,
+        path: '/',
       },
       {
-        Component: appRoutes.users.Component,
-        path: appRoutes.users.path,
-      },
-      {
-        Component: techRoutes.login.Component,
-        path: techRoutes.login.path,
+        Component: unauthorizedRoutes.login.Component,
+        path: unauthorizedRoutes.login.path,
       },
     ],
     Component: NavigationLayout,

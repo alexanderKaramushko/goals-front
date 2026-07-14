@@ -1,8 +1,12 @@
 import { Box } from '@mui/material';
-import type { FC, PropsWithChildren } from 'react';
+import { Outlet } from 'react-router';
 
-const AppLayout: FC<PropsWithChildren> = ({ children }) => {
-  return <Box sx={{ margin: '0 auto', maxWidth: '90%', paddingTop: 4 }}>{children}</Box>;
+const AppLayout = () => {
+  return (
+    <Box sx={{ margin: '78px auto', maxWidth: '90%', paddingTop: 4 }}>
+      <Outlet />
+    </Box>
+  );
 };
 
 export default AppLayout;
