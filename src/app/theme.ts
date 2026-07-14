@@ -4,6 +4,18 @@ export const theme = createTheme({
   colorSchemes: {
     dark: true,
   },
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backdropFilter: 'blur(18px)',
+          backgroundColor: 'secondary',
+          borderRadius: '24px',
+          color: 'text.primary',
+        },
+      },
+    },
+  },
   palette: {
     background: {
       default: '#F8F7F5',
@@ -38,18 +50,4 @@ export const theme = createTheme({
     '0px 14px 40px rgba(47, 52, 58, 0.10)',
     ...Array(18).fill('0px 18px 56px rgba(47, 52, 58, 0.12)'),
   ] as Shadows,
-  typography: {
-    fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
-      '"Segoe UI"',
-      'Roboto',
-      '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(','),
-  },
 });
