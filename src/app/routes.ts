@@ -1,5 +1,6 @@
 import AuthPage from 'pages/auth';
 import GoalsPage from 'pages/goals';
+import UsersPage from 'pages/users';
 
 export const appRoutes = {
   app: {
@@ -8,7 +9,7 @@ export const appRoutes = {
     title: 'Цели',
   },
   users: {
-    Component: GoalsPage,
+    Component: UsersPage,
     path: '/users',
     title: 'Пользователи',
   },

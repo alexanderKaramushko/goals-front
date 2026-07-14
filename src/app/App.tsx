@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import { queryClient } from 'shared/libs/query-client';
 
-import AppLayout from 'pages/layouts/app';
+import NavigationLayout from 'pages/layouts/navigation';
 
 import { appRoutes, techRoutes } from './routes';
 import { theme } from './theme';
@@ -26,7 +26,7 @@ const router = createBrowserRouter([
         path: techRoutes.login.path,
       },
     ],
-    Component: AppLayout,
+    Component: NavigationLayout,
   },
 ]);
 
