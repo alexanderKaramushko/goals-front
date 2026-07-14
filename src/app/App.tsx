@@ -5,16 +5,28 @@ import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import { queryClient } from 'shared/libs/query-client';
 
-import AuthPage from 'pages/auth';
+import AppLayout from 'pages/layouts/app';
 
-import ResponsiveAppBar from 'widgets/app-bar/app-bar';
-
+import { appRoutes, techRoutes } from './routes';
 import { theme } from './theme';
 
 const router = createBrowserRouter([
   {
-    Component: AuthPage,
-    path: '/login',
+    children: [
+      {
+        Component: appRoutes.app.Component,
+        path: appRoutes.app.path,
+      },
+      {
+        Component: appRoutes.users.Component,
+        path: appRoutes.users.path,
+      },
+      {
+        Component: techRoutes.login.Component,
+        path: techRoutes.login.path,
+      },
+    ],
+    Component: AppLayout,
   },
 ]);
 
@@ -22,7 +34,6 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <ResponsiveAppBar />
         <CssBaseline />
         <RouterProvider router={router} />
       </ThemeProvider>

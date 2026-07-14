@@ -6,11 +6,11 @@ import MelkorDivider from 'shared/icons/melkor-divider-symbol.svg?react';
 
 import Auth from 'features/Auth';
 
-import styles from './Auth.module.css';
+import styles from './styles.module.css';
 
 const AuthPage = () => {
   return (
-    <Background>
+    <Background showLines>
       <div className={styles.root}>
         <Grid container spacing={4} sx={{ alignItems: 'center', flexDirection: 'column' }}>
           <Grid>

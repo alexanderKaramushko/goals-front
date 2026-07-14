@@ -2,7 +2,7 @@ import GoogleIcon from '@mui/icons-material/Google';
 import { Box, Button, Typography } from '@mui/material';
 import { motion } from 'motion/react';
 
-import styles from './Auth.module.css';
+import styles from './styles.module.css';
 
 const Auth = () => {
   return (
