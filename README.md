@@ -5,6 +5,7 @@ UI управления целями.
 ## dev-разработка
 
 [Frontend login](http://localhost:5173/login) <br />
+[Проектная документация (ТЗ)](https://goals-front-nu.vercel.app/) <br />
 
 ### Быстрый старт
 
