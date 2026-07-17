@@ -16,12 +16,18 @@ import { appRoutes, unauthorizedRoutes } from 'app/routes';
 import { Switch } from 'shared/components';
 import { goalsAuthApiClient } from 'shared/libs/api-client';
 
+const appBarRoutes = Object.values(appRoutes).filter(({ handle }) => !handle.skip);
+
 function ResponsiveAppBar() {
   const { mode, setMode } = useColorScheme();
   const [anchorElNav, setAnchorElNav] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
+
+  const activePath = appBarRoutes.find(({ path }) =>
+    matchPath(`${path}/*`, location.pathname),
+  )?.path;
 
   const userResult = useQuery({
     queryFn: () => goalsAuthApiClient.get<{ name: string }[]>('users/profile'),
@@ -99,26 +105,26 @@ function ResponsiveAppBar() {
                     vertical: 'top',
                   }}
                 >
-                  {Object.values(appRoutes).map(({ path, title }) => (
+                  {appBarRoutes.map(({ handle, path }) => (
                     <MenuItem
-                      key={title}
+                      key={handle.title}
                       onClick={() => {
                         setAnchorElNav(null);
                         navigate(path);
                       }}
-                      selected={!!matchPath(path, location.pathname)}
+                      selected={!!activePath}
                     >
-                      <Typography sx={{ textAlign: 'center' }}>{title}</Typography>
+                      <Typography sx={{ textAlign: 'center' }}>{handle.title}</Typography>
                     </MenuItem>
                   ))}
                 </Menu>
               </Box>
               <Box sx={{ display: { gap: '14px', md: 'flex', xs: 'none' }, flexGrow: 1, ml: 4 }}>
-                <Tabs value={location.pathname}>
-                  {Object.values(appRoutes).map(({ path, title }) => (
+                <Tabs value={activePath}>
+                  {appBarRoutes.map(({ handle, path }) => (
                     <Tab
-                      key={title}
-                      label={title}
+                      key={handle.title}
+                      label={handle.title}
                       onClick={(event) => {
                         setAnchorElNav(event.currentTarget);
                         navigate(path);

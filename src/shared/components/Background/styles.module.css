@@ -1,6 +1,6 @@
 .root {
-  overflow: hidden;
   position: relative;
+  height: 100%;
 }
 
 .svg {
@@ -15,9 +15,4 @@
 
 .flowLayer {
   isolation: isolate;
-}
-
-.content {
-  position: relative;
-  z-index: 1;
 }

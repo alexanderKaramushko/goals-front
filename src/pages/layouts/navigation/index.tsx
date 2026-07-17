@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import { Outlet, useLocation } from 'react-router';
 
 import { unauthorizedRoutes } from 'app/routes';
@@ -13,8 +14,10 @@ const NavigationLayout = () => {
     <Background
       showLines={Object.values(unauthorizedRoutes).some(({ path }) => location.pathname === path)}
     >
-      <ResponsiveAppBar />
-      <Outlet />
+      <Box sx={{ boxSizing: 'border-box', height: '100%', overflowY: 'auto' }}>
+        <ResponsiveAppBar />
+        <Outlet />
+      </Box>
     </Background>
   );
 };

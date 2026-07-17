@@ -1,0 +1,102 @@
+.root {
+  overflow-x: auto;
+}
+
+.connector {
+  align-items: center;
+  left: calc(-50% + 30px);
+  position: absolute;
+  right: calc(50% + 30px);
+  top: 15px;
+}
+
+.simpleConnector {
+  align-items: center;
+  left: calc(-50% + 20px);
+  position: absolute;
+  right: calc(50% + 20px);
+  top: 34px;
+}
+
+.connectorLine {
+  height: 2px;
+  background: var(--shared-stepper-connector-color, currentcolor);
+  flex-grow: 1;
+}
+
+.step {
+  flex: 1 0 100% !important;
+  max-width: 150px;
+  padding-top: 15px;
+}
+
+.stepLabel :global(.MuiStepLabel-label) {
+  margin-top: 12px !important;
+  font-weight: 500;
+}
+
+.stepLabel :global(.MuiStepLabel-iconContainer) {
+  position: relative;
+}
+
+.stepLabel :global(.MuiStepLabel-iconContainer)::before {
+  background: radial-gradient(
+    circle at center,
+    transparent 0%,
+    transparent 41%,
+    var(--shared-stepper-background-default, transparent) 43%,
+    var(--shared-stepper-glow-color-1, transparent) 45%,
+    var(--shared-stepper-glow-color-2, transparent) 50%,
+    var(--shared-stepper-glow-color-3, transparent) 51%,
+    var(--shared-stepper-glow-color-3, transparent) 60%
+  );
+  border-radius: 50%;
+  content: '';
+  height: 70px;
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+  width: 70px;
+}
+
+.stepLabelSelected :global(.MuiStepLabel-iconContainer)::before {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.stepIconRoot {
+  display: block;
+  height: 40px;
+  position: relative;
+  width: 40px;
+}
+
+.stepIconRoot:hover .deleteButton {
+  display: block !important;
+}
+
+.deleteButton {
+  display: none !important;
+  position: absolute !important;
+  right: -20px;
+  top: -20px;
+}
+
+.completeIcon {
+  color: var(--shared-stepper-complete-color, currentcolor);
+  cursor: pointer;
+  display: block;
+  margin: -4px;
+}
+
+.stepIcon {
+  color: var(--shared-stepper-icon-color, currentcolor);
+  cursor: pointer;
+  display: block;
+}
+

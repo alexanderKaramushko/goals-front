@@ -9,9 +9,14 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backdropFilter: 'blur(18px)',
-          backgroundColor: 'secondary',
           borderRadius: '24px',
-          color: 'text.primary',
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
         },
       },
     },
@@ -19,7 +24,7 @@ export const theme = createTheme({
   palette: {
     background: {
       default: '#F8F7F5',
-      paper: 'rgba(255, 255, 255, 0.72)',
+      paper: '#FFF',
     },
     divider: '#E3E5E8',
     mode: 'light',

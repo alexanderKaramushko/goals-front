@@ -1,0 +1,42 @@
+.root {
+  --shared-popper-arrow-background: transparent;
+  --shared-popper-arrow-shadow: none;
+  --shared-popper-paper-background: transparent;
+  --shared-popper-paper-padding: 16px;
+  --shared-popper-shadow: none;
+  border-radius: 20px;
+  box-shadow: var(--shared-popper-shadow);
+  z-index: 10;
+}
+
+.paper {
+  background: var(--shared-popper-paper-background);
+  border-radius: inherit;
+  padding: var(--shared-popper-paper-padding);
+  position: relative;
+  z-index: 2;
+}
+
+.arrow {
+  height: 12px;
+  position: absolute;
+  width: 12px;
+}
+
+.arrow::before {
+  background-color: var(--shared-popper-arrow-background);
+  box-shadow: var(--shared-popper-arrow-shadow);
+  content: '';
+  height: 12px;
+  position: absolute;
+  transform: rotate(45deg);
+  width: 12px;
+}
+
+.root[data-popper-placement^='bottom'] .arrow {
+  top: -6px;
+}
+
+.root[data-popper-placement^='top'] .arrow {
+  bottom: -6px;
+}

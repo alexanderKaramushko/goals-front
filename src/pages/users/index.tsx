@@ -1,7 +1,5 @@
-import styles from './styles.module.css';
-
 const UsersPage = () => {
-  return <div className={styles.root}></div>;
+  return <>Users</>;
 };
 
 export default UsersPage;

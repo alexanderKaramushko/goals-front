@@ -175,7 +175,7 @@ export const Background: FC<PropsWithChildren<BackgroundProps>> = ({
         </Box>
       )}
 
-      <Box className={styles.content}>{children}</Box>
+      {children}
     </Box>
   );
 };
