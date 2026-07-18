@@ -44,6 +44,11 @@ export const theme = createTheme({
       primary: '#1C1C1E',
       secondary: '#6E6E73',
     },
+    warning: {
+      dark: '#7E4216',
+      light: '#C27A38',
+      main: '#A66124',
+    },
   },
   shadows: [
     'none',
