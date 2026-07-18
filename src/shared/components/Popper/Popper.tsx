@@ -36,10 +36,10 @@ export const Popper: FC<PopperProps> = ({
   const popperSx: SxProps<Theme> = [
     {
       '--shared-popper-arrow-background': theme.palette.background.paper,
-      '--shared-popper-arrow-shadow': theme.shadows[2],
+      '--shared-popper-arrow-shadow': theme.shadows[1],
       '--shared-popper-paper-background': theme.palette.background.paper,
       '--shared-popper-paper-padding': theme.spacing(2),
-      '--shared-popper-shadow': theme.shadows[5],
+      '--shared-popper-shadow': theme.shadows[6],
     },
     ...(Array.isArray(sx) ? sx : sx ? [sx] : []),
   ];
@@ -67,11 +67,7 @@ export const Popper: FC<PopperProps> = ({
       {...props}
     >
       <ClickAwayListener onClickAway={onClickAway}>
-        <Paper
-          {...restPaperProps}
-          className={cn(styles.paper, paperClassName)}
-          sx={paperSx}
-        >
+        <Paper {...restPaperProps} className={cn(styles.paper, paperClassName)} sx={paperSx}>
           <Box className={styles.arrow} component="span" ref={setArrowRef} />
           {children}
         </Paper>
@@ -79,3 +75,4 @@ export const Popper: FC<PopperProps> = ({
     </MuiPopper>
   );
 };
+

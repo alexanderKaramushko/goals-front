@@ -224,7 +224,7 @@ const CreateGoalPage = () => {
                       },
                     }}
                     sx={{ '& .MuiPickersInputBase-root': { borderRadius: 2 }, mt: 1 }}
-                    value={targetData.endDate ? dayjs(targetData.endDate, 'YYYY-MM-DD') : null}
+                    value={targetData.endDate ? dayjs(targetData.endDate) : null}
                   />
                 </FormControl>
               </Grid>
@@ -255,7 +255,7 @@ const CreateGoalPage = () => {
                   connector={<ConnectorWithInterButton onConnectorClick={addInterStep} />}
                   items={steps.map(({ date, id, title }) => ({
                     id,
-                    isComplete: isComplete(id),
+                    isCompleted: isComplete(id),
                     isSelected: editableStepId === id,
                     label: title,
                     onClick: (event) => openEdit(event.currentTarget, id),
@@ -263,9 +263,9 @@ const CreateGoalPage = () => {
                       setSteps(steps.filter((step) => step.id !== id));
                     },
                     stepLabelProps: {
-                      optional: dayjs(date, 'YYYY-MM-DD').isValid() && (
+                      optional: dayjs(date).isValid() && (
                         <Typography variant="caption">
-                          Срок: {dayjs(date, 'YYYY-MM-DD').format('DD-MM-YYYY')}
+                          Срок: {dayjs(date).format('DD-MM-YYYY')}
                         </Typography>
                       ),
                     },
@@ -314,6 +314,7 @@ const CreateGoalPage = () => {
         <Grid container spacing={2}>
           <Grid size={6}>
             <TextField
+              autoFocus
               fullWidth
               id="step-title"
               label="Название"
@@ -361,7 +362,7 @@ const CreateGoalPage = () => {
               }}
               value={
                 editableStepId && getStepFieldValue(editableStepId, 'date')
-                  ? dayjs(getStepFieldValue(editableStepId, 'date'), 'YYYY-MM-DD')
+                  ? dayjs(getStepFieldValue(editableStepId, 'date'))
                   : null
               }
             />

@@ -17,7 +17,7 @@ import styles from './styles.module.css';
 
 type StepperItem = {
   id: string;
-  isComplete?: boolean;
+  isCompleted?: boolean;
   isSelected?: boolean;
   label: ReactNode;
   onClick?: MouseEventHandler<HTMLDivElement>;
@@ -55,7 +55,7 @@ export const Stepper: FC<StepperProps> = ({ className, items, style, sx, ...prop
       {items.map(
         ({
           id,
-          isComplete,
+          isCompleted,
           isSelected,
           label,
           onClick,
@@ -73,7 +73,7 @@ export const Stepper: FC<StepperProps> = ({ className, items, style, sx, ...prop
           const StepIconComponent: FC<StepIconProps> = (stepIconProps) => (
             <StepIconSlot
               {...stepIconProps}
-              isComplete={isComplete}
+              isCompleted={isCompleted}
               onDeleteClick={items.length > 1 ? onDeleteClick : undefined}
             />
           );

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { dayjs } from 'shared/libs/dayjs';
+import { dayjs } from 'shared/libs/dayjs/dayjs';
 
 const goalsServiceBaseUrl = new URL(window.location.origin);
 

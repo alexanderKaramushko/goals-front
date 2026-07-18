@@ -6,11 +6,14 @@ import type { FC } from 'react';
 import styles from './styles.module.css';
 
 export type StepIconSlotProps = StepIconProps & {
-  isComplete?: boolean;
+  /**
+   * Если не передан, то определения состояния завершенности берется из StepIconProps['completed']
+   */
+  isCompleted?: boolean;
   onDeleteClick?: () => void;
 };
 
-export const StepIconSlot: FC<StepIconSlotProps> = ({ isComplete, onDeleteClick, ...props }) => {
+export const StepIconSlot: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ...props }) => {
   return (
     <Box className={styles.stepIconRoot}>
       {onDeleteClick && (
@@ -26,7 +29,7 @@ export const StepIconSlot: FC<StepIconSlotProps> = ({ isComplete, onDeleteClick,
           <HighlightOffIcon />
         </IconButton>
       )}
-      {isComplete ? (
+      {isCompleted ? (
         <CheckCircleIcon
           className={styles.completeIcon}
           sx={{
