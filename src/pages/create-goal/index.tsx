@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useMutation } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { useState } from 'react';
@@ -20,56 +19,38 @@ import { useNavigate } from 'react-router';
 import { appRoutes, useRouteHandle } from 'app/routes';
 
 import { ConnectorWithInterButton, Popper, Stepper } from 'shared/components';
-import { goalsServiceApiClient } from 'shared/libs/api-client';
+
+import { useCreateStep, useCreateTarget } from 'entities/api';
 
 type StepId = string;
 
-type CreateTargetData = {
+type StepData = {
+  date: string;
   description: string;
-  endDate: string;
+  id: StepId;
   title: string;
 };
 
-type CreateStepData = {
-  title: string;
+type TargetData = {
   description: string;
-  /**
-   * @example YYYY-MM-DD
-   */
-  date: string;
-  id: StepId;
+  shouldBeCompletedAt: string;
+  title: string;
 };
 
 const CreateGoalPage = () => {
   const routeHandle = useRouteHandle();
   const navigate = useNavigate();
 
-  const createTargetMutation = useMutation({
-    mutationFn: (data: CreateTargetData) =>
-      goalsServiceApiClient.post('targets/create', {
-        description: data.description,
-        shouldBeCompletedAt: data.endDate,
-        title: data.title,
-      }),
-    mutationKey: ['createTarget'],
-  });
+  const createTarget = useCreateTarget();
+  const stepCreation = useCreateStep();
 
-  const addStepMutation = useMutation({
-    mutationFn: (data: CreateStepData & { targetId: number }) =>
-      goalsServiceApiClient.post(`steps/create/${data.targetId}`, {
-        description: data.description,
-        shouldBeCompletedAt: data.date,
-        title: data.title,
-      }),
-  });
-
-  const [targetData, setTargetData] = useState<CreateTargetData>({
+  const [targetData, setTargetData] = useState<TargetData>({
     description: '',
-    endDate: '',
+    shouldBeCompletedAt: '',
     title: '',
   });
 
-  const [steps, setSteps] = useState<CreateStepData[]>([
+  const [stepsData, setStepsDate] = useState<StepData[]>([
     {
       date: '',
       description: '',
@@ -91,12 +72,12 @@ const CreateGoalPage = () => {
     setEditableStepId(stepId);
   }
 
-  function editStep<Name extends keyof CreateStepData>(
+  function editStep<Name extends keyof StepData>(
     stepId: StepId,
     name: Name,
-    value: CreateStepData[Name],
+    value: StepData[Name],
   ) {
-    const newSteps = steps.map((step) => {
+    const newSteps = stepsData.map((step) => {
       if (step.id === stepId) {
         return {
           ...step,
@@ -107,18 +88,18 @@ const CreateGoalPage = () => {
       return step;
     });
 
-    setSteps(newSteps);
+    setStepsDate(newSteps);
   }
 
-  function getStepFieldValue(stepId: StepId, name: keyof CreateStepData) {
-    return steps.find((step) => step.id === stepId)[name];
+  function getStepFieldValue(stepId: StepId, name: keyof StepData) {
+    return stepsData.find((step) => step.id === stepId)[name];
   }
 
   function addInterStep(stepIndex: number) {
-    const stepsBefore = steps.slice(0, stepIndex);
-    const stepsAfter = steps.slice(stepIndex);
+    const stepsBefore = stepsData.slice(0, stepIndex);
+    const stepsAfter = stepsData.slice(stepIndex);
 
-    setSteps(() => [
+    setStepsDate(() => [
       ...stepsBefore,
       {
         date: '',
@@ -131,13 +112,10 @@ const CreateGoalPage = () => {
   }
 
   function isComplete(stepId: StepId) {
-    return Object.values(steps.find((step) => step.id === stepId)).every((value) => !!value);
+    return Object.values(stepsData.find((step) => step.id === stepId)).every((value) => !!value);
   }
 
-  function editTargetData<Name extends keyof CreateTargetData>(
-    name: Name,
-    value: CreateTargetData[Name],
-  ) {
+  function editTargetData<Name extends keyof TargetData>(name: Name, value: TargetData[Name]) {
     setTargetData((prevTargetData) => ({
       ...prevTargetData,
       [name]: value,
@@ -145,17 +123,20 @@ const CreateGoalPage = () => {
   }
 
   function isFormFilled() {
-    return targetData.title && targetData.description && steps.every(({ id }) => isComplete(id));
+    return (
+      targetData.title && targetData.description && stepsData.every(({ id }) => isComplete(id))
+    );
   }
 
   async function save() {
     if (isFormFilled()) {
       try {
-        const createdTarget = await createTargetMutation.mutateAsync(targetData);
+        const createdTarget = await createTarget.invoke(targetData);
 
-        for (const step of steps) {
-          await addStepMutation.mutateAsync({
+        for (const step of stepsData) {
+          await stepCreation.invoke({
             ...step,
+            shouldBeCompletedAt: step.date,
             targetId: createdTarget.data[0].id,
           });
         }
@@ -209,7 +190,7 @@ const CreateGoalPage = () => {
                     format="DD • MM"
                     onChange={(value) => {
                       if (value.isValid()) {
-                        editTargetData('endDate', value.format('YYYY-MM-DD'));
+                        editTargetData('shouldBeCompletedAt', value.format('YYYY-MM-DD'));
                       }
                     }}
                     slotProps={{
@@ -224,7 +205,9 @@ const CreateGoalPage = () => {
                       },
                     }}
                     sx={{ '& .MuiPickersInputBase-root': { borderRadius: 2 }, mt: 1 }}
-                    value={targetData.endDate ? dayjs(targetData.endDate) : null}
+                    value={
+                      targetData.shouldBeCompletedAt ? dayjs(targetData.shouldBeCompletedAt) : null
+                    }
                   />
                 </FormControl>
               </Grid>
@@ -253,14 +236,14 @@ const CreateGoalPage = () => {
                 </Typography>
                 <Stepper
                   connector={<ConnectorWithInterButton onConnectorClick={addInterStep} />}
-                  items={steps.map(({ date, id, title }) => ({
+                  items={stepsData.map(({ date, id, title }) => ({
                     id,
                     isCompleted: isComplete(id),
                     isSelected: editableStepId === id,
                     label: title,
                     onClick: (event) => openEdit(event.currentTarget, id),
                     onDeleteClick: () => {
-                      setSteps(steps.filter((step) => step.id !== id));
+                      setStepsDate(stepsData.filter((step) => step.id !== id));
                     },
                     stepLabelProps: {
                       optional: dayjs(date).isValid() && (
@@ -276,7 +259,7 @@ const CreateGoalPage = () => {
               <Grid>
                 <Button
                   onClick={() => {
-                    setSteps((prevSteps) => [
+                    setStepsDate((prevSteps) => [
                       ...prevSteps,
                       { date: '', description: '', id: nanoid(), title: 'Новый шаг' },
                     ]);
@@ -338,9 +321,11 @@ const CreateGoalPage = () => {
                 }
               }}
               shouldDisableDate={(date) => {
-                const stepIndex = steps.findIndex((step) => step.id === editableStepId);
-                const prevStepDate = Reflect.has(steps, stepIndex - 1) && steps[stepIndex - 1].date;
-                const nextStepDate = Reflect.has(steps, stepIndex + 1) && steps[stepIndex + 1].date;
+                const stepIndex = stepsData.findIndex((step) => step.id === editableStepId);
+                const prevStepDate =
+                  Reflect.has(stepsData, stepIndex - 1) && stepsData[stepIndex - 1].date;
+                const nextStepDate =
+                  Reflect.has(stepsData, stepIndex + 1) && stepsData[stepIndex + 1].date;
 
                 return (
                   (prevStepDate && date.isSameOrBefore(prevStepDate)) ||

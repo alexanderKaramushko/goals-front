@@ -15,7 +15,6 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { type FC, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
@@ -23,11 +22,16 @@ import { useNavigate } from 'react-router';
 import { appRoutes, useRouteHandle } from 'app/routes';
 
 import { Connector, Popper, Stepper } from 'shared/components';
-import { goalsServiceApiClient } from 'shared/libs/api-client';
 import { decline } from 'shared/utils';
 
-type TargetId = number;
-type StepId = number;
+import {
+  useActivateTarget,
+  useCancelTarget,
+  useCompleteStep,
+  useDeleteTarget,
+  useGetSteps,
+  useGetTargets,
+} from 'entities/api';
 
 type CompleteStepData = {
   resultComment: string;
@@ -38,49 +42,23 @@ const GoalWithSteps: FC<{
 }> = ({ targetId }) => {
   const theme = useTheme();
 
-  const stepsResult = useQuery({
-    enabled: !!targetId,
-    queryFn: () =>
-      goalsServiceApiClient.get<
-        {
-          id: number;
-          targetId: number;
-          title: string;
-          description: string;
-          shouldBeCompletedAt: string;
-          closedAt: string | null;
-          createdAt: string;
-          completedAt: string | null;
-        }[]
-      >(`/steps/get-all/${targetId}`),
-    queryKey: ['targets', targetId],
-    refetchOnMount: true,
-  });
-
-  const completeStepMutation = useMutation({
-    mutationFn: (data: { stepId: StepId; resultComment: string }) =>
-      goalsServiceApiClient.put(`steps/complete/${data.stepId}`, {
-        resultComment: data.resultComment,
-      }),
-  });
+  const steps = useGetSteps(targetId);
+  const completeStep = useCompleteStep();
 
   const [completeStepData, setCompleteStepData] = useState<CompleteStepData>({
     resultComment: '',
   });
 
   const [editedStepEl, setEditedStepEl] = useState<HTMLElement | null>(null);
-  const [editableStepId, setEditableStepId] = useState<StepId | null>(null);
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const steps = stepsResult.isSuccess ? stepsResult.data.data : [];
+  const [editableStepId, setEditableStepId] = useState<number | null>(null);
 
   const uncompletedStepIndex = useMemo(() => {
-    return steps.findIndex(
+    return steps.data.findIndex(
       (step) => !step.completedAt && dayjs(step.shouldBeCompletedAt).isSameOrAfter(dayjs(), 'day'),
     );
-  }, [steps]);
+  }, [steps.data]);
 
-  function openEdit(el: HTMLElement, stepId: StepId) {
+  function openEdit(el: HTMLElement, stepId: number) {
     setEditedStepEl(el);
     setEditableStepId(stepId);
   }
@@ -100,21 +78,17 @@ const GoalWithSteps: FC<{
     }));
   }
 
-  async function completeStep(stepId: StepId) {
-    try {
-      await completeStepMutation.mutateAsync({
-        ...completeStepData,
-        stepId,
-      });
+  async function handleCompleteStep(stepId: number) {
+    await completeStep.invoke({
+      ...completeStepData,
+      stepId,
+    });
 
-      await stepsResult.refetch();
-    } catch {
-      // TODO Показывать уведомление
-    }
+    await steps.refetch();
   }
 
   const connectorColors = useMemo(() => {
-    return steps.reduce<string[]>((acc, step, index, currentSteps) => {
+    return steps.data.reduce<string[]>((acc, step, index, currentSteps) => {
       const isCurrentStepCompleted = !!step.completedAt;
       const prevStep = currentSteps[index - 1];
       const isPrevStepCompleted = !!prevStep?.completedAt;
@@ -146,61 +120,67 @@ const GoalWithSteps: FC<{
     }, []);
   }, [steps, theme]);
 
-  const stepperItems = steps.map(({ completedAt, id, shouldBeCompletedAt, title }, stepIndex) => {
-    const deadline = dayjs(shouldBeCompletedAt).startOf('day');
-    const today = dayjs().startOf('day');
-    const daysLeft = deadline.diff(today, 'day');
+  const stepperItems = steps.data.map(
+    ({ completedAt, id, shouldBeCompletedAt, title }, stepIndex) => {
+      const deadline = dayjs(shouldBeCompletedAt).startOf('day');
+      const today = dayjs().startOf('day');
+      const daysLeft = deadline.diff(today, 'day');
 
-    const isOutdated = daysLeft < 0;
-    const isToday = daysLeft === 0;
-    const isDeadlineSoon = daysLeft === 1;
+      const isOutdated = daysLeft < 0;
+      const isToday = daysLeft === 0;
+      const isDeadlineSoon = daysLeft === 1;
 
-    const getStatusLabel = () => {
-      if (completedAt && dayjs(completedAt).isValid()) {
-        return `Завершен: ${dayjs(completedAt).format('DD-MM-YYYY')}`;
+      const getStatusLabel = () => {
+        if (completedAt && dayjs(completedAt).isValid()) {
+          return `Завершен: ${dayjs(completedAt).format('DD-MM-YYYY')}`;
+        }
+        if (!dayjs(shouldBeCompletedAt).isValid()) return null;
+        if (isOutdated) return 'Просрочено';
+        if (isToday) return 'Ожидает завершения';
+        if (isDeadlineSoon) return 'Остался 1 день';
+
+        const verb = decline(daysLeft, ['Осталось', 'Остался', 'Осталось']);
+        const days = decline(daysLeft, ['дней', 'день', 'дня']);
+
+        return `${verb} ${daysLeft} ${days}`;
+      };
+
+      const getStatusColor = () => {
+        if (completedAt) return 'text.secondary';
+        if (isOutdated) return theme.palette.error.main;
+        if (isToday || isDeadlineSoon) return theme.palette.warning.main;
+
+        return 'text.secondary';
+      };
+
+      const stepLabelSx: { [key: string]: { color: string } | undefined } = {};
+      if (isDeadlineSoon || isToday) {
+        stepLabelSx['& .MuiSvgIcon-root'] = { color: theme.palette.warning.main };
       }
-      if (!dayjs(shouldBeCompletedAt).isValid()) return null;
-      if (isOutdated) return 'Просрочено';
-      if (isToday) return 'Ожидает завершения';
-      if (isDeadlineSoon) return 'Остался 1 день';
+      if (isOutdated) {
+        stepLabelSx['& .MuiSvgIcon-root.Mui-error'] = { color: theme.palette.error.main };
+      }
 
-      const verb = decline(daysLeft, ['Осталось', 'Остался', 'Осталось']);
-      const days = decline(daysLeft, ['дней', 'день', 'дня']);
-
-      return `${verb} ${daysLeft} ${days}`;
-    };
-
-    const getStatusColor = () => {
-      if (completedAt) return 'text.secondary';
-      if (isOutdated) return theme.palette.error.main;
-      if (isToday || isDeadlineSoon) return theme.palette.warning.main;
-
-      return 'text.secondary';
-    };
-
-    return {
-      id: id.toString(),
-      isSelected: editableStepId === id,
-      label: title,
-      onClick: (event: React.MouseEvent<HTMLElement>) =>
-        uncompletedStepIndex === stepIndex && openEdit(event.currentTarget, id),
-      stepLabelProps: {
-        optional: (
-          <Typography sx={{ color: getStatusColor() }} variant="caption">
-            {getStatusLabel()}
-          </Typography>
-        ),
-        sx: {
-          '& .MuiSvgIcon-root': (isDeadlineSoon || isToday) && {
-            color: theme.palette.warning.main,
-          },
-          '& .MuiSvgIcon-root.Mui-error': isOutdated && {
-            color: theme.palette.error.main,
-          },
+      return {
+        id: id.toString(),
+        isSelected: editableStepId === id,
+        label: title,
+        onClick: (event: React.MouseEvent<HTMLDivElement>) => {
+          if (uncompletedStepIndex === stepIndex) {
+            openEdit(event.currentTarget, id);
+          }
         },
-      },
-    };
-  });
+        stepLabelProps: {
+          optional: (
+            <Typography sx={{ color: getStatusColor() }} variant="caption">
+              {getStatusLabel()}
+            </Typography>
+          ),
+          sx: stepLabelSx,
+        },
+      };
+    },
+  );
 
   return (
     <>
@@ -241,8 +221,8 @@ const GoalWithSteps: FC<{
               aria-label="Завершить шаг"
               color="success"
               onClick={async () => {
-                if (completeStepData.resultComment) {
-                  await completeStep(editableStepId);
+                if (completeStepData.resultComment && editableStepId !== null) {
+                  await handleCompleteStep(editableStepId);
                   closeEdit();
                 }
               }}
@@ -260,66 +240,10 @@ const GoalsPage = () => {
   const routeHandle = useRouteHandle();
   const navigate = useNavigate();
 
-  const goalsResult = useQuery({
-    queryFn: () =>
-      goalsServiceApiClient.get<
-        {
-          description: string;
-          id: number;
-          isOutdated: boolean;
-          shouldBeCompletedAt: string;
-          status: string;
-          title: string;
-          userId: string;
-        }[]
-      >('/targets/get-all/108266036103493388680'),
-    queryKey: ['targets', '108266036103493388680'],
-    refetchOnMount: true,
-  });
-
-  const activateTargetMutation = useMutation({
-    mutationFn: (data: { targetId: TargetId }) =>
-      goalsServiceApiClient.put(`targets/activate/${data.targetId}`),
-  });
-
-  const deleteTargetMutation = useMutation({
-    mutationFn: (data: { targetId: TargetId }) =>
-      goalsServiceApiClient.delete(`targets/delete/${data.targetId}`),
-  });
-
-  const cancelTargetMutation = useMutation({
-    mutationFn: (data: { targetId: TargetId }) =>
-      goalsServiceApiClient.post(`targets/cancel/${data.targetId}`),
-  });
-
-  async function activateTarget(targetId: TargetId) {
-    try {
-      await activateTargetMutation.mutateAsync({ targetId });
-      await goalsResult.refetch();
-    } catch {
-      // TODO Показывать уведомление
-    }
-  }
-
-  async function deleteTarget(targetId: TargetId) {
-    try {
-      await deleteTargetMutation.mutateAsync({ targetId });
-      await goalsResult.refetch();
-    } catch {
-      // TODO Показывать уведомление
-    }
-  }
-
-  async function cancelTarget(targetId: TargetId) {
-    try {
-      await cancelTargetMutation.mutateAsync({ targetId });
-      await goalsResult.refetch();
-    } catch {
-      // TODO Показывать уведомление
-    }
-  }
-
-  const goals = goalsResult.isSuccess ? goalsResult.data.data : [];
+  const targets = useGetTargets();
+  const targetActivation = useActivateTarget();
+  const deleteTarget = useDeleteTarget();
+  const cancelTarget = useCancelTarget();
 
   return (
     <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -341,7 +265,7 @@ const GoalsPage = () => {
         </Button>
       </Grid>
       <Grid size={12}>
-        {goals.map(({ description, id, shouldBeCompletedAt, status, title }) => {
+        {targets.data.map(({ description, id, shouldBeCompletedAt, status, title }) => {
           const deadline = dayjs(shouldBeCompletedAt).startOf('day');
           const today = dayjs().startOf('day');
           const daysLeft = deadline.diff(today, 'day');
@@ -410,7 +334,10 @@ const GoalsPage = () => {
                               <IconButton
                                 aria-label="Удалить цель"
                                 color="error"
-                                onClick={() => deleteTarget(id)}
+                                onClick={async () => {
+                                  await deleteTarget.invoke(id);
+                                  await targets.refetch();
+                                }}
                                 size="large"
                               >
                                 <DeleteIcon />
@@ -420,7 +347,10 @@ const GoalsPage = () => {
                               <IconButton
                                 aria-label="Активировать цель"
                                 color="success"
-                                onClick={() => activateTarget(id)}
+                                onClick={async () => {
+                                  await targetActivation.invoke(id);
+                                  await targets.refetch();
+                                }}
                                 size="large"
                               >
                                 <PlayCircleFilledIcon />
@@ -433,7 +363,10 @@ const GoalsPage = () => {
                             <IconButton
                               aria-label="Отменить цель"
                               color="warning"
-                              onClick={() => cancelTarget(id)}
+                              onClick={async () => {
+                                await cancelTarget.invoke(id);
+                                await targets.refetch();
+                              }}
                               size="large"
                             >
                               <CancelIcon />
