@@ -1,17 +1,5 @@
-import CancelIcon from '@mui/icons-material/Cancel';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import DeleteIcon from '@mui/icons-material/Delete';
-import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Grid,
-  IconButton,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Card, CardContent, Grid, Typography } from '@mui/material';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router';
 
@@ -19,8 +7,11 @@ import { appRoutes, useRouteHandle } from 'app/routes';
 
 import { decline } from 'shared/utils';
 
-import { useActivateTarget, useCancelTarget, useDeleteTarget, useGetTargets } from 'entities/api';
+import { useGetTargets } from 'entities/api';
 
+import { ActivateTarget } from 'features/activate-target';
+import { CancelTarget } from 'features/cancel-target';
+import { DeleteTarget } from 'features/delete-target';
 import { StepProgress } from 'features/step-progress';
 
 const GoalsPage = () => {
@@ -28,15 +19,12 @@ const GoalsPage = () => {
   const navigate = useNavigate();
 
   const targets = useGetTargets();
-  const targetActivation = useActivateTarget();
-  const deleteTarget = useDeleteTarget();
-  const cancelTarget = useCancelTarget();
 
   return (
     <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
       <Grid>
         <Typography color="primary" variant="h4">
-          {routeHandle.title}
+          {routeHandle?.title}
         </Typography>
         <Typography color="text.primary" variant="body1">
           Планируйте, отслеживайте прогресс и достигайте результатов
@@ -117,48 +105,12 @@ const GoalsPage = () => {
                       <Grid>
                         {status === 'created' && (
                           <>
-                            <Tooltip title="Удалить цель">
-                              <IconButton
-                                aria-label="Удалить цель"
-                                color="error"
-                                onClick={async () => {
-                                  await deleteTarget.invoke(id);
-                                  await targets.refetch();
-                                }}
-                                size="large"
-                              >
-                                <DeleteIcon />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="Активировать цель">
-                              <IconButton
-                                aria-label="Активировать цель"
-                                color="success"
-                                onClick={async () => {
-                                  await targetActivation.invoke(id);
-                                  await targets.refetch();
-                                }}
-                                size="large"
-                              >
-                                <PlayCircleFilledIcon />
-                              </IconButton>
-                            </Tooltip>
+                            <DeleteTarget onSuccess={() => targets.refetch()} targetId={id} />
+                            <ActivateTarget onSuccess={() => targets.refetch()} targetId={id} />
                           </>
                         )}
                         {status === 'active' && (
-                          <Tooltip title="Отменить цель">
-                            <IconButton
-                              aria-label="Отменить цель"
-                              color="warning"
-                              onClick={async () => {
-                                await cancelTarget.invoke(id);
-                                await targets.refetch();
-                              }}
-                              size="large"
-                            >
-                              <CancelIcon />
-                            </IconButton>
-                          </Tooltip>
+                          <CancelTarget onSuccess={() => targets.refetch()} targetId={id} />
                         )}
                       </Grid>
                     </Grid>
