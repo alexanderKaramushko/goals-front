@@ -94,7 +94,7 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
 
         return [
           ...acc,
-          `linear-gradient(to right, ${theme.palette.info.main} ${daysPassed}%, ${theme.palette.grey[400]} ${daysPassed}%);`,
+          `linear-gradient(to right, ${theme.palette.primary.main} ${daysPassed}%, ${theme.palette.grey[400]} ${daysPassed}%);`,
         ];
       }
 
