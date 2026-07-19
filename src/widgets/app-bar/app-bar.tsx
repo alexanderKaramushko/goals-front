@@ -1,7 +1,5 @@
-import LightModeIcon from '@mui/icons-material/LightMode';
 import MenuIcon from '@mui/icons-material/Menu';
-import ModeNightIcon from '@mui/icons-material/ModeNight';
-import { Box, Menu, MenuItem, Stack, Tab, Tabs, Toolbar, useColorScheme } from '@mui/material';
+import { Box, Menu, MenuItem, Tab, Tabs, Toolbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
@@ -12,14 +10,13 @@ import { matchPath, useLocation, useNavigate } from 'react-router';
 
 import { appRoutes, unauthorizedRoutes } from 'app/routes';
 
-import { Switch } from 'shared/components';
-
 import { useGetUserProfile } from 'entities/api';
+
+import { ThemeChanger } from 'features/theme-changer';
 
 const appBarRoutes = Object.values(appRoutes).filter(({ handle }) => !handle.skip);
 
 function ResponsiveAppBar() {
-  const { mode, setMode } = useColorScheme();
   const [anchorElNav, setAnchorElNav] = useState(null);
 
   const location = useLocation();
@@ -131,30 +128,7 @@ function ResponsiveAppBar() {
           )}
         </Box>
         <Box sx={{ mr: 2 }}>
-          <Stack direction="row" spacing={1}>
-            <LightModeIcon
-              sx={{
-                color: (theme) =>
-                  mode === 'dark'
-                    ? theme.darken(theme.palette.text.secondary, 0.4)
-                    : theme.darken(theme.palette.primary.light, 0.25),
-              }}
-            />
-            <Switch
-              checked={mode == 'dark'}
-              onChange={(_, checked) => {
-                setMode(checked ? 'dark' : 'light');
-              }}
-            />
-            <ModeNightIcon
-              sx={{
-                color: (theme) =>
-                  mode === 'dark'
-                    ? theme.lighten(theme.palette.text.secondary, 0.9)
-                    : theme.darken(theme.palette.secondary.main, 0.4),
-              }}
-            />
-          </Stack>
+          <ThemeChanger />
         </Box>
         <IconButton sx={{ p: 0 }}>
           <Avatar>{letters}</Avatar>
