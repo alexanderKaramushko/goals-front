@@ -39,6 +39,7 @@ const GoalWithSteps: FC<{
   const theme = useTheme();
 
   const stepsResult = useQuery({
+    enabled: !!targetId,
     queryFn: () =>
       goalsServiceApiClient.get<
         {
