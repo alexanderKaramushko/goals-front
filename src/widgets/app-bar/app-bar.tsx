@@ -6,15 +6,15 @@ import AppBar from '@mui/material/AppBar';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { matchPath, useLocation, useNavigate } from 'react-router';
 
 import { appRoutes, unauthorizedRoutes } from 'app/routes';
 
 import { Switch } from 'shared/components';
-import { goalsAuthApiClient } from 'shared/libs/api-client';
+
+import { useGetUserProfile } from 'entities/api';
 
 const appBarRoutes = Object.values(appRoutes).filter(({ handle }) => !handle.skip);
 
@@ -29,27 +29,20 @@ function ResponsiveAppBar() {
     matchPath(`${path}/*`, location.pathname),
   )?.path;
 
-  const userResult = useQuery({
-    queryFn: () => goalsAuthApiClient.get<{ name: string }[]>('users/profile'),
-    queryKey: ['profile'],
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: false,
+  const userProfile = useGetUserProfile({
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error.status === 401) {
+        navigate(unauthorizedRoutes.login.path);
+      }
+    },
   });
 
-  const name = userResult.isSuccess ? (userResult.data.data[0]?.name ?? '') : '';
-  const letters = name
+  const letters = userProfile.data?.name
     .trim()
     .split(/\s+/)
     .map((word) => word[0])
     .slice(0, 2)
     .join('');
-
-  useEffect(() => {
-    if (axios.isAxiosError(userResult.error) && userResult.error.status === 401) {
-      navigate(unauthorizedRoutes.login.path);
-    }
-  }, [userResult.error, navigate]);
 
   return (
     <AppBar
@@ -73,7 +66,7 @@ function ResponsiveAppBar() {
           Melkor Apps
         </Typography>
         <Box sx={{ display: 'flex', flexGrow: 1 }}>
-          {userResult.isSuccess && (
+          {userProfile.data && (
             <>
               <Box sx={{ display: { md: 'none', xs: 'flex' }, flexGrow: 1 }}>
                 <IconButton
