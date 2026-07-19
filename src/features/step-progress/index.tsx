@@ -80,7 +80,9 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
       }
 
       if (prevStep) {
-        const startDate = dayjs(prevStep.shouldBeCompletedAt).startOf('day');
+        const startDate = dayjs(prevStep.completedAt || prevStep.shouldBeCompletedAt).startOf(
+          'day',
+        );
         const endDate = dayjs(step.shouldBeCompletedAt).startOf('day');
 
         const daysLeft = endDate.diff(startDate, 'day');
