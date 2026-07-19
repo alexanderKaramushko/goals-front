@@ -171,22 +171,30 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
   const skeletons = useRef([
     {
       id: nanoid(),
-      label: '',
+      label: (
+        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
+      ),
       StepIcon: StepSkeleton,
     },
     {
       id: nanoid(),
-      label: '',
+      label: (
+        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
+      ),
       StepIcon: StepSkeleton,
     },
     {
       id: nanoid(),
-      label: '',
+      label: (
+        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
+      ),
       StepIcon: StepSkeleton,
     },
     {
       id: nanoid(),
-      label: '',
+      label: (
+        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
+      ),
       StepIcon: StepSkeleton,
     },
   ]);
