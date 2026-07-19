@@ -20,6 +20,7 @@ export function useCreateTarget() {
 
   return {
     invoke,
+    loading: createTargetMutation.isPending,
   };
 }
 

@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
 import { type FC, useState } from 'react';
 
-import { ConnectorWithInterButton, Popper, Stepper } from 'shared/components';
+import { ConnectorWithInterButton, Popper, StepIcon, Stepper } from 'shared/components';
 
 import { useCreateStep, useCreateTarget } from 'entities/api';
 
@@ -226,12 +226,15 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
               connector={<ConnectorWithInterButton onConnectorClick={addInterStep} />}
               items={stepsData.map(({ date, id, title }) => ({
                 id,
-                isCompleted: isComplete(id),
                 isSelected: editableStepId === id,
                 label: title,
                 onClick: (event) => openEdit(event.currentTarget, id),
-                onDeleteClick: () => {
-                  setStepsDate(stepsData.filter((step) => step.id !== id));
+                StepIcon: StepIcon,
+                stepIconProps: {
+                  isCompleted: isComplete(id),
+                  onDeleteClick: () => {
+                    setStepsDate(stepsData.filter((step) => step.id !== id));
+                  },
                 },
                 stepLabelProps: {
                   optional: dayjs(date).isValid() && (
@@ -260,6 +263,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
             <Button
               color="success"
               disabled={!isFormFilled()}
+              loading={createTarget.loading || stepCreation.loading}
               onClick={save}
               startIcon={<SaveIcon />}
               sx={{ ml: 2 }}

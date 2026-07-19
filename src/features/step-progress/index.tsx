@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/refs */
 import DoneIcon from '@mui/icons-material/Done';
-import { Grid, IconButton, TextField, Typography, useTheme } from '@mui/material';
+import { Grid, IconButton, Skeleton, TextField, Typography, useTheme } from '@mui/material';
 import dayjs from 'dayjs';
-import { type FC, useMemo, useState } from 'react';
+import { nanoid } from 'nanoid';
+import { type FC, useMemo, useRef, useState } from 'react';
 
-import { Connector, Popper, Stepper } from 'shared/components';
+import { Connector, Popper, StepIcon, Stepper } from 'shared/components';
 import { decline } from 'shared/utils';
 
 import { useCompleteStep, useGetSteps } from 'entities/api';
@@ -16,6 +18,8 @@ type CompleteStepData = {
 type StepProgressProps = {
   targetId: TargetId;
 };
+
+const StepSkeleton = () => <Skeleton height={40} variant="circular" width={40} />;
 
 export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
   const theme = useTheme();
@@ -132,6 +136,7 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
       };
 
       const stepLabelSx: { [key: string]: { color: string } | undefined } = {};
+
       if (isDeadlineSoon || isToday) {
         stepLabelSx['& .MuiSvgIcon-root'] = { color: theme.palette.warning.main };
       }
@@ -148,6 +153,7 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
             openEdit(event.currentTarget, id);
           }
         },
+        StepIcon: StepIcon,
         stepLabelProps: {
           optional: (
             <Typography sx={{ color: getStatusColor() }} variant="caption">
@@ -160,13 +166,42 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
     },
   );
 
+  const skeletons = useRef([
+    {
+      id: nanoid(),
+      label: '',
+      StepIcon: StepSkeleton,
+    },
+    {
+      id: nanoid(),
+      label: '',
+      StepIcon: StepSkeleton,
+    },
+    {
+      id: nanoid(),
+      label: '',
+      StepIcon: StepSkeleton,
+    },
+    {
+      id: nanoid(),
+      label: '',
+      StepIcon: StepSkeleton,
+    },
+  ]);
+
+  const skeletonsDividerColors = useRef(
+    Array.from<string>({ length: skeletons.current.length }).fill(theme.palette.grey['200']),
+  );
+
   return (
     <>
       <Stepper
         activeStep={uncompletedStepIndex}
-        connector={<Connector colors={connectorColors} />}
-        items={stepperItems}
-        sx={{ mt: 2 }}
+        connector={
+          <Connector colors={steps.loading ? skeletonsDividerColors.current : connectorColors} />
+        }
+        items={steps.loading ? skeletons.current : stepperItems}
+        sx={{ mt: 2, ...(steps.loading && { overflow: 'hidden' }) }}
       />
       <Popper
         anchorEl={editedStepEl}

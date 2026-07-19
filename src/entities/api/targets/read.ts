@@ -17,7 +17,7 @@ export function useGetTargets() {
 
   const userId = userQuery.isSuccess ? userQuery.data.data[0]?.subjectId : null;
 
-  const targetsResult = useQuery({
+  const targetsQuery = useQuery({
     enabled: !!userId,
     queryFn: () => goalsServiceApiClient.get<Target[]>(`/targets/get-all/${userId}`),
     queryKey: ['targets', userId].filter(Boolean),
@@ -25,8 +25,9 @@ export function useGetTargets() {
   });
 
   return {
-    data: targetsResult.isSuccess ? targetsResult.data.data : [],
-    refetch: () => targetsResult.refetch(),
+    data: targetsQuery.isSuccess ? targetsQuery.data.data : [],
+    loading: targetsQuery.isLoading,
+    refetch: () => targetsQuery.refetch(),
   };
 }
 

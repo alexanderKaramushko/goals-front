@@ -13,7 +13,7 @@ export type StepIconSlotProps = StepIconProps & {
   onDeleteClick?: () => void;
 };
 
-export const StepIconSlot: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ...props }) => {
+export const StepIcon: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ...props }) => {
   return (
     <Box className={styles.stepIconRoot}>
       {onDeleteClick && (

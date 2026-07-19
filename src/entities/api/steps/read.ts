@@ -5,7 +5,7 @@ import { goalsServiceApiClient } from 'shared/libs/api-client';
 import type { Step } from '../types';
 
 export function useGetSteps(targetId: number | null) {
-  const stepsResult = useQuery({
+  const stepsQuery = useQuery({
     enabled: !!targetId,
     queryFn: () => goalsServiceApiClient.get<Step[]>(`/steps/get-all/${targetId}`),
     queryKey: ['targets', targetId],
@@ -13,8 +13,9 @@ export function useGetSteps(targetId: number | null) {
   });
 
   return {
-    data: stepsResult.isSuccess ? stepsResult.data.data : [],
-    refetch: () => stepsResult.refetch(),
+    data: stepsQuery.isSuccess ? stepsQuery.data.data : [],
+    loading: stepsQuery.isLoading,
+    refetch: () => stepsQuery.refetch(),
   };
 }
 

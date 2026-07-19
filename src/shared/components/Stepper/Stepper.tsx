@@ -12,18 +12,19 @@ import { alpha } from '@mui/material/styles';
 import cn from 'classnames';
 import { type CSSProperties, type FC, type MouseEventHandler, type ReactNode } from 'react';
 
-import { StepIconSlot } from './StepIconSlot';
 import styles from './styles.module.css';
+
+type CustomStepIconProps = { isCompleted?: boolean; onDeleteClick?: () => void };
 
 type StepperItem = {
   id: string;
-  isCompleted?: boolean;
   isSelected?: boolean;
   label: ReactNode;
   onClick?: MouseEventHandler<HTMLDivElement>;
-  onDeleteClick?: () => void;
   stepProps?: Omit<StepProps, 'children'>;
   stepLabelProps?: Omit<StepLabelProps, 'children' | 'onClick' | 'slots'>;
+  stepIconProps?: CustomStepIconProps;
+  StepIcon: (props: StepIconProps & CustomStepIconProps) => ReactNode | Promise<ReactNode>;
 };
 
 type StepperProps = Omit<MuiStepperProps, 'children'> & {
@@ -55,11 +56,11 @@ export const Stepper: FC<StepperProps> = ({ className, items, style, sx, ...prop
       {items.map(
         ({
           id,
-          isCompleted,
           isSelected,
           label,
           onClick,
-          onDeleteClick,
+          StepIcon,
+          stepIconProps,
           stepLabelProps,
           stepProps,
         }) => {
@@ -70,13 +71,6 @@ export const Stepper: FC<StepperProps> = ({ className, items, style, sx, ...prop
           } = stepLabelProps ?? {};
 
           const { className: stepClassName, sx: stepSx, ...restStepProps } = stepProps ?? {};
-          const StepIconComponent: FC<StepIconProps> = (stepIconProps) => (
-            <StepIconSlot
-              {...stepIconProps}
-              isCompleted={isCompleted}
-              onDeleteClick={items.length > 1 ? onDeleteClick : undefined}
-            />
-          );
 
           return (
             <MuiStep
@@ -94,8 +88,11 @@ export const Stepper: FC<StepperProps> = ({ className, items, style, sx, ...prop
                   stepLabelClassName,
                 )}
                 onClick={onClick}
+                slotProps={{
+                  stepIcon: stepIconProps,
+                }}
                 slots={{
-                  stepIcon: StepIconComponent,
+                  stepIcon: StepIcon,
                 }}
                 sx={stepLabelSx}
               >
