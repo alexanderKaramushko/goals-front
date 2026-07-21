@@ -243,6 +243,9 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
                     </Typography>
                   ),
                 },
+                stepProps: {
+                  active: true,
+                },
               }))}
               sx={{ mt: 2 }}
             />

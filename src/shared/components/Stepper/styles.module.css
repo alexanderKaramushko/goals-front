@@ -89,14 +89,24 @@
 
 .completeIcon {
   color: var(--shared-stepper-complete-color, currentcolor);
-  cursor: pointer;
   display: block;
   margin: -4px;
+
+  &.active {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .stepIcon {
   color: var(--shared-stepper-icon-color, currentcolor);
-  cursor: pointer;
   display: block;
+
+  &.active {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 

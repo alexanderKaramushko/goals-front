@@ -1,6 +1,7 @@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { Box, IconButton, StepIcon as MuiStepIcon, type StepIconProps } from '@mui/material';
+import cn from 'classnames';
 import type { FC } from 'react';
 
 import styles from './styles.module.css';
@@ -31,7 +32,7 @@ export const StepIcon: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ..
       )}
       {isCompleted ? (
         <CheckCircleIcon
-          className={styles.completeIcon}
+          className={cn(styles.completeIcon, { [styles.active]: props.active })}
           sx={{
             fontSize: '48px',
             height: '48px',
@@ -42,7 +43,7 @@ export const StepIcon: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ..
         <MuiStepIcon
           {...props}
           active={false}
-          className={styles.stepIcon}
+          className={cn(styles.stepIcon, { [styles.active]: props.active })}
           sx={{
             fontSize: '40px',
             height: '40px',
