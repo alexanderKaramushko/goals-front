@@ -9,7 +9,7 @@ import { Connector, Popper, StepIcon, Stepper } from 'shared/components';
 import { decline } from 'shared/utils';
 
 import { useCompleteStep, useGetSteps } from 'entities/api';
-import type { TargetId } from 'entities/api/types';
+import type { Target, TargetId } from 'entities/api/types';
 
 type CompleteStepData = {
   resultComment: string;
@@ -17,11 +17,12 @@ type CompleteStepData = {
 
 type StepProgressProps = {
   targetId: TargetId;
+  targetStatus?: Target['status'];
 };
 
 const StepSkeleton = () => <Skeleton height={40} variant="circular" width={40} />;
 
-export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
+export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) => {
   const theme = useTheme();
 
   const steps = useGetSteps(targetId);
@@ -35,10 +36,14 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
   const [editableStepId, setEditableStepId] = useState<number | null>(null);
 
   const uncompletedStepIndex = useMemo(() => {
-    return steps.data.findIndex(
-      (step) => !step.completedAt && dayjs(step.shouldBeCompletedAt).isSameOrAfter(dayjs(), 'day'),
-    );
-  }, [steps.data]);
+    const completedIndex = steps.data.findLastIndex((step) => !!step.completedAt);
+
+    return ['created', 'completed'].includes(targetStatus)
+      ? -1
+      : // Считаем, что за последним завершенным шагом
+        // может быть либо незавершенный шаг, либо пустота
+        completedIndex + 1;
+  }, [steps.data, targetStatus]);
 
   function openEdit(el: HTMLElement, stepId: number) {
     setEditedStepEl(el);
@@ -114,8 +119,10 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
       const isToday = daysLeft === 0;
       const isDeadlineSoon = daysLeft === 1;
 
+      const isCompleted = completedAt && dayjs(completedAt).isValid();
+
       const getStatusLabel = () => {
-        if (completedAt && dayjs(completedAt).isValid()) {
+        if (isCompleted) {
           return `Завершен: ${dayjs(completedAt).format('DD-MM-YYYY')}`;
         }
         if (!dayjs(shouldBeCompletedAt).isValid()) return null;
@@ -148,6 +155,7 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
 
       return {
         id: id.toString(),
+        isCompleted,
         isSelected: editableStepId === id,
         label: title,
         onClick: (event: React.MouseEvent<HTMLDivElement>) => {
@@ -156,6 +164,9 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId }) => {
           }
         },
         StepIcon: StepIcon,
+        stepIconProps: {
+          isCompleted,
+        },
         stepLabelProps: {
           optional: (
             <Typography sx={{ color: getStatusColor() }} variant="caption">

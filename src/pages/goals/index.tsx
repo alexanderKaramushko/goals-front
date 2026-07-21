@@ -123,7 +123,7 @@ const GoalsPage = () => {
               </Grid>
             </Grid>
             <Grid size={12}>
-              <StepProgress targetId={id} />
+              <StepProgress targetId={id} targetStatus={status} />
             </Grid>
           </Grid>
         </CardContent>
