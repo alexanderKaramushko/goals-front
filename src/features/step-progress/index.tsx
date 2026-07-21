@@ -74,8 +74,14 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
     await steps.refetch();
   }
 
+  const isTargetActive = targetStatus === 'active';
+
   const connectorColors = useMemo(() => {
     return steps.data.reduce<string[]>((acc, step, index, currentSteps) => {
+      if (!isTargetActive) {
+        return [...acc, theme.palette.grey[400]];
+      }
+
       const isCurrentStepCompleted = !!step.completedAt;
       const prevStep = currentSteps[index - 1];
       const isPrevStepCompleted = !!prevStep?.completedAt;
@@ -107,7 +113,7 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
 
       return acc;
     }, []);
-  }, [steps, theme]);
+  }, [steps, theme, isTargetActive]);
 
   const stepperItems = steps.data.map(
     ({ completedAt, id, shouldBeCompletedAt, title }, stepIndex) => {
@@ -120,8 +126,10 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
       const isDeadlineSoon = daysLeft === 1;
 
       const isCompleted = completedAt && dayjs(completedAt).isValid();
+      const isActive = uncompletedStepIndex === stepIndex;
 
       const getStatusLabel = () => {
+        if (!isTargetActive) return `Срок: ${dayjs(shouldBeCompletedAt).format('DD-MM-YYYY')}`;
         if (isCompleted) {
           return `Завершен: ${dayjs(completedAt).format('DD-MM-YYYY')}`;
         }
@@ -136,30 +144,42 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
         return `${verb} ${daysLeft} ${days}`;
       };
 
-      const getStatusColor = () => {
-        if (completedAt) return 'text.secondary';
-        if (isOutdated) return theme.palette.error.main;
-        if (isToday || isDeadlineSoon) return theme.palette.warning.main;
+      const getStepLabelColor = () => {
+        if (!isTargetActive) return 'text.secondary';
+        if (isCompleted || !isTargetActive) return theme.palette.grey[400];
+        if (isDeadlineSoon || isToday) return 'warning.main';
+        if (isOutdated) return 'error.main';
+        if (isActive) return 'text.primary';
 
-        return 'text.secondary';
+        return theme.palette.grey[400];
       };
 
-      const stepLabelSx: { [key: string]: { color: string } | undefined } = {};
+      const getStatusColor = () => {
+        if (!isTargetActive) return 'text.secondary';
+        if (isCompleted) return theme.palette.grey[400];
+        if (isDeadlineSoon || isToday) return 'warning.main';
+        if (isOutdated) return 'error.main';
+        if (isActive) return 'text.primary';
 
-      if (isDeadlineSoon || isToday) {
-        stepLabelSx['& .MuiSvgIcon-root'] = { color: theme.palette.warning.main };
-      }
-      if (isOutdated) {
-        stepLabelSx['& .MuiSvgIcon-root.Mui-error'] = { color: theme.palette.error.main };
-      }
+        return theme.palette.grey[400];
+      };
+
+      const getStepIconColor = () => {
+        if (!isTargetActive) return 'text.secondary';
+        if (isCompleted) return 'success.main';
+        if (isToday || isDeadlineSoon) return 'warning.main';
+        if (isOutdated) return 'error.main';
+        if (isActive) return 'primary.main';
+
+        return theme.palette.grey[400];
+      };
 
       return {
         id: id.toString(),
-        isCompleted,
         isSelected: editableStepId === id,
         label: title,
         onClick: (event: React.MouseEvent<HTMLDivElement>) => {
-          if (uncompletedStepIndex === stepIndex) {
+          if (isActive) {
             openEdit(event.currentTarget, id);
           }
         },
@@ -173,7 +193,10 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
               {getStatusLabel()}
             </Typography>
           ),
-          sx: stepLabelSx,
+          sx: {
+            '& .MuiStepLabel-label': { color: getStepLabelColor() },
+            '& .MuiSvgIcon-root': { color: getStepIconColor() },
+          },
         },
       };
     },

@@ -23,7 +23,7 @@ type StepperItem = {
   onClick?: MouseEventHandler<HTMLDivElement>;
   stepProps?: Omit<StepProps, 'children'>;
   stepLabelProps?: Omit<StepLabelProps, 'children' | 'onClick' | 'slots'>;
-  stepIconProps?: CustomStepIconProps;
+  stepIconProps?: Partial<StepIconProps> & CustomStepIconProps;
   StepIcon: (props: StepIconProps & CustomStepIconProps) => ReactNode | Promise<ReactNode>;
 };
 

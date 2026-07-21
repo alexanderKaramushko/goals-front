@@ -59,8 +59,10 @@ const GoalsPage = () => {
 
     const isOutdated = daysLeft < 0;
     const isToday = daysLeft === 0;
+    const isActive = status === 'active';
 
     const getStatusText = () => {
+      if (!isActive) return `${dayjs(shouldBeCompletedAt).format('DD-MM-YYYY')}`;
       if (isOutdated) return 'просрочено';
       if (isToday) return 'сегодня';
 
@@ -71,11 +73,13 @@ const GoalsPage = () => {
     };
 
     const getStatusColor = () => {
+      if (!isActive) return 'text.secondary';
       if (isOutdated) return 'error.main';
       if (isToday || daysLeft === 1) return 'warning.main';
 
       return 'text.secondary';
     };
+
     return (
       <Card
         key={id}
