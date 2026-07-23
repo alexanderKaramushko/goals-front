@@ -13,9 +13,9 @@ export const ActivateTarget: FC<ActivateTargetButtonProps> = ({ onSuccess, targe
   const activateTarget = useActivateTarget();
 
   return (
-    <Tooltip title="Активировать цель">
+    <Tooltip title="Начать выполнение">
       <IconButton
-        aria-label="Активировать цель"
+        aria-label="Начать выполнение"
         color="success"
         onClick={async () => {
           await activateTarget.invoke(targetId);
