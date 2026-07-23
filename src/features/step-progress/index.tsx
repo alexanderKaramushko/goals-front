@@ -26,6 +26,12 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
   const theme = useTheme();
 
   const steps = useGetSteps(targetId);
+
+  // TODO возвращать с бэка поле createdAt и сортировать по нему
+  const sortedSteps = [...steps.data].sort((stepA, stepB) =>
+    dayjs(stepA.shouldBeCompletedAt).diff(stepB.shouldBeCompletedAt),
+  );
+
   const completeStep = useCompleteStep();
 
   const [completeStepData, setCompleteStepData] = useState<CompleteStepData>({
@@ -36,14 +42,14 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
   const [editableStepId, setEditableStepId] = useState<number | null>(null);
 
   const uncompletedStepIndex = useMemo(() => {
-    const completedIndex = steps.data.findLastIndex((step) => !!step.completedAt);
+    const completedIndex = sortedSteps.findLastIndex((step) => !!step.completedAt);
 
     return ['created', 'completed'].includes(targetStatus)
       ? -1
       : // Считаем, что за последним завершенным шагом
         // может быть либо незавершенный шаг, либо пустота
         completedIndex + 1;
-  }, [steps.data, targetStatus]);
+  }, [sortedSteps, targetStatus]);
 
   function openEdit(el: HTMLElement, stepId: number) {
     setEditedStepEl(el);
@@ -77,7 +83,7 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
   const isTargetActive = targetStatus === 'active';
 
   const connectorColors = useMemo(() => {
-    return steps.data.reduce<string[]>((acc, step, index, currentSteps) => {
+    return sortedSteps.reduce<string[]>((acc, step, index, currentSteps) => {
       if (!isTargetActive) {
         return [...acc, theme.palette.grey[400]];
       }
@@ -113,9 +119,9 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
 
       return acc;
     }, []);
-  }, [steps, theme, isTargetActive]);
+  }, [sortedSteps, theme, isTargetActive]);
 
-  const stepperItems = steps.data.map(
+  const stepperItems = sortedSteps.map(
     ({ completedAt, id, shouldBeCompletedAt, title }, stepIndex) => {
       const deadline = dayjs(shouldBeCompletedAt).startOf('day');
       const today = dayjs().startOf('day');
