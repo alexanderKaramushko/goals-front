@@ -1,5 +1,6 @@
 import type {
   CompleteStepDto,
+  CompleteTargetDto,
   CreatedStepResponseDto,
   CreateStepDto,
   CreateTargetDto,
@@ -21,6 +22,8 @@ export type ActivateTargetPayload = { targetId: TargetId };
 export type DeleteTargetPayload = { targetId: TargetId };
 
 export type CancelTargetPayload = { targetId: TargetId };
+
+export type CompleteTargetPayload = CompleteTargetDto & { targetId: TargetId };
 
 export type CreateStepPayload = CreateStepDto & { targetId: TargetId };
 

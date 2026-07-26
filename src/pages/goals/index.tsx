@@ -27,6 +27,7 @@ import type { Target } from 'entities/api/types';
 
 import { ActivateTarget } from 'features/activate-target';
 import { CancelTarget } from 'features/cancel-target';
+import { CompleteTarget } from 'features/complete-target';
 import { DeleteTarget } from 'features/delete-target';
 import { StepProgress } from 'features/step-progress';
 
@@ -51,13 +52,19 @@ const GoalsPage = () => {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  function renderTarget({ description, id, shouldBeCompletedAt, status, title }: Target) {
+  function renderTarget({
+    description,
+    // eslint-disable-next-line @typescript-eslint/no-shadow
+    id,
+    isOutdated,
+    shouldBeCompletedAt,
+    status,
+    title,
+  }: Target) {
     const deadline = dayjs(shouldBeCompletedAt).startOf('day');
     const today = dayjs().startOf('day');
     const daysLeft = deadline.diff(today, 'day');
 
-    const isOutdated = daysLeft < 0;
     const isToday = daysLeft === 0;
     const isActive = status === 'active';
 
@@ -121,7 +128,14 @@ const GoalsPage = () => {
                     </>
                   )}
                   {status === 'active' && (
-                    <CancelTarget onSuccess={() => targets.refetch()} targetId={id} />
+                    <>
+                      <CancelTarget onSuccess={() => targets.refetch()} targetId={id} />
+                      <CompleteTarget
+                        isTargetOutdated={isOutdated}
+                        onSuccess={() => targets.refetch()}
+                        targetId={id}
+                      />
+                    </>
                   )}
                 </Grid>
               </Grid>

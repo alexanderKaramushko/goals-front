@@ -5,6 +5,7 @@ import { goalsServiceApiClient } from 'shared/libs/api-client';
 import type {
   ActivateTargetPayload,
   CancelTargetPayload,
+  CompleteTargetPayload,
   DeleteTargetPayload,
   TargetId,
 } from '../types';
@@ -56,6 +57,27 @@ export function useCancelTarget({ onError }: { onError?: (error: unknown) => voi
   async function invoke(targetId: TargetId) {
     try {
       await cancelTargetMutation.mutateAsync({ targetId });
+    } catch (error) {
+      onError?.(error);
+    }
+  }
+
+  return {
+    invoke,
+  };
+}
+
+export function useCompleteTarget({ onError }: { onError?: (error: unknown) => void } = {}) {
+  const completeTargetMutation = useMutation({
+    mutationFn: (data: CompleteTargetPayload) =>
+      goalsServiceApiClient.put(`targets/complete/${data.targetId}`, {
+        resultComment: data.resultComment,
+      }),
+  });
+
+  async function invoke(targetId: TargetId, resultComment: string) {
+    try {
+      await completeTargetMutation.mutateAsync({ resultComment, targetId });
     } catch (error) {
       onError?.(error);
     }
