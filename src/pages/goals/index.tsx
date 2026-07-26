@@ -174,7 +174,7 @@ const GoalsPage = () => {
         </Button>
       </Grid>
       <Grid size={12}>
-        {activeTargets.length && (
+        {!!activeTargets.length && (
           <Accordion
             aria-controls={`${id}-panel1-content`}
             id={`${id}-panel1-header`}
