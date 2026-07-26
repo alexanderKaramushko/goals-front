@@ -160,25 +160,27 @@ const GoalsPage = () => {
         </Button>
       </Grid>
       <Grid size={12}>
-        <Accordion
-          aria-controls={`${id}-panel1-content`}
-          id={`${id}-panel1-header`}
-          sx={{
-            borderRadius: 2,
-          }}
-        >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-              <Typography variant="body1">Выполняются</Typography>
-              <Chip label={activeTargets.length} />
-            </Stack>
-          </AccordionSummary>
-          <AccordionDetails sx={{ p: 4, pt: 0 }}>
-            <Stack direction="column" spacing={2}>
-              {targets.loading ? renderSkeletons() : activeTargets.map(renderTarget)}
-            </Stack>
-          </AccordionDetails>
-        </Accordion>
+        {activeTargets.length && (
+          <Accordion
+            aria-controls={`${id}-panel1-content`}
+            id={`${id}-panel1-header`}
+            sx={{
+              borderRadius: 2,
+            }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Typography variant="body1">Выполняются</Typography>
+                <Chip label={activeTargets.length} />
+              </Stack>
+            </AccordionSummary>
+            <AccordionDetails sx={{ p: 4, pt: 0 }}>
+              <Stack direction="column" spacing={2}>
+                {targets.loading ? renderSkeletons() : activeTargets.map(renderTarget)}
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        )}
         {!!createdTargets.length && (
           <Accordion
             aria-controls={`${id}-panel2-content`}
