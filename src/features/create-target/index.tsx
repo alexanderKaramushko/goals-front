@@ -327,7 +327,8 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
 
                 return (
                   (prevStepDate && date.isSameOrBefore(prevStepDate)) ||
-                  (nextStepDate && date.isSameOrAfter(nextStepDate))
+                  (nextStepDate && date.isSameOrAfter(nextStepDate)) ||
+                  date.isAfter(targetData.shouldBeCompletedAt)
                 );
               }}
               slotProps={{
