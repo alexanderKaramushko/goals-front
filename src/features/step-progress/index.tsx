@@ -3,6 +3,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import { Grid, IconButton, Skeleton, TextField, Typography, useTheme } from '@mui/material';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
+import { useSnackbar } from 'notistack';
 import { type FC, useMemo, useRef, useState } from 'react';
 
 import { Connector, Popper, StepIcon, Stepper } from 'shared/components';
@@ -24,6 +25,7 @@ const StepSkeleton = () => <Skeleton height={40} variant="circular" width={40} /
 
 export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) => {
   const theme = useTheme();
+  const { enqueueSnackbar } = useSnackbar();
 
   const steps = useGetSteps(targetId);
 
@@ -72,12 +74,19 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
   }
 
   async function handleCompleteStep(stepId: number) {
-    await completeStep.invoke({
-      ...completeStepData,
-      stepId,
-    });
+    try {
+      await completeStep.invoke({
+        ...completeStepData,
+        stepId,
+      });
 
-    await steps.refetch();
+      await steps.refetch();
+    } catch (error) {
+      enqueueSnackbar({
+        message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+        variant: 'error',
+      });
+    }
   }
 
   const isTargetActive = targetStatus === 'active';

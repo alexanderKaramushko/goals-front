@@ -3,6 +3,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { QueryClientProvider } from '@tanstack/react-query';
+import { SnackbarProvider } from 'notistack';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 
 import { queryClient } from 'shared/libs/query-client';
@@ -55,10 +56,15 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <CssBaseline />
-          <RouterProvider router={router} />
-        </LocalizationProvider>
+        <SnackbarProvider
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          autoHideDuration={2000}
+        >
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <CssBaseline />
+            <RouterProvider router={router} />
+          </LocalizationProvider>
+        </SnackbarProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

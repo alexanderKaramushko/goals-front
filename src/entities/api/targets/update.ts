@@ -21,6 +21,8 @@ export function useActivateTarget({ onError }: { onError?: (error: unknown) => v
       await activateTargetMutation.mutateAsync({ targetId });
     } catch (error) {
       onError?.(error);
+
+      throw error;
     }
   }
 
@@ -40,6 +42,8 @@ export function useDeleteTarget({ onError }: { onError?: (error: unknown) => voi
       await deleteTargetMutation.mutateAsync({ targetId });
     } catch (error) {
       onError?.(error);
+
+      throw error;
     }
   }
 
@@ -59,6 +63,8 @@ export function useCancelTarget({ onError }: { onError?: (error: unknown) => voi
       await cancelTargetMutation.mutateAsync({ targetId });
     } catch (error) {
       onError?.(error);
+
+      throw error;
     }
   }
 
@@ -80,6 +86,8 @@ export function useCompleteTarget({ onError }: { onError?: (error: unknown) => v
       await completeTargetMutation.mutateAsync({ resultComment, targetId });
     } catch (error) {
       onError?.(error);
+
+      throw error;
     }
   }
 

@@ -2,6 +2,7 @@ import DoneIcon from '@mui/icons-material/Done';
 import MarkChatReadIcon from '@mui/icons-material/MarkChatRead';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import { Grid, IconButton, TextField, Tooltip } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { type FC, useState } from 'react';
 
 import { Popper } from 'shared/components';
@@ -24,6 +25,7 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
   targetId,
 }) => {
   const completeTarget = useCompleteTarget();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [completeTargetData, setCompleteTargetData] = useState<CompleteTargetData>({
     resultComment: '',
@@ -46,8 +48,11 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
       await completeTarget.invoke(targetId, resultComment);
       setAnchorEl(null);
       onSuccess();
-    } catch {
-      // TODO Показывать уведомление
+    } catch (error) {
+      enqueueSnackbar({
+        message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+        variant: 'error',
+      });
     }
   }
 

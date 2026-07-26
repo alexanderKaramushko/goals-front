@@ -17,6 +17,8 @@ export function useCompleteStep({ onError }: { onError?: (error: unknown) => voi
       await completeStepMutation.mutateAsync(data);
     } catch (error) {
       onError?.(error);
+
+      throw error;
     }
   }
 

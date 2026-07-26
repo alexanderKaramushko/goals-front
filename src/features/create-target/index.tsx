@@ -13,6 +13,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { nanoid } from 'nanoid';
+import { useSnackbar } from 'notistack';
 import { type FC, useState } from 'react';
 
 import { ConnectorWithInterButton, Popper, StepIcon, Stepper } from 'shared/components';
@@ -41,6 +42,7 @@ type CreateTargetProps = {
 export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
   const createTarget = useCreateTarget();
   const stepCreation = useCreateStep();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [targetData, setTargetData] = useState<TargetData>({
     description: '',
@@ -140,8 +142,11 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
         }
 
         onSuccess?.();
-      } catch {
-        // TODO Показывать уведомление
+      } catch (error) {
+        enqueueSnackbar({
+          message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+          variant: 'error',
+        });
       }
     }
   }
