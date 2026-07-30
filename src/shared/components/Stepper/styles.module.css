@@ -28,6 +28,12 @@
   flex: 1 0 100% !important;
   max-width: 170px;
   padding-top: 15px;
+
+  &.active {
+    &:hover {
+      cursor: pointer;
+    }
+  }
 }
 
 .stepLabel :global(.MuiStepLabel-label) {
@@ -91,22 +97,10 @@
   color: var(--shared-stepper-complete-color, currentcolor);
   display: block;
   margin: -4px;
-
-  &.active {
-    &:hover {
-      cursor: pointer;
-    }
-  }
 }
 
 .stepIcon {
   color: var(--shared-stepper-icon-color, currentcolor);
   display: block;
-
-  &.active {
-    &:hover {
-      cursor: pointer;
-    }
-  }
 }
 

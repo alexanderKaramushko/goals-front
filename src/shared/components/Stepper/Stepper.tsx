@@ -75,7 +75,7 @@ export const Stepper: FC<StepperProps> = ({ className, items, style, sx, ...prop
           return (
             <MuiStep
               {...restStepProps}
-              className={cn(styles.step, stepClassName)}
+              className={cn(styles.step, stepClassName, { [styles.active]: !!onClick })}
               key={id}
               sx={stepSx}
             >

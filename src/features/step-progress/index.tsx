@@ -193,11 +193,14 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
         id: id.toString(),
         isSelected: editableStepId === id,
         label: title,
-        onClick: (event: React.MouseEvent<HTMLDivElement>) => {
-          if (isActive) {
-            openEdit(event.currentTarget, id);
-          }
-        },
+        onClick:
+          isActive && !isOutdated
+            ? (event: React.MouseEvent<HTMLDivElement>) => {
+                if (isActive && !isOutdated) {
+                  openEdit(event.currentTarget, id);
+                }
+              }
+            : undefined,
         StepIcon: StepIcon,
         stepIconProps: {
           isCompleted,
