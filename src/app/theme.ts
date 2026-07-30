@@ -20,6 +20,13 @@ export const theme = createTheme({
         },
       },
     },
+    MuiCardContent: {
+      styleOverrides: {
+        root: {
+          padding: '24px 32px !important',
+        },
+      },
+    },
   },
   palette: {
     background: {

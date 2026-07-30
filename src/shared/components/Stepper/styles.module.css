@@ -43,12 +43,12 @@
   background: radial-gradient(
     circle at center,
     transparent 0%,
-    transparent 41%,
+    transparent 40%,
     var(--shared-stepper-background-default, transparent) 43%,
     var(--shared-stepper-glow-color-1, transparent) 45%,
-    var(--shared-stepper-glow-color-2, transparent) 50%,
-    var(--shared-stepper-glow-color-3, transparent) 51%,
-    var(--shared-stepper-glow-color-3, transparent) 60%
+    var(--shared-stepper-glow-color-2, transparent) 55%,
+    var(--shared-stepper-glow-color-3, transparent) 55%,
+    var(--shared-stepper-glow-color-3, transparent) 65%
   );
   border-radius: 50%;
   content: '';

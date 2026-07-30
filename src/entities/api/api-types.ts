@@ -91,6 +91,24 @@ export interface DeletedTargetResponseDto {
   id: object;
 }
 
+export interface UserResponseDto {
+  /**
+   * Id пользователя
+   * @example "108266036103493388680"
+   */
+  id: string;
+  /**
+   * Имя пользователя
+   * @example "Alex Karamushko"
+   */
+  fullName: string;
+  /**
+   * Дата создания
+   * @example "2026-06-21 16:37:39.368 +0400"
+   */
+  createdAt: string;
+}
+
 export interface CreateStepDto {
   /** @example "Рецепты для плана питания" */
   title: string;

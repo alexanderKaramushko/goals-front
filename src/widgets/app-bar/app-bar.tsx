@@ -5,7 +5,7 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { matchPath, useLocation, useNavigate } from 'react-router';
 
 import { appRoutes, unauthorizedRoutes } from 'app/routes';
@@ -26,13 +26,14 @@ function ResponsiveAppBar() {
     matchPath(`${path}/*`, location.pathname),
   )?.path;
 
-  const userProfile = useGetUserProfile({
-    onError: (error) => {
-      if (axios.isAxiosError(error) && error.status === 401) {
+  const userProfile = useGetUserProfile();
+
+  useEffect(() => {
+    if (axios.isAxiosError(userProfile.error) && userProfile.error.status === 401) {
         navigate(unauthorizedRoutes.login.path);
       }
-    },
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userProfile.error])
 
   const letters = userProfile.data?.name
     .trim()

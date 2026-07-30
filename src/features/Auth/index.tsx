@@ -18,7 +18,7 @@ const Auth = () => {
 
           url.pathname = 'auth/google-oauth/login';
 
-          url.searchParams.append('id', import.meta.env.VITE_APP_ID);
+          url.searchParams.append('appId', import.meta.env.VITE_APP_ID);
 
           window.open(url.toString(), '_self', 'noopener noreferrer');
         }}

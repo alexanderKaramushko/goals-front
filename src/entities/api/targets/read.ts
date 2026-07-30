@@ -1,26 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 
-import { goalsAuthApiClient, goalsServiceApiClient } from 'shared/libs/api-client';
+import { goalsServiceApiClient } from 'shared/libs/api-client';
 
-import type { User } from 'entities/api/auth-types';
+import type { Target, UserId } from '../types';
 
-import type { Target } from '../types';
-
-export function useGetTargets() {
-  const userQuery = useQuery({
-    queryFn: () => goalsAuthApiClient.get<User[]>('users/profile'),
-    queryKey: ['profile'],
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: false,
-  });
-
-  const userId = userQuery.isSuccess ? userQuery.data.data[0]?.subjectId : null;
-
+export function useGetUsersTargets(userId: UserId | null) {
   const targetsQuery = useQuery({
     enabled: !!userId,
     queryFn: () => goalsServiceApiClient.get<Target[]>(`/targets/get-all/${userId}`),
-    queryKey: ['targets', userId].filter(Boolean),
+    queryKey: ['targets', userId],
     refetchOnMount: true,
   });
 

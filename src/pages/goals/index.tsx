@@ -22,7 +22,7 @@ import { appRoutes, useRouteHandle } from 'app/routes';
 
 import { decline } from 'shared/utils';
 
-import { useGetTargets } from 'entities/api';
+import { useGetUserProfile, useGetUsersTargets } from 'entities/api';
 import type { Target } from 'entities/api/types';
 
 import { ActivateTarget } from 'features/activate-target';
@@ -36,7 +36,8 @@ const GoalsPage = () => {
   const navigate = useNavigate();
   const id = useId();
 
-  const targets = useGetTargets();
+  const userQuery = useGetUserProfile();
+  const targets = useGetUsersTargets(userQuery.data.subjectId);
 
   function getTargets(status: Target['status']) {
     return targets.data.filter((target) => target.status === status);
