@@ -10,7 +10,6 @@ import {
   CardContent,
   Chip,
   Grid,
-  Skeleton,
   Stack,
   Typography,
 } from '@mui/material';
@@ -31,26 +30,18 @@ import { CompleteTarget } from 'features/complete-target';
 import { DeleteTarget } from 'features/delete-target';
 import { StepProgress } from 'features/step-progress';
 
+import { Skeletons } from './skeletons';
+
 const GoalsPage = () => {
   const routeHandle = useRouteHandle();
   const navigate = useNavigate();
   const id = useId();
 
   const userQuery = useGetUserProfile();
-  const targets = useGetUsersTargets(userQuery.data.subjectId);
+  const targets = useGetUsersTargets(userQuery.data?.subjectId);
 
   function getTargets(status: Target['status']) {
     return targets.data.filter((target) => target.status === status);
-  }
-
-  function renderSkeletons() {
-    return (
-      <Stack direction="column" spacing={2}>
-        <Skeleton height={270} sx={{ borderRadius: 4 }} variant="rectangular" width="100%" />
-        <Skeleton height={270} sx={{ borderRadius: 4 }} variant="rectangular" width="100%" />
-        <Skeleton height={270} sx={{ borderRadius: 4 }} variant="rectangular" width="100%" />
-      </Stack>
-    );
   }
 
   function renderTarget({
@@ -175,83 +166,89 @@ const GoalsPage = () => {
         </Button>
       </Grid>
       <Grid size={12}>
-        {!!activeTargets.length && (
-          <Accordion
-            aria-controls={`${id}-panel1-content`}
-            id={`${id}-panel1-header`}
-            sx={{
-              borderRadius: 2,
-            }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <Typography variant="body1">Выполняются</Typography>
-                <Chip label={activeTargets.length} />
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails sx={{ p: 4, pt: 0 }}>
-              <Stack direction="column" spacing={2}>
-                {targets.loading ? renderSkeletons() : activeTargets.map(renderTarget)}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        )}
-        {!!createdTargets.length && (
-          <Accordion
-            aria-controls={`${id}-panel2-content`}
-            id={`${id}-panel2-header`}
-            sx={{ mt: 2 }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <Typography variant="body1">Новые</Typography>
-                <Chip label={createdTargets.length} />
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails sx={{ p: 4, pt: 0 }}>
-              <Stack direction="column" spacing={2}>
-                {targets.loading ? renderSkeletons() : createdTargets.map(renderTarget)}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        )}
-        {!!completedTargets.length && (
-          <Accordion
-            aria-controls={`${id}-panel2-content`}
-            id={`${id}-panel2-header`}
-            sx={{ mt: 2 }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <Typography variant="body1">Завершенные</Typography>
-                <Chip label={completedTargets.length} />
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails sx={{ p: 4, pt: 0 }}>
-              <Stack direction="column" spacing={2}>
-                {targets.loading ? renderSkeletons() : completedTargets.map(renderTarget)}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        )}
-        {!!cancelledTargets.length && (
-          <Accordion
-            aria-controls={`${id}-panel2-content`}
-            id={`${id}-panel2-header`}
-            sx={{ mt: 2 }}
-          >
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                <Typography variant="body1">Отмененные</Typography>
-                <Chip label={cancelledTargets.length} />
-              </Stack>
-            </AccordionSummary>
-            <AccordionDetails sx={{ p: 4, pt: 0 }}>
-              <Stack direction="column" spacing={2}>
-                {targets.loading ? renderSkeletons() : cancelledTargets.map(renderTarget)}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
+        {targets.loading ? (
+          <Skeletons />
+        ) : (
+          <>
+            {!!activeTargets.length && (
+              <Accordion
+                aria-controls={`${id}-panel1-content`}
+                id={`${id}-panel1-header`}
+                sx={{
+                  borderRadius: 2,
+                }}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                    <Typography variant="body1">Выполняются</Typography>
+                    <Chip label={activeTargets.length} />
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                  <Stack direction="column" spacing={2}>
+                    {activeTargets.map(renderTarget)}
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            )}
+            {!!createdTargets.length && (
+              <Accordion
+                aria-controls={`${id}-panel2-content`}
+                id={`${id}-panel2-header`}
+                sx={{ mt: 2 }}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                    <Typography variant="body1">Новые</Typography>
+                    <Chip label={createdTargets.length} />
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                  <Stack direction="column" spacing={2}>
+                    {createdTargets.map(renderTarget)}
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            )}
+            {!!completedTargets.length && (
+              <Accordion
+                aria-controls={`${id}-panel2-content`}
+                id={`${id}-panel2-header`}
+                sx={{ mt: 2 }}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                    <Typography variant="body1">Завершенные</Typography>
+                    <Chip label={completedTargets.length} />
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                  <Stack direction="column" spacing={2}>
+                    {completedTargets.map(renderTarget)}
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            )}
+            {!!cancelledTargets.length && (
+              <Accordion
+                aria-controls={`${id}-panel2-content`}
+                id={`${id}-panel2-header`}
+                sx={{ mt: 2 }}
+              >
+                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                    <Typography variant="body1">Отмененные</Typography>
+                    <Chip label={cancelledTargets.length} />
+                  </Stack>
+                </AccordionSummary>
+                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                  <Stack direction="column" spacing={2}>
+                    {cancelledTargets.map(renderTarget)}
+                  </Stack>
+                </AccordionDetails>
+              </Accordion>
+            )}
+          </>
         )}
       </Grid>
     </Grid>

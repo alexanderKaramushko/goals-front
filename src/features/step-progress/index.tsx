@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/refs */
 import DoneIcon from '@mui/icons-material/Done';
-import { Grid, IconButton, Skeleton, TextField, Typography, useTheme } from '@mui/material';
+import { Grid, IconButton, TextField, Typography, useTheme } from '@mui/material';
 import dayjs from 'dayjs';
-import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { type FC, useMemo, useRef, useState } from 'react';
 
@@ -12,6 +11,8 @@ import { decline } from 'shared/utils';
 import { useCompleteStep, useGetSteps } from 'entities/api';
 import type { Target, TargetId } from 'entities/api/types';
 
+import { skeletons } from './skeletons';
+
 type CompleteStepData = {
   resultComment: string;
 };
@@ -20,8 +21,6 @@ type StepProgressProps = {
   targetId: TargetId;
   targetStatus?: Target['status'];
 };
-
-const StepSkeleton = () => <Skeleton height={40} variant="circular" width={40} />;
 
 export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) => {
   const theme = useTheme();
@@ -45,8 +44,9 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
 
   const uncompletedStepIndex = useMemo(() => {
     const completedIndex = sortedSteps.findLastIndex((step) => !!step.completedAt);
+    const isTargetInActive = ['created', 'completed'].includes(targetStatus);
 
-    return ['created', 'completed'].includes(targetStatus)
+    return isTargetInActive
       ? -1
       : // Считаем, что за последним завершенным шагом
         // может быть либо незавершенный шаг, либо пустота
@@ -220,39 +220,8 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
     },
   );
 
-  const skeletons = useRef([
-    {
-      id: nanoid(),
-      label: (
-        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
-      ),
-      StepIcon: StepSkeleton,
-    },
-    {
-      id: nanoid(),
-      label: (
-        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
-      ),
-      StepIcon: StepSkeleton,
-    },
-    {
-      id: nanoid(),
-      label: (
-        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
-      ),
-      StepIcon: StepSkeleton,
-    },
-    {
-      id: nanoid(),
-      label: (
-        <Skeleton height={20} sx={{ display: 'inline-block' }} variant="rectangular" width={80} />
-      ),
-      StepIcon: StepSkeleton,
-    },
-  ]);
-
   const skeletonsDividerColors = useRef(
-    Array.from<string>({ length: skeletons.current.length }).fill(theme.palette.grey['200']),
+    Array.from<string>({ length: skeletons.length }).fill(theme.palette.grey['200']),
   );
 
   return (
@@ -262,7 +231,7 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
         connector={
           <Connector colors={steps.loading ? skeletonsDividerColors.current : connectorColors} />
         }
-        items={steps.loading ? skeletons.current : stepperItems}
+        items={steps.loading ? skeletons : stepperItems}
         sx={{ mt: 2, ...(steps.loading && { overflow: 'hidden' }) }}
       />
       <Popper
