@@ -16,7 +16,7 @@ import { ThemeChanger } from 'features/theme-changer';
 
 const appBarRoutes = Object.values(appRoutes).filter(({ handle }) => !handle.skip);
 
-function ResponsiveAppBar() {
+export const ResponsiveAppBar = () => {
   const [anchorElNav, setAnchorElNav] = useState(null);
 
   const location = useLocation();
@@ -30,10 +30,10 @@ function ResponsiveAppBar() {
 
   useEffect(() => {
     if (axios.isAxiosError(userProfile.error) && userProfile.error.status === 401) {
-        navigate(unauthorizedRoutes.login.path);
-      }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userProfile.error])
+      navigate(unauthorizedRoutes.login.path);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userProfile.error]);
 
   const letters = userProfile.data?.name
     .trim()
@@ -137,6 +137,4 @@ function ResponsiveAppBar() {
       </Toolbar>
     </AppBar>
   );
-}
-
-export default ResponsiveAppBar;
+};

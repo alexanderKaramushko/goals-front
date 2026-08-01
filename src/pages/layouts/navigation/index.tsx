@@ -5,7 +5,7 @@ import { unauthorizedRoutes } from 'app/routes';
 
 import { Background } from 'shared/components';
 
-import ResponsiveAppBar from 'widgets/app-bar/app-bar';
+import { ResponsiveAppBar } from 'widgets/app-bar/app-bar';
 
 const NavigationLayout = () => {
   const location = useLocation();
