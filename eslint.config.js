@@ -11,12 +11,16 @@ import simpleImportSort from 'eslint-plugin-simple-import-sort';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  globalIgnores(['dist', 'node_modules', '*.json', '*.md']),
+  globalIgnores(['dist', 'docs/.docusaurus', 'docs/build', 'node_modules', '*.json', '*.md']),
   {
     extends: [js.configs.recommended],
     files: ['**/*.{js,mjs,cjs}'],
     languageOptions: {
       ecmaVersion: 2023,
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       sourceType: 'module',
     },
   },
