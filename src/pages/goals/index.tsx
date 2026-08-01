@@ -4,31 +4,26 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
   Button,
-  Card,
-  CardContent,
   Chip,
   Grid,
   Stack,
   Typography,
 } from '@mui/material';
-import dayjs from 'dayjs';
 import { useId } from 'react';
 import { useNavigate } from 'react-router';
 
 import { appRoutes, useRouteHandle } from 'app/routes';
 
-import { decline } from 'shared/utils';
-
 import { useGetUserProfile, useGetUsersTargets } from 'entities/api';
-import type { Target } from 'entities/api/types';
+import type { Target as TargetType } from 'entities/api/types';
 
 import { ActivateTarget } from 'features/activate-target';
 import { CancelTarget } from 'features/cancel-target';
 import { CompleteTarget } from 'features/complete-target';
 import { DeleteTarget } from 'features/delete-target';
-import { StepProgress } from 'features/step-progress';
+
+import { Target } from 'widgets/target/target';
 
 import { Skeletons } from './skeletons';
 
@@ -40,111 +35,36 @@ const GoalsPage = () => {
   const userQuery = useGetUserProfile();
   const targets = useGetUsersTargets(userQuery.data?.subjectId);
 
-  function getTargets(status: Target['status']) {
+  function getTargets(status: TargetType['status']) {
     return targets.data.filter((target) => target.status === status);
-  }
-
-  function renderTarget({
-    description,
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    id,
-    isOutdated,
-    shouldBeCompletedAt,
-    status,
-    title,
-  }: Target) {
-    const deadline = dayjs(shouldBeCompletedAt).startOf('day');
-    const today = dayjs().startOf('day');
-    const daysLeft = deadline.diff(today, 'day');
-
-    const isToday = daysLeft === 0;
-    const isActive = status === 'active';
-
-    const getStatusText = () => {
-      if (!isActive) return `${dayjs(shouldBeCompletedAt).format('DD-MM-YYYY')}`;
-      if (isOutdated) return 'просрочено';
-      if (isToday) return 'сегодня';
-
-      const verb = decline(daysLeft, ['осталось', 'остался', 'осталось']);
-      const days = decline(daysLeft, ['дней', 'день', 'дня']);
-
-      return `${verb} ${daysLeft} ${days}`;
-    };
-
-    const getStatusColor = () => {
-      if (!isActive) return 'text.secondary';
-      if (isOutdated) return 'error.main';
-      if (isToday || daysLeft === 1) return 'warning.main';
-
-      return 'text.secondary';
-    };
-
-    return (
-      <Card
-        key={id}
-        sx={{
-          borderRadius: 4,
-          boxShadow: 5,
-        }}
-      >
-        <CardContent>
-          <Grid container spacing={2}>
-            <Grid size={12}>
-              <Grid container sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                <Grid>
-                  <Typography component="div" gutterBottom sx={{ margin: 0 }} variant="h5">
-                    {title}
-                  </Typography>
-                  {['active', 'created'].includes(status) && (
-                    <Typography
-                      sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}
-                      variant="caption"
-                    >
-                      Дедлайн:{' '}
-                      <Box component="span" sx={{ color: getStatusColor(), fontWeight: 500 }}>
-                        {getStatusText()}
-                      </Box>
-                    </Typography>
-                  )}
-                  <Box sx={{ mt: 1.5 }}>
-                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
-                      {description}
-                    </Typography>
-                  </Box>
-                </Grid>
-                <Grid>
-                  {status === 'created' && (
-                    <>
-                      <DeleteTarget onSuccess={() => targets.refetch()} targetId={id} />
-                      <ActivateTarget onSuccess={() => targets.refetch()} targetId={id} />
-                    </>
-                  )}
-                  {status === 'active' && (
-                    <>
-                      <CancelTarget onSuccess={() => targets.refetch()} targetId={id} />
-                      <CompleteTarget
-                        isTargetOutdated={isOutdated}
-                        onSuccess={() => targets.refetch()}
-                        targetId={id}
-                      />
-                    </>
-                  )}
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid size={12}>
-              <StepProgress targetId={id} targetStatus={status} />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    );
   }
 
   const activeTargets = getTargets('active');
   const createdTargets = getTargets('created');
   const completedTargets = getTargets('completed');
   const cancelledTargets = getTargets('cancelled');
+
+  // eslint-disable-next-line @typescript-eslint/no-shadow
+  const renderActions = ({ id, isOutdated, status }: TargetType) => (
+    <>
+      {status === 'created' && (
+        <>
+          <DeleteTarget onSuccess={() => targets.refetch()} targetId={id} />
+          <ActivateTarget onSuccess={() => targets.refetch()} targetId={id} />
+        </>
+      )}
+      {status === 'active' && (
+        <>
+          <CancelTarget onSuccess={() => targets.refetch()} targetId={id} />
+          <CompleteTarget
+            isTargetOutdated={isOutdated}
+            onSuccess={() => targets.refetch()}
+            targetId={id}
+          />
+        </>
+      )}
+    </>
+  );
 
   return (
     <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -186,7 +106,9 @@ const GoalsPage = () => {
                 </AccordionSummary>
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
-                    {activeTargets.map(renderTarget)}
+                    {activeTargets.map((target) => (
+                      <Target target={target}>{renderActions(target)}</Target>
+                    ))}
                   </Stack>
                 </AccordionDetails>
               </Accordion>
@@ -205,7 +127,9 @@ const GoalsPage = () => {
                 </AccordionSummary>
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
-                    {createdTargets.map(renderTarget)}
+                    {createdTargets.map((target) => (
+                      <Target target={target}>{renderActions(target)}</Target>
+                    ))}
                   </Stack>
                 </AccordionDetails>
               </Accordion>
@@ -224,7 +148,9 @@ const GoalsPage = () => {
                 </AccordionSummary>
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
-                    {completedTargets.map(renderTarget)}
+                    {completedTargets.map((target) => (
+                      <Target target={target}>{renderActions(target)}</Target>
+                    ))}
                   </Stack>
                 </AccordionDetails>
               </Accordion>
@@ -243,7 +169,9 @@ const GoalsPage = () => {
                 </AccordionSummary>
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
-                    {cancelledTargets.map(renderTarget)}
+                    {cancelledTargets.map((target) => (
+                      <Target target={target}>{renderActions(target)}</Target>
+                    ))}
                   </Stack>
                 </AccordionDetails>
               </Accordion>
