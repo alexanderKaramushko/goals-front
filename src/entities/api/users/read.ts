@@ -36,6 +36,7 @@ export function useGetUsers() {
 
   return {
     data: users,
+    loading: usersQuery.isLoading,
   };
 }
 

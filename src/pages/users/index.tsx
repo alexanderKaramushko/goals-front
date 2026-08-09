@@ -8,6 +8,8 @@ import { appRoutes, useRouteHandle } from 'app/routes';
 import { useGetUsers, useGetUserTargets } from 'entities/api';
 import type { Target, User } from 'entities/api/types';
 
+import { Skeletons } from './skeletons';
+
 const UserCard: FC<{ user: User }> = ({ user }) => {
   const { fullName, id } = user;
 
@@ -92,11 +94,15 @@ const UsersPage = () => {
         </Typography>
       </Grid>
       <Grid size={12}>
-        <Stack direction="column" spacing={2}>
-          {users.data.map((user) => (
-            <UserCard key={user.id} user={user} />
-          ))}
-        </Stack>
+        {users.loading ? (
+          <Skeletons />
+        ) : (
+          <Stack direction="column" spacing={2}>
+            {users.data.map((user) => (
+              <UserCard key={user.id} user={user} />
+            ))}
+          </Stack>
+        )}
       </Grid>
     </Grid>
   );
