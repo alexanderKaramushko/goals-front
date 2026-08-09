@@ -4,6 +4,7 @@ import { useMatches } from 'react-router';
 import AuthPage from 'pages/auth';
 import CreateGoalPage from 'pages/create-goal';
 import GoalsPage from 'pages/goals';
+import UserTargetsPage from 'pages/user-targets';
 import UsersPage from 'pages/users';
 
 type RouteHandle = {
@@ -43,6 +44,14 @@ export const appRoutes: RouteScheme = {
       title: 'Пользователи',
     },
     path: '/users',
+  },
+  userTargets: {
+    Component: UserTargetsPage,
+    handle: {
+      skip: true,
+      title: 'Цели пользователя',
+    },
+    path: '/users/:userId',
   },
 };
 

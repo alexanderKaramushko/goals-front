@@ -6,6 +6,7 @@ import type {
   CreateTargetDto,
   TargetsResponseDto,
   UserResponseDto,
+  UserTargetsResponseDto,
 } from './api-types';
 
 export type Target = TargetsResponseDto;
@@ -33,4 +34,6 @@ export type CompleteStepPayload = CompleteStepDto & { stepId: StepId };
 export type User = UserResponseDto;
 
 export type UserId = User['id'];
+
+export type RewardTarget = UserTargetsResponseDto;
 

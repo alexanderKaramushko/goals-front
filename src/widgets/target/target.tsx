@@ -10,9 +10,14 @@ import { StepProgress } from 'features/step-progress';
 
 type TargetProps = {
   target: TargetType;
+  onStepComplete: () => void;
 };
 
-export const Target: FC<PropsWithChildren<TargetProps>> = ({ children, target }) => {
+export const Target: FC<PropsWithChildren<TargetProps>> = ({
+  children,
+  onStepComplete,
+  target,
+}) => {
   const { description, id, isOutdated, shouldBeCompletedAt, status, title } = target;
 
   const deadline = dayjs(shouldBeCompletedAt).startOf('day');
@@ -78,7 +83,12 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({ children, target })
             </Grid>
           </Grid>
           <Grid size={12}>
-            <StepProgress targetId={id} targetStatus={status} />
+            <StepProgress
+              onStepComplete={onStepComplete}
+              steps={target.steps}
+              targetId={id}
+              targetStatus={status}
+            />
           </Grid>
         </Grid>
       </CardContent>

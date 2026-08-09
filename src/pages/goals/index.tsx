@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router';
 
 import { appRoutes, useRouteHandle } from 'app/routes';
 
-import { useGetUserProfile, useGetUsersTargets } from 'entities/api';
+import { useGetOwnTargets } from 'entities/api';
 import type { Target as TargetType } from 'entities/api/types';
 
 import { ActivateTarget } from 'features/activate-target';
@@ -32,8 +32,7 @@ const GoalsPage = () => {
   const navigate = useNavigate();
   const id = useId();
 
-  const userQuery = useGetUserProfile();
-  const targets = useGetUsersTargets(userQuery.data?.subjectId);
+  const targets = useGetOwnTargets();
 
   function getTargets(status: TargetType['status']) {
     return targets.data.filter((target) => target.status === status);
@@ -65,6 +64,10 @@ const GoalsPage = () => {
       )}
     </>
   );
+
+  function refetchTargets() {
+    targets.refetch();
+  }
 
   return (
     <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -107,7 +110,9 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {activeTargets.map((target) => (
-                      <Target target={target}>{renderActions(target)}</Target>
+                      <Target onStepComplete={refetchTargets} target={target}>
+                        {renderActions(target)}
+                      </Target>
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -128,7 +133,9 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {createdTargets.map((target) => (
-                      <Target target={target}>{renderActions(target)}</Target>
+                      <Target onStepComplete={refetchTargets} target={target}>
+                        {renderActions(target)}
+                      </Target>
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -149,7 +156,9 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {completedTargets.map((target) => (
-                      <Target target={target}>{renderActions(target)}</Target>
+                      <Target onStepComplete={refetchTargets} target={target}>
+                        {renderActions(target)}
+                      </Target>
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -170,7 +179,9 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {cancelledTargets.map((target) => (
-                      <Target target={target}>{renderActions(target)}</Target>
+                      <Target onStepComplete={refetchTargets} target={target}>
+                        {renderActions(target)}
+                      </Target>
                     ))}
                   </Stack>
                 </AccordionDetails>

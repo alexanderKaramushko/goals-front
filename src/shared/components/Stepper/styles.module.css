@@ -29,6 +29,10 @@
   max-width: 170px;
   padding-top: 15px;
 
+  &:not(&.active) * {
+    font-weight: 400;
+  }
+
   &.active {
     &:hover {
       cursor: pointer;

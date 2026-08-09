@@ -29,14 +29,17 @@ const router = createBrowserRouter([
           {
             Component: appRoutes.users.Component,
             handle: appRoutes.users.handle,
-
             path: appRoutes.users.path,
           },
           {
             Component: appRoutes.createGoal.Component,
             handle: appRoutes.createGoal.handle,
-
             path: appRoutes.createGoal.path,
+          },
+          {
+            Component: appRoutes.userTargets.Component,
+            handle: appRoutes.userTargets.handle,
+            path: appRoutes.userTargets.path,
           },
         ],
         Component: AppLayout,

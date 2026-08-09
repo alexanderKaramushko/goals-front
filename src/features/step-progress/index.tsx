@@ -1,17 +1,14 @@
-/* eslint-disable react-hooks/refs */
 import DoneIcon from '@mui/icons-material/Done';
 import { Grid, IconButton, TextField, Typography, useTheme } from '@mui/material';
 import dayjs from 'dayjs';
 import { useSnackbar } from 'notistack';
-import { type FC, useMemo, useRef, useState } from 'react';
+import { type FC, useMemo, useState } from 'react';
 
 import { Connector, Popper, StepIcon, Stepper } from 'shared/components';
 import { decline } from 'shared/utils';
 
-import { useCompleteStep, useGetSteps } from 'entities/api';
+import { useCompleteStep } from 'entities/api';
 import type { Target, TargetId } from 'entities/api/types';
-
-import { skeletons } from './skeletons';
 
 type CompleteStepData = {
   resultComment: string;
@@ -20,16 +17,22 @@ type CompleteStepData = {
 type StepProgressProps = {
   targetId: TargetId;
   targetStatus?: Target['status'];
+  steps?: Target['steps'];
+  onStepComplete?: () => void;
+  readOnly?: boolean;
 };
 
-export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) => {
+export const StepProgress: FC<StepProgressProps> = ({
+  onStepComplete,
+  readOnly,
+  steps = [],
+  targetStatus,
+}) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
-  const steps = useGetSteps(targetId);
-
   // TODO возвращать с бэка поле createdAt и сортировать по нему
-  const sortedSteps = [...steps.data].sort((stepA, stepB) =>
+  const sortedSteps = [...steps].sort((stepA, stepB) =>
     dayjs(stepA.shouldBeCompletedAt).diff(stepB.shouldBeCompletedAt),
   );
 
@@ -43,15 +46,24 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
   const [editableStepId, setEditableStepId] = useState<number | null>(null);
 
   const uncompletedStepIndex = useMemo(() => {
-    const completedIndex = sortedSteps.findLastIndex((step) => !!step.completedAt);
+    const completedIndex = sortedSteps.findLastIndex((step) => {
+      const deadline = dayjs(step.shouldBeCompletedAt).startOf('day');
+      const today = dayjs().startOf('day');
+      const daysLeft = deadline.diff(today, 'day');
+
+      const isOutdated = daysLeft < 0;
+
+      return isOutdated || !!step.completedAt;
+    });
+
     const isTargetInActive = ['created', 'completed'].includes(targetStatus);
 
-    return isTargetInActive
+    return isTargetInActive || readOnly
       ? -1
       : // Считаем, что за последним завершенным шагом
         // может быть либо незавершенный шаг, либо пустота
         completedIndex + 1;
-  }, [sortedSteps, targetStatus]);
+  }, [sortedSteps, targetStatus, readOnly]);
 
   function openEdit(el: HTMLElement, stepId: number) {
     setEditedStepEl(el);
@@ -80,7 +92,8 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
         stepId,
       });
 
-      await steps.refetch();
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      onStepComplete && onStepComplete();
     } catch (error) {
       enqueueSnackbar({
         message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
@@ -161,18 +174,18 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
 
       const getStepLabelColor = () => {
         if (!isTargetActive) return 'text.secondary';
-        if (isCompleted || !isTargetActive) return theme.palette.grey[400];
+        if (isCompleted || !isTargetActive) return theme.palette.grey[600];
         if (isDeadlineSoon || isToday) return 'warning.main';
         if (isOutdated) return 'error.main';
         if (isActive) return 'text.primary';
 
-        return theme.palette.grey[400];
+        return theme.palette.grey[600];
       };
 
       const getStatusColor = () => {
         if (!isTargetActive) return 'text.secondary';
         if (isCompleted) return theme.palette.grey[400];
-        if (isDeadlineSoon || isToday) return 'warning.main';
+        if (isToday || isDeadlineSoon) return 'warning.main';
         if (isOutdated) return 'error.main';
         if (isActive) return 'text.primary';
 
@@ -193,14 +206,11 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
         id: id.toString(),
         isSelected: editableStepId === id,
         label: title,
-        onClick:
-          isActive && !isOutdated
-            ? (event: React.MouseEvent<HTMLDivElement>) => {
-                if (isActive && !isOutdated) {
-                  openEdit(event.currentTarget, id);
-                }
-              }
-            : undefined,
+        onClick: isActive
+          ? (event: React.MouseEvent<HTMLDivElement>) => {
+              openEdit(event.currentTarget, id);
+            }
+          : undefined,
         StepIcon: StepIcon,
         stepIconProps: {
           isCompleted,
@@ -220,19 +230,13 @@ export const StepProgress: FC<StepProgressProps> = ({ targetId, targetStatus }) 
     },
   );
 
-  const skeletonsDividerColors = useRef(
-    Array.from<string>({ length: skeletons.length }).fill(theme.palette.grey['200']),
-  );
-
   return (
     <>
       <Stepper
         activeStep={uncompletedStepIndex}
-        connector={
-          <Connector colors={steps.loading ? skeletonsDividerColors.current : connectorColors} />
-        }
-        items={steps.loading ? skeletons : stepperItems}
-        sx={{ mt: 2, ...(steps.loading && { overflow: 'hidden' }) }}
+        connector={<Connector colors={connectorColors} />}
+        items={stepperItems}
+        sx={{ mt: 2 }}
       />
       <Popper
         anchorEl={editedStepEl}

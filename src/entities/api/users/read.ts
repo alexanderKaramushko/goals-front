@@ -2,8 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 
 import { goalsAuthApiClient, goalsServiceApiClient } from 'shared/libs/api-client';
 
+import type { UserTargetsResponseDto } from '../api-types';
 import type { AuthUserProfile } from '../auth-types';
-import type { User } from '../types';
+import type { User, UserId } from '../types';
 
 export function useGetUserProfile() {
   const userQuery = useQuery({
@@ -35,6 +36,23 @@ export function useGetUsers() {
 
   return {
     data: users,
+  };
+}
+
+export function useGetUserTargets(userId: UserId) {
+  const targetsQuery = useQuery({
+    queryFn: () => goalsServiceApiClient.get<UserTargetsResponseDto[]>(`users/${userId}/targets`),
+    queryKey: ['users', userId],
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+
+  const targets = targetsQuery.isSuccess ? targetsQuery.data.data : [];
+
+  return {
+    data: targets,
+    loading: targetsQuery.isLoading,
   };
 }
 

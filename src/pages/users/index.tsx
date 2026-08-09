@@ -1,14 +1,18 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { Avatar, Button, Card, CardContent, Grid, Stack, Typography } from '@mui/material';
 import type { FC } from 'react';
+import { generatePath, useNavigate } from 'react-router';
 
-import { useRouteHandle } from 'app/routes';
+import { appRoutes, useRouteHandle } from 'app/routes';
 
-import { useGetUsers, useGetUsersTargets } from 'entities/api';
+import { useGetUsers, useGetUserTargets } from 'entities/api';
 import type { Target, User } from 'entities/api/types';
 
 const UserCard: FC<{ user: User }> = ({ user }) => {
-  const targets = useGetUsersTargets(user.id);
+  const { fullName, id } = user;
+
+  const navigate = useNavigate();
+  const targets = useGetUserTargets(user.id);
 
   function getTargets(status: Target['status']) {
     return targets.data.filter((target) => target.status === status);
@@ -31,7 +35,7 @@ const UserCard: FC<{ user: User }> = ({ user }) => {
           </Grid>
           <Grid sx={{ flex: 1 }}>
             <Typography color="primary" variant="h5">
-              {user.fullName}
+              {fullName}
             </Typography>
             <Stack direction="row" spacing={2}>
               <Typography variant="caption">
@@ -60,7 +64,12 @@ const UserCard: FC<{ user: User }> = ({ user }) => {
             </Stack>
           </Grid>
           <Grid>
-            <Button endIcon={<ChevronRightIcon />}>Посмотреть цели</Button>
+            <Button
+              endIcon={<ChevronRightIcon />}
+              onClick={() => navigate(generatePath(appRoutes.userTargets.path, { userId: id }))}
+            >
+              Посмотреть цели
+            </Button>
           </Grid>
         </Grid>
       </CardContent>

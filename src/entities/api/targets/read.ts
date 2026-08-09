@@ -2,13 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { goalsServiceApiClient } from 'shared/libs/api-client';
 
-import type { Target, UserId } from '../types';
+import type { Target } from '../types';
 
-export function useGetUsersTargets(userId: UserId | null) {
+export function useGetOwnTargets() {
   const targetsQuery = useQuery({
-    enabled: !!userId,
-    queryFn: () => goalsServiceApiClient.get<Target[]>(`/targets/get-all/${userId}`),
-    queryKey: ['targets', userId],
+    queryFn: () => goalsServiceApiClient.get<Target[]>(`/targets/get-all-own`),
+    queryKey: ['targets'],
     refetchOnMount: true,
   });
 
