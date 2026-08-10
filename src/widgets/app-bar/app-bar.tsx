@@ -56,6 +56,9 @@ export const ResponsiveAppBar = () => {
       }}
     >
       <Toolbar disableGutters>
+        <Box sx={{ mr: 1 }}>
+          <img src="/logo.png" width="40px" />
+        </Box>
         <Typography
           noWrap
           sx={{ display: { md: 'block', xs: 'none' }, fontWeight: 500 }}
