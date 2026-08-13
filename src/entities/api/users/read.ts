@@ -20,6 +20,7 @@ export function useGetUserProfile() {
   return {
     data: userProfile,
     error: userQuery.error,
+    loading: userQuery.isLoading,
   };
 }
 

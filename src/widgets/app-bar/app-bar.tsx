@@ -14,6 +14,8 @@ import { useGetUserProfile } from 'entities/api';
 
 import { ThemeChanger } from 'features/theme-changer';
 
+import { AvatarSkeleton, TabsSkeletonDesktop } from './skeletons';
+
 const appBarRoutes = Object.values(appRoutes).filter(({ handle }) => !handle.skip);
 
 export const ResponsiveAppBar = () => {
@@ -67,7 +69,9 @@ export const ResponsiveAppBar = () => {
           Melkor Apps
         </Typography>
         <Box sx={{ display: 'flex', flexGrow: 1 }}>
-          {userProfile.data && (
+          {userProfile.loading ? (
+            <TabsSkeletonDesktop />
+          ) : (
             <>
               <Box sx={{ display: { md: 'none', xs: 'flex' }, flexGrow: 1 }}>
                 <IconButton
@@ -135,7 +139,7 @@ export const ResponsiveAppBar = () => {
           <ThemeChanger />
         </Box>
         <IconButton sx={{ p: 0 }}>
-          <Avatar>{letters}</Avatar>
+          {userProfile.loading ? <AvatarSkeleton /> : <Avatar>{letters}</Avatar>}
         </IconButton>
       </Toolbar>
     </AppBar>
