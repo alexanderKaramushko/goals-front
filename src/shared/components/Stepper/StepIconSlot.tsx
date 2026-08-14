@@ -18,17 +18,18 @@ export const StepIcon: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ..
   return (
     <Box className={styles.stepIconRoot}>
       {onDeleteClick && (
-        <IconButton
-          className={styles.deleteButton}
-          color="primary"
-          onClick={(event) => {
-            event.stopPropagation();
-            onDeleteClick();
-          }}
-          size="small"
-        >
-          <HighlightOffIcon />
-        </IconButton>
+        <div className={styles.deleteButton}>
+          <IconButton
+            color="primary"
+            onClick={(event) => {
+              event.stopPropagation();
+              onDeleteClick();
+            }}
+            size="small"
+          >
+            <HighlightOffIcon />
+          </IconButton>
+        </div>
       )}
       {isCompleted ? (
         <CheckCircleIcon
