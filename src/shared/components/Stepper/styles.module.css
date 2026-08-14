@@ -34,7 +34,7 @@
   }
 
   &.active {
-    &:hover {
+    &:hover * {
       cursor: pointer;
     }
   }
