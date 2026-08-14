@@ -223,38 +223,40 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
               />
             </FormControl>
           </Grid>
-          <Grid size={12}>
-            <Typography sx={{ fontWeigh: 500 }} variant="body1">
-              Шаги цели
-            </Typography>
-            <Stepper
-              connector={<ConnectorWithInterButton onConnectorClick={addInterStep} />}
-              items={stepsData.map(({ date, id, title }) => ({
-                id,
-                isSelected: editableStepId === id,
-                label: title,
-                onClick: (event) => openEdit(event.currentTarget, id),
-                StepIcon: StepIcon,
-                stepIconProps: {
-                  isCompleted: isComplete(id),
-                  onDeleteClick: () => {
-                    setStepsDate(stepsData.filter((step) => step.id !== id));
+          {!!stepsData.length && (
+            <Grid size={12}>
+              <Typography sx={{ fontWeigh: 500 }} variant="body1">
+                Шаги цели
+              </Typography>
+              <Stepper
+                connector={<ConnectorWithInterButton onConnectorClick={addInterStep} />}
+                items={stepsData.map(({ date, id, title }) => ({
+                  id,
+                  isSelected: editableStepId === id,
+                  label: title,
+                  onClick: (event) => openEdit(event.currentTarget, id),
+                  StepIcon: StepIcon,
+                  stepIconProps: {
+                    isCompleted: isComplete(id),
+                    onDeleteClick: () => {
+                      setStepsDate(stepsData.filter((step) => step.id !== id));
+                    },
                   },
-                },
-                stepLabelProps: {
-                  optional: dayjs(date).isValid() && (
-                    <Typography variant="caption">
-                      Срок: {dayjs(date).format('DD-MM-YYYY')}
-                    </Typography>
-                  ),
-                },
-                stepProps: {
-                  active: true,
-                },
-              }))}
-              sx={{ mt: 2 }}
-            />
-          </Grid>
+                  stepLabelProps: {
+                    optional: dayjs(date).isValid() && (
+                      <Typography variant="caption">
+                        Срок: {dayjs(date).format('DD-MM-YYYY')}
+                      </Typography>
+                    ),
+                  },
+                  stepProps: {
+                    active: true,
+                  },
+                }))}
+                sx={{ mt: 2 }}
+              />
+            </Grid>
+          )}
           <Grid>
             <Button
               onClick={() => {
