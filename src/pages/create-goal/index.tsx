@@ -13,7 +13,7 @@ const CreateGoalPage = () => {
     <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
       <Grid size={12}>
         <Typography color="primary" variant="h4">
-          {routeHandle.title}
+          {routeHandle?.title}
         </Typography>
         <Typography color="text.primary" variant="body1">
           Заполните шаги цели и сохраните
@@ -27,4 +27,3 @@ const CreateGoalPage = () => {
 };
 
 export default CreateGoalPage;
-

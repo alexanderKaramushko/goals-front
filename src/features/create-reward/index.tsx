@@ -4,6 +4,7 @@ import { useSnackbar } from 'notistack';
 import { type FC, type ReactNode, useState } from 'react';
 
 import { Popper } from 'shared/components';
+import { getErrorMessage } from 'shared/utils';
 
 import { useCreateReward } from 'entities/api/rewards';
 import type { TargetId } from 'entities/api/types';
@@ -54,7 +55,7 @@ export const CreateReward: FC<CreateRewardProps> = ({ onSuccess, slots, targetId
         onSuccess?.();
       } catch (error) {
         enqueueSnackbar({
-          message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+          message: getErrorMessage(error),
           variant: 'error',
         });
       }
@@ -89,7 +90,7 @@ export const CreateReward: FC<CreateRewardProps> = ({ onSuccess, slots, targetId
               Назначение награды
             </Typography>
           </Grid>
-          {slots.top && <Grid size={12}>{slots.top}</Grid>}
+          {slots?.top && <Grid size={12}>{slots.top}</Grid>}
           <Grid size={12}>
             <TextField
               autoFocus

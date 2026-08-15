@@ -3,6 +3,8 @@ import { IconButton, Tooltip } from '@mui/material';
 import { useSnackbar } from 'notistack';
 import type { FC } from 'react';
 
+import { getErrorMessage } from 'shared/utils';
+
 import { useCancelTarget } from 'entities/api';
 
 interface CancelTargetButtonProps {
@@ -20,7 +22,7 @@ export const CancelTarget: FC<CancelTargetButtonProps> = ({ onSuccess, targetId 
       onSuccess?.();
     } catch (error) {
       enqueueSnackbar({
-        message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+        message: getErrorMessage(error),
         variant: 'error',
       });
     }
@@ -34,4 +36,3 @@ export const CancelTarget: FC<CancelTargetButtonProps> = ({ onSuccess, targetId 
     </Tooltip>
   );
 };
-

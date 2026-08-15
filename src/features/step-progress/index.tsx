@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack';
 import { type FC, useMemo, useState } from 'react';
 
 import { Connector, Popper, StepIcon, Stepper } from 'shared/components';
-import { decline } from 'shared/utils';
+import { decline, getErrorMessage } from 'shared/utils';
 
 import { useCompleteStep } from 'entities/api';
 import type { Target, TargetId } from 'entities/api/types';
@@ -56,7 +56,7 @@ export const StepProgress: FC<StepProgressProps> = ({
       return isOutdated || !!step.completedAt;
     });
 
-    const isTargetInActive = ['created', 'completed'].includes(targetStatus);
+    const isTargetInActive = targetStatus === 'created' || targetStatus === 'completed';
 
     return isTargetInActive || readOnly
       ? -1
@@ -92,11 +92,10 @@ export const StepProgress: FC<StepProgressProps> = ({
         stepId,
       });
 
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      onStepComplete && onStepComplete();
+      onStepComplete?.();
     } catch (error) {
       enqueueSnackbar({
-        message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+        message: getErrorMessage(error),
         variant: 'error',
       });
     }
@@ -153,7 +152,7 @@ export const StepProgress: FC<StepProgressProps> = ({
       const isToday = daysLeft === 0;
       const isDeadlineSoon = daysLeft === 1;
 
-      const isCompleted = completedAt && dayjs(completedAt).isValid();
+      const isCompleted = Boolean(completedAt && dayjs(completedAt).isValid());
       const isActive = uncompletedStepIndex === stepIndex;
 
       const getStatusLabel = () => {
@@ -283,4 +282,3 @@ export const StepProgress: FC<StepProgressProps> = ({
     </>
   );
 };
-

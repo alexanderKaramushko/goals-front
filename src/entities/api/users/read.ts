@@ -41,9 +41,14 @@ export function useGetUsers() {
   };
 }
 
-export function useGetUserTargets(userId: UserId) {
+export function useGetUserTargets(userId?: UserId) {
   const targetsQuery = useQuery({
-    queryFn: () => goalsServiceApiClient.get<UserTargetsResponseDto[]>(`users/${userId}/targets`),
+    enabled: Boolean(userId),
+    queryFn: () => {
+      if (!userId) throw new Error('Не указан идентификатор пользователя');
+
+      return goalsServiceApiClient.get<UserTargetsResponseDto[]>(`users/${userId}/targets`);
+    },
     queryKey: ['users', userId],
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -58,4 +63,3 @@ export function useGetUserTargets(userId: UserId) {
     refetch: () => targetsQuery.refetch(),
   };
 }
-

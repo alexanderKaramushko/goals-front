@@ -19,7 +19,7 @@ import { AvatarSkeleton, TabsSkeletonDesktop } from './skeletons';
 const appBarRoutes = Object.values(appRoutes).filter(({ handle }) => !handle.skip);
 
 export const ResponsiveAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();

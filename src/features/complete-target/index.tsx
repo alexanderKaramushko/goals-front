@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import { type FC, useState } from 'react';
 
 import { Popper } from 'shared/components';
+import { getErrorMessage } from 'shared/utils';
 
 import { useCompleteTarget } from 'entities/api';
 
@@ -47,10 +48,10 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
     try {
       await completeTarget.invoke(targetId, resultComment);
       setAnchorEl(null);
-      onSuccess();
+      onSuccess?.();
     } catch (error) {
       enqueueSnackbar({
-        message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+        message: getErrorMessage(error),
         variant: 'error',
       });
     }
@@ -114,4 +115,3 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
     </>
   );
 };
-

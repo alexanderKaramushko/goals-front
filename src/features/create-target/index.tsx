@@ -17,6 +17,7 @@ import { useSnackbar } from 'notistack';
 import { type FC, useState } from 'react';
 
 import { ConnectorWithInterButton, Popper, StepIcon, Stepper } from 'shared/components';
+import { getErrorMessage } from 'shared/utils';
 
 import { useCreateStep, useCreateTarget } from 'entities/api';
 
@@ -73,10 +74,12 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
   }
 
   function editStep<Name extends keyof StepData>(
-    stepId: StepId,
+    stepId: StepId | null,
     name: Name,
     value: StepData[Name],
   ) {
+    if (!stepId) return;
+
     const newSteps = stepsData.map((step) => {
       if (step.id === stepId) {
         return {
@@ -92,7 +95,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
   }
 
   function getStepFieldValue(stepId: StepId, name: keyof StepData) {
-    return stepsData.find((step) => step.id === stepId)[name];
+    return stepsData.find((step) => step.id === stepId)?.[name] ?? '';
   }
 
   function addInterStep(stepIndex: number) {
@@ -112,7 +115,9 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
   }
 
   function isComplete(stepId: StepId) {
-    return Object.values(stepsData.find((step) => step.id === stepId)).every((value) => !!value);
+    const step = stepsData.find((currentStep) => currentStep.id === stepId);
+
+    return step ? Object.values(step).every(Boolean) : false;
   }
 
   function editTargetData<Name extends keyof TargetData>(name: Name, value: TargetData[Name]) {
@@ -144,7 +149,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
         onSuccess?.();
       } catch (error) {
         enqueueSnackbar({
-          message: error?.response?.data?.message || error.message || 'Ошибка. Поробуйте еще раз',
+          message: getErrorMessage(error),
           variant: 'error',
         });
       }
@@ -182,7 +187,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
                 disablePast
                 format="DD • MM"
                 onChange={(value) => {
-                  if (value.isValid()) {
+                  if (value?.isValid()) {
                     editTargetData('shouldBeCompletedAt', value.format('YYYY-MM-DD'));
                   }
                 }}
@@ -316,7 +321,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
               format="DD • MM"
               label="Дата"
               onChange={(value) => {
-                if (value.isValid()) {
+                if (value?.isValid()) {
                   editStep(editableStepId, 'date', value.format('YYYY-MM-DD'));
                 }
               }}
@@ -373,4 +378,3 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
     </>
   );
 };
-

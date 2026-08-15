@@ -11,7 +11,7 @@ type ConnectorProps = {
 };
 
 export const Connector: FC<ConnectorProps> = ({ colors }) => {
-  const stepContext = useContext<StepContextType>(StepContext);
+  const stepContext = useContext(StepContext) as StepContextType;
 
   return (
     <Grid className={styles.simpleConnector} container>

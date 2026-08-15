@@ -2,5 +2,7 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
   "cSpell.words": ["VITE"],
-  "nestor.ineditor.actionsPanelBehaviour": "On"
+  "nestor.ineditor.actionsPanelBehaviour": "On",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }

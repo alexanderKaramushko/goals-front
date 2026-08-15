@@ -8,7 +8,7 @@ import UserTargetsPage from 'pages/user-targets';
 import UsersPage from 'pages/users';
 
 type RouteHandle = {
-  title?: string;
+  title: string;
   /** Не отображать в навигации */
   skip?: boolean;
 };
@@ -18,7 +18,7 @@ type RouteScheme = Record<
   {
     Component: () => JSX.Element;
     path: string;
-    handle?: RouteHandle;
+    handle: RouteHandle;
   }
 >;
 
@@ -78,4 +78,3 @@ export function useRouteHandle() {
 
   return handle;
 }
-
