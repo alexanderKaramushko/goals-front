@@ -1,4 +1,6 @@
-import { CssBaseline } from '@mui/material';
+/* eslint-disable @typescript-eslint/no-shadow */
+import HelpIcon from '@mui/icons-material/Help';
+import { Box, CssBaseline, Tooltip } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -68,6 +70,11 @@ function App() {
             <RouterProvider router={router} />
           </LocalizationProvider>
         </SnackbarProvider>
+        <Box sx={{ bottom: 24, cursor: 'pointer', position: 'fixed', right: 24 }}>
+          <Tooltip placement="left" title={import.meta.env.VITE_VERSION.slice(0, 7)}>
+            <HelpIcon sx={{ color: (theme) => theme.palette.grey['600'] }} />
+          </Tooltip>
+        </Box>
       </ThemeProvider>
     </QueryClientProvider>
   );
