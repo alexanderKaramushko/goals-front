@@ -55,6 +55,7 @@ export function useGetUserTargets(userId: UserId) {
   return {
     data: targets,
     loading: targetsQuery.isLoading,
+    refetch: () => targetsQuery.refetch(),
   };
 }
 

@@ -10,7 +10,7 @@
 }
 
 .paper {
-  background: var(--shared-popper-paper-background);
+  background: var(--shared-popper-paper-background) !important;
   border-radius: inherit;
   padding: var(--shared-popper-paper-padding);
   position: relative;
@@ -40,3 +40,16 @@
 .root[data-popper-placement^='top'] .arrow {
   bottom: -6px;
 }
+
+.root[data-popper-placement^='left'] .arrow {
+  top: 50%;
+  right: -6px;
+  transform: translateY(-50%);
+}
+
+.root[data-popper-placement^='right'] .arrow {
+  top: 50%;
+  left: -6px;
+  transform: translateY(-50%);
+}
+

@@ -156,7 +156,11 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {completedTargets.map((target) => (
-                      <Target onStepComplete={refetchTargets} target={target}>
+                      <Target
+                        onStepComplete={refetchTargets}
+                        rewards={target.rewards}
+                        target={target}
+                      >
                         {renderActions(target)}
                       </Target>
                     ))}

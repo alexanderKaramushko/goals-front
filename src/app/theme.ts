@@ -52,9 +52,10 @@ export const theme = createTheme({
       secondary: '#6E6E73',
     },
     warning: {
-      dark: '#7E4216',
-      light: '#C27A38',
-      main: '#A66124',
+      contrastText: '#fff',
+      dark: '#A26E46',
+      light: '#FDF2E2',
+      main: '#D4A373',
     },
   },
   shadows: [

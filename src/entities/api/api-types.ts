@@ -46,14 +46,14 @@ export interface TargetStepsDto {
   /** @example "2027-02-14" */
   shouldBeCompletedAt: string;
   /** @example "2026-06-06" */
-  completedAt: string | null;
+  completedAt: null;
 }
 
 export interface TargetRewardsDto {
   /** @example 1 */
   id: number;
   /** @example null */
-  recipientUserId: object | null;
+  recipientUserId: null;
   /** @example 1 */
   targetId: number;
   /** @example "target" */
@@ -81,6 +81,8 @@ export interface TargetsResponseDto {
   shouldBeCompletedAt: string;
   /** @example false */
   isOutdated: boolean;
+  /** @example "Хочу книгу в награду" */
+  resultComment: null;
   /**
    * Все шаги цели
    * @example [{"id":1,"targetId":1,"title":"Накопить 1000р","description":"Копейка рубль бережет!","shouldBeCompletedAt":"2027-02-14","completedAt":"2026-06-06"}]
@@ -148,14 +150,14 @@ export interface UserResponseDto {
    * Дата создания
    * @example "2026-06-21 16:37:39.368 +0400"
    */
-  createdAt: object | null;
+  createdAt: null;
 }
 
 export interface CreatedRewardOnTargetResponseDto {
   /** @example 1 */
   id: number;
   /** @example 1 */
-  targetId: object | null;
+  targetId: null;
   /** @example "За составление плана питания" */
   title: string;
   /** @example "План питания составлен без штрафов" */
@@ -165,7 +167,7 @@ export interface CreatedRewardOnTargetResponseDto {
   /** @example "2026-02-14T10:45:30.000Z" */
   createdAt: string;
   /** @example "2026-02-14T10:45:30.000Z" */
-  acceptedAt: object | null;
+  acceptedAt: null;
 }
 
 export interface UserTargetStepsDto {
@@ -180,7 +182,7 @@ export interface UserTargetStepsDto {
   /** @example "2027-02-14" */
   shouldBeCompletedAt: string;
   /** @example "2026-06-06" */
-  completedAt: string | null;
+  completedAt: null;
 }
 
 export interface UserTargetsResponseDto {
@@ -196,6 +198,8 @@ export interface UserTargetsResponseDto {
   shouldBeCompletedAt: string;
   /** @example true */
   canAssignReward: boolean;
+  /** @example "Хочу книгу в награду" */
+  resultComment: null;
   /** Награда, назначенная текущим пользователем */
   reward: CreatedRewardOnTargetResponseDto | null;
   /**

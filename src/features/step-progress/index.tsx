@@ -175,7 +175,7 @@ export const StepProgress: FC<StepProgressProps> = ({
       const getStepLabelColor = () => {
         if (!isTargetActive) return 'text.secondary';
         if (isCompleted || !isTargetActive) return theme.palette.grey[600];
-        if (isDeadlineSoon || isToday) return 'warning.main';
+        if (isDeadlineSoon || isToday) return 'warning.dark';
         if (isOutdated) return 'error.main';
         if (isActive) return 'text.primary';
 
@@ -185,7 +185,7 @@ export const StepProgress: FC<StepProgressProps> = ({
       const getStatusColor = () => {
         if (!isTargetActive) return 'text.secondary';
         if (isCompleted) return theme.palette.grey[400];
-        if (isToday || isDeadlineSoon) return 'warning.main';
+        if (isToday || isDeadlineSoon) return 'warning.dark';
         if (isOutdated) return 'error.main';
         if (isActive) return 'text.primary';
 
@@ -195,7 +195,7 @@ export const StepProgress: FC<StepProgressProps> = ({
       const getStepIconColor = () => {
         if (!isTargetActive) return 'text.secondary';
         if (isCompleted) return 'success.main';
-        if (isToday || isDeadlineSoon) return 'warning.main';
+        if (isToday || isDeadlineSoon) return 'warning.dark';
         if (isOutdated) return 'error.main';
         if (isActive) return 'primary.main';
 

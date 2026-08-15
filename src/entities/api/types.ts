@@ -1,7 +1,9 @@
 import type {
   CompleteStepDto,
   CompleteTargetDto,
+  CreatedRewardOnTargetResponseDto,
   CreatedStepResponseDto,
+  CreateRewardOnTargetDto,
   CreateStepDto,
   CreateTargetDto,
   TargetsResponseDto,
@@ -36,4 +38,8 @@ export type User = UserResponseDto;
 export type UserId = User['id'];
 
 export type RewardTarget = UserTargetsResponseDto;
+
+export type CreateRewardPayload = CreateRewardOnTargetDto & { targetId: TargetId };
+
+export type Reward = CreatedRewardOnTargetResponseDto;
 
