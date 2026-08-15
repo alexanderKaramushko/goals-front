@@ -12,7 +12,7 @@ ARG VITE_APP_TITLE="Цели и награды"
 ARG VITE_APP_ID=goals
 ARG VITE_GOALS_SERVICE_API=https://goals.melkor-apps.ru/api
 ARG VITE_GOALS_AUTH_API=https://goals.melkor-apps.ru/auth
-ARG VITE_APP_RELEASE
+ARG VITE_VERSION
 
 RUN npm run build
 
