@@ -89,6 +89,7 @@ cp .env.example .env
 | `VITE_APP_ID`            | Идентификатор приложения для auth-сервиса        |
 | `VITE_GOALS_SERVICE_API` | Адрес goals-service для dev-proxy `/api`         |
 | `VITE_GOALS_AUTH_API`    | Адрес auth-сервиса для входа и dev-proxy `/auth` |
+| `VITE_VERSION`           | sha-версия приложения                            |
 
 ### Локальный запуск
 
@@ -162,18 +163,15 @@ npm run docs:build
 
 Docusaurus dev-сервер доступен на `http://localhost:3005`.
 
-## Эксплуатация
-
-Результатом production-сборки является статический каталог `dist/`. Внешний web-сервер должен:
-
-- отдавать `index.html` для клиентских маршрутов `/app`, `/app/create-goal`, `/users` и `/login`;
-- проксировать `/api` в goals-service;
-- проксировать `/auth` в auth-сервис;
-- работать по HTTPS, чтобы auth-cookie передавалась безопасно.
-
-Конфигурация web-сервера, контейнеризация и мониторинг в этот репозиторий не входят.
-
 ## Связанные репозитории
 
 - [goals-service](https://github.com/alexanderKaramushko/goals-service) — backend пользователей,
   целей, шагов и наград.
+
+## Релиз
+
+Релиз выполняется из ветки `main` после успешной сборки CI workflow.
+
+1. Дождаться успешного завершения CI workflow.
+2. Выполнить ручной деплой через `deploy` workflow.
+3. Создать GitHub Release с релизным Docker-тегом через `release` workflow.
