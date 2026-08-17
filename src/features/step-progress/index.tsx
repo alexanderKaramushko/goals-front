@@ -183,7 +183,7 @@ export const StepProgress: FC<StepProgressProps> = ({
 
       const getStatusColor = () => {
         if (!isTargetActive) return 'text.secondary';
-        if (isCompleted) return theme.palette.grey[400];
+        if (isCompleted) return theme.palette.grey[600];
         if (isToday || isDeadlineSoon) return 'warning.dark';
         if (isOutdated) return 'error.main';
         if (isActive) return 'text.primary';
@@ -282,3 +282,4 @@ export const StepProgress: FC<StepProgressProps> = ({
     </>
   );
 };
+
