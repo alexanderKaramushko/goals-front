@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { goalsAuthApiClient, goalsServiceApiClient } from 'shared/libs/api-client';
 
-import type { UserTargetsResponseDto } from '../api-types';
+import type { UserResponseDto, UserTargetsResponseDto } from '../api-types';
 import type { AuthUserProfile } from '../auth-types';
 import type { User, UserId } from '../types';
 
@@ -63,3 +63,24 @@ export function useGetUserTargets(userId?: UserId) {
     refetch: () => targetsQuery.refetch(),
   };
 }
+
+export function useGetUser(userId?: UserId) {
+  const userQuery = useQuery({
+    enabled: Boolean(userId),
+    queryFn: () => {
+      if (!userId) throw new Error('Не указан идентификатор пользователя');
+
+      return goalsServiceApiClient.get<UserResponseDto>(`users/${userId}`);
+    },
+    queryKey: ['user', userId],
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
+
+  return {
+    data: userQuery.data?.data,
+    loading: userQuery.isLoading,
+  };
+}
+
