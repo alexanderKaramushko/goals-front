@@ -17,7 +17,7 @@ import { useParams } from 'react-router';
 
 import { useRouteHandle } from 'app/routes';
 
-import { useGetUserTargets } from 'entities/api';
+import { useGetUser, useGetUserTargets } from 'entities/api';
 import type { Target as TargetType } from 'entities/api/types';
 
 import { CreateReward } from 'features/create-reward';
@@ -32,6 +32,7 @@ const UserTargetsPage = () => {
   const id = useId();
   const { mode } = useColorScheme();
 
+  const user = useGetUser(params.userId);
   const targets = useGetUserTargets(params.userId);
 
   function getTargets(status: TargetType['status']) {
@@ -45,7 +46,10 @@ const UserTargetsPage = () => {
     <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
       <Grid>
         <Typography color="primary" variant="h4">
-          {routeHandle?.title}
+          {routeHandle?.title?.replace(
+            /%{userName}/,
+            user.data?.fullName ? `"${user.data?.fullName}"` : '',
+          )}
         </Typography>
         <Typography color="text.primary" variant="body1">
           Отслеживайте прогресс по целям пользователя и назначайте награды
