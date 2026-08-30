@@ -3,7 +3,7 @@ import { Avatar, Button, Card, CardContent, Grid, Stack, Typography } from '@mui
 import type { FC } from 'react';
 import { generatePath, useNavigate } from 'react-router';
 
-import { appRoutes, useRouteHandle } from 'app/routes';
+import { appRoutes, useRouteHandle } from 'app/routing/routes';
 
 import { useGetUsers, useGetUserTargets } from 'entities/api';
 import type { Target, User } from 'entities/api/types';

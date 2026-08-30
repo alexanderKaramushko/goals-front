@@ -13,7 +13,7 @@ import {
 import { useId } from 'react';
 import { useNavigate } from 'react-router';
 
-import { appRoutes, useRouteHandle } from 'app/routes';
+import { appRoutes, useRouteHandle } from 'app/routing/routes';
 
 import { useGetOwnTargets } from 'entities/api';
 import type { Target as TargetType } from 'entities/api/types';

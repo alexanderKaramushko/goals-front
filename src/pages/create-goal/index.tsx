@@ -1,7 +1,7 @@
 import { Grid, Typography } from '@mui/material';
 import { useNavigate } from 'react-router';
 
-import { appRoutes, useRouteHandle } from 'app/routes';
+import { appRoutes, useRouteHandle } from 'app/routing/routes';
 
 import { CreateTarget } from 'features/create-target';
 
@@ -27,3 +27,4 @@ const CreateGoalPage = () => {
 };
 
 export default CreateGoalPage;
+
