@@ -51,14 +51,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
     title: '',
   });
 
-  const [stepsData, setStepsDate] = useState<StepData[]>([
-    {
-      date: '',
-      description: '',
-      id: nanoid(),
-      title: 'Новый шаг',
-    },
-  ]);
+  const [stepsData, setStepsDate] = useState<StepData[]>([]);
 
   const [editedStepEl, setEditedStepEl] = useState<HTMLElement | null>(null);
   const [editableStepId, setEditableStepId] = useState<string | null>(null);
@@ -378,3 +371,4 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
     </>
   );
 };
+
