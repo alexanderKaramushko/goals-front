@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { Outlet, useLocation } from 'react-router';
 
-import { unauthorizedRoutes } from 'app/routes';
+import { unauthorizedRoutes } from 'app/routing/routes';
 
 import { Background } from 'shared/components';
 

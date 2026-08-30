@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { matchPath, useLocation, useNavigate } from 'react-router';
 
-import { appRoutes, unauthorizedRoutes } from 'app/routes';
+import { appRoutes, unauthorizedRoutes } from 'app/routing/routes';
 
 import { useGetUserProfile } from 'entities/api';
 

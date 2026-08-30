@@ -15,7 +15,7 @@ import {
 import { useId } from 'react';
 import { useParams } from 'react-router';
 
-import { useRouteHandle } from 'app/routes';
+import { useRouteHandle } from 'app/routing/routes';
 
 import { useGetUser, useGetUserTargets } from 'entities/api';
 import type { Target as TargetType } from 'entities/api/types';
