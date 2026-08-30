@@ -56,9 +56,7 @@ export const StepProgress: FC<StepProgressProps> = ({
       return isOutdated || !!step.completedAt;
     });
 
-    const isTargetInActive = targetStatus === 'created' || targetStatus === 'completed';
-
-    return isTargetInActive || readOnly
+    return targetStatus !== 'active' || readOnly
       ? -1
       : // Считаем, что за последним завершенным шагом
         // может быть либо незавершенный шаг, либо пустота
