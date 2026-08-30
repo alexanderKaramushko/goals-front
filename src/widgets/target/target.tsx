@@ -138,14 +138,16 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
                 <Grid>{children}</Grid>
               </Grid>
             </Grid>
-            <Grid size={12}>
-              <StepProgress
-                onStepComplete={onStepComplete}
-                steps={target.steps}
-                targetId={id}
-                targetStatus={status}
-              />
-            </Grid>
+            {!!target.steps.length && (
+              <Grid size={12}>
+                <StepProgress
+                  onStepComplete={onStepComplete}
+                  steps={target.steps}
+                  targetId={id}
+                  targetStatus={status}
+                />
+              </Grid>
+            )}
           </Grid>
         </CardContent>
       </Card>
