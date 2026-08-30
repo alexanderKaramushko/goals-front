@@ -1,49 +1,18 @@
-import MenuIcon from '@mui/icons-material/Menu';
-import { Box, Menu, MenuItem, Tab, Tabs, Toolbar } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { matchPath, useLocation, useNavigate } from 'react-router';
-
-import { appRoutes, unauthorizedRoutes } from 'app/routing/routes';
-
-import { useGetUserProfile } from 'entities/api';
+import type { FC, ReactNode } from 'react';
 
 import { ThemeChanger } from 'features/theme-changer';
 
-import { AvatarSkeleton, TabsSkeletonDesktop } from './skeletons';
+type ResponsiveAppBarProps = {
+  slots?: {
+    navigation?: ReactNode;
+    profile?: ReactNode;
+  };
+};
 
-const appBarRoutes = Object.values(appRoutes).filter(({ handle }) => !handle.skip);
-
-export const ResponsiveAppBar = () => {
-  const [anchorElNav, setAnchorElNav] = useState<HTMLElement | null>(null);
-
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  const activePath = appBarRoutes.find(({ path }) =>
-    matchPath(`${path}/*`, location.pathname),
-  )?.path;
-
-  const userProfile = useGetUserProfile();
-
-  useEffect(() => {
-    if (axios.isAxiosError(userProfile.error) && userProfile.error.status === 401) {
-      navigate(unauthorizedRoutes.login.path);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userProfile.error]);
-
-  const letters = userProfile.data?.name
-    .trim()
-    .split(/\s+/)
-    .map((word) => word[0])
-    .slice(0, 2)
-    .join('');
-
+export const ResponsiveAppBar: FC<ResponsiveAppBarProps> = ({ slots }) => {
   return (
     <AppBar
       color="secondary"
@@ -68,79 +37,11 @@ export const ResponsiveAppBar = () => {
         >
           Melkor Apps
         </Typography>
-        <Box sx={{ display: 'flex', flexGrow: 1 }}>
-          {userProfile.loading ? (
-            <TabsSkeletonDesktop />
-          ) : (
-            <>
-              <Box sx={{ display: { md: 'none', xs: 'flex' }, flexGrow: 1 }}>
-                <IconButton
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  color="inherit"
-                  onClick={(event) => {
-                    setAnchorElNav(event.currentTarget);
-                  }}
-                  size="large"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  anchorEl={anchorElNav}
-                  anchorOrigin={{
-                    horizontal: 'left',
-                    vertical: 'bottom',
-                  }}
-                  id="menu-appbar"
-                  keepMounted
-                  onClick={() => {
-                    setAnchorElNav(null);
-                  }}
-                  open={Boolean(anchorElNav)}
-                  sx={{ display: { md: 'none', xs: 'block' } }}
-                  transformOrigin={{
-                    horizontal: 'left',
-                    vertical: 'top',
-                  }}
-                >
-                  {appBarRoutes.map(({ handle, path }) => (
-                    <MenuItem
-                      key={handle.title}
-                      onClick={() => {
-                        setAnchorElNav(null);
-                        navigate(path);
-                      }}
-                      selected={!!activePath}
-                    >
-                      <Typography sx={{ textAlign: 'center' }}>{handle.title}</Typography>
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-              <Box sx={{ display: { gap: '14px', md: 'flex', xs: 'none' }, flexGrow: 1, ml: 4 }}>
-                <Tabs value={activePath}>
-                  {appBarRoutes.map(({ handle, path }) => (
-                    <Tab
-                      key={handle.title}
-                      label={handle.title}
-                      onClick={(event) => {
-                        setAnchorElNav(event.currentTarget);
-                        navigate(path);
-                      }}
-                      value={path}
-                    />
-                  ))}
-                </Tabs>
-              </Box>
-            </>
-          )}
-        </Box>
-        <Box sx={{ mr: 2 }}>
+        <Box sx={{ display: 'flex', flexGrow: 1 }}>{slots?.navigation}</Box>
+        <Box sx={{ mr: slots?.profile ? 2 : 0 }}>
           <ThemeChanger />
         </Box>
-        <IconButton sx={{ p: 0 }}>
-          {userProfile.loading ? <AvatarSkeleton /> : <Avatar>{letters}</Avatar>}
-        </IconButton>
+        {slots?.profile}
       </Toolbar>
     </AppBar>
   );
