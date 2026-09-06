@@ -16,7 +16,7 @@ const Auth = () => {
         onClick={() => {
           const url = new URL(import.meta.env.VITE_GOALS_AUTH_API);
 
-          url.pathname = 'auth/google-oauth/login';
+          url.pathname = 'auth/id/login';
 
           url.searchParams.append('appId', import.meta.env.VITE_APP_ID);
 
