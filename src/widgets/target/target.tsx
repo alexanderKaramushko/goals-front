@@ -5,6 +5,7 @@ import {
   Badge,
   Box,
   Card,
+  CardActions,
   CardContent,
   Divider,
   Grid,
@@ -17,7 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { type FC, Fragment, type PropsWithChildren, useState } from 'react';
+import { type FC, Fragment, type ReactNode, useState } from 'react';
 
 import { Popper } from 'shared/components';
 import { decline, useAdaptive } from 'shared/utils';
@@ -35,14 +36,10 @@ type TargetProps = {
   target: TargetType;
   onStepComplete: () => void;
   rewards?: Reward[];
+  actions?: ReactNode;
 };
 
-export const Target: FC<PropsWithChildren<TargetProps>> = ({
-  children,
-  onStepComplete,
-  rewards = [],
-  target,
-}) => {
+export const Target: FC<TargetProps> = ({ actions, onStepComplete, rewards = [], target }) => {
   const { description, id, isOutdated, shouldBeCompletedAt, status, title } = target;
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -160,7 +157,7 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
                     </Typography>
                   </Box>
                 </Grid>
-                <Grid>{children}</Grid>
+                {!isMobile && actions && <Grid>{actions}</Grid>}
               </Grid>
             </Grid>
             {!!target.steps.length && (
@@ -175,6 +172,7 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
             )}
           </Grid>
         </CardContent>
+        {isMobile && actions && <CardActions disableSpacing>{actions}</CardActions>}
       </Card>
       {!!rewards.length &&
         (isMobile ? (

@@ -1,20 +1,23 @@
 import CancelIcon from '@mui/icons-material/Cancel';
-import { IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import type { FC } from 'react';
 
-import { getErrorMessage } from 'shared/utils';
+import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCancelTarget } from 'entities/api';
 
 interface CancelTargetButtonProps {
   targetId: number;
   onSuccess?: () => void;
+  sx?: SxProps<Theme>;
 }
 
-export const CancelTarget: FC<CancelTargetButtonProps> = ({ onSuccess, targetId }) => {
+export const CancelTarget: FC<CancelTargetButtonProps> = ({ onSuccess, sx, targetId }) => {
   const cancelTarget = useCancelTarget();
   const { enqueueSnackbar } = useSnackbar();
+  const { isMobile } = useAdaptive();
 
   async function save() {
     try {
@@ -30,9 +33,22 @@ export const CancelTarget: FC<CancelTargetButtonProps> = ({ onSuccess, targetId 
 
   return (
     <Tooltip title="Отменить цель">
-      <IconButton aria-label="Отменить цель" color="warning" onClick={save} size="large">
-        <CancelIcon />
-      </IconButton>
+      {isMobile ? (
+        <Button
+          aria-label="Отменить цель"
+          color="warning"
+          fullWidth
+          onClick={save}
+          size="large"
+          sx={sx}
+        >
+          <CancelIcon />
+        </Button>
+      ) : (
+        <IconButton aria-label="Отменить цель" color="warning" onClick={save} size="large">
+          <CancelIcon />
+        </IconButton>
+      )}
     </Tooltip>
   );
 };

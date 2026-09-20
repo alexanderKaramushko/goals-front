@@ -1,20 +1,23 @@
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
-import { IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import type { FC } from 'react';
 
-import { getErrorMessage } from 'shared/utils';
+import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useActivateTarget } from 'entities/api';
 
 interface ActivateTargetButtonProps {
   targetId: number;
   onSuccess?: () => void;
+  sx?: SxProps<Theme>;
 }
 
-export const ActivateTarget: FC<ActivateTargetButtonProps> = ({ onSuccess, targetId }) => {
+export const ActivateTarget: FC<ActivateTargetButtonProps> = ({ onSuccess, sx, targetId }) => {
   const activateTarget = useActivateTarget();
   const { enqueueSnackbar } = useSnackbar();
+  const { isMobile } = useAdaptive();
 
   async function save() {
     try {
@@ -30,9 +33,22 @@ export const ActivateTarget: FC<ActivateTargetButtonProps> = ({ onSuccess, targe
 
   return (
     <Tooltip title="Начать выполнение">
-      <IconButton aria-label="Начать выполнение" color="success" onClick={save} size="large">
-        <PlayCircleFilledIcon />
-      </IconButton>
+      {isMobile ? (
+        <Button
+          aria-label="Начать выполнение"
+          color="success"
+          fullWidth
+          onClick={save}
+          size="large"
+          sx={sx}
+        >
+          <PlayCircleFilledIcon />
+        </Button>
+      ) : (
+        <IconButton aria-label="Начать выполнение" color="success" onClick={save} size="large">
+          <PlayCircleFilledIcon />
+        </IconButton>
+      )}
     </Tooltip>
   );
 };
