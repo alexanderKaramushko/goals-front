@@ -52,7 +52,7 @@ const UserTargetsPage = () => {
           )}
         </Typography>
         <Typography color="text.primary" variant="body1">
-          Отслеживайте прогресс по целям пользователя и назначайте награды
+          Отслеживайте прогресс по&nbsp;целям пользователя и&nbsp;назначайте награды
         </Typography>
       </Grid>
       <Grid size={12}>
@@ -156,4 +156,3 @@ const UserTargetsPage = () => {
 };
 
 export default UserTargetsPage;
-

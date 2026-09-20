@@ -49,7 +49,7 @@ export const appRoutes: RouteScheme = {
     Component: UserTargetsPage,
     handle: {
       skip: true,
-      title: 'Цели пользователя %{userName}',
+      title: 'Цели пользователя\u00A0%{userName}',
     },
     path: '/users/:userId',
   },
@@ -78,4 +78,3 @@ export function useRouteHandle() {
 
   return handle;
 }
-

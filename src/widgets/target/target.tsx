@@ -62,7 +62,7 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
     const verb = decline(daysLeft, ['осталось', 'остался', 'осталось']);
     const days = decline(daysLeft, ['дней', 'день', 'дня']);
 
-    return `${verb} ${daysLeft} ${days}`;
+    return `${verb}\u00A0${daysLeft}\u00A0${days}`;
   };
 
   const getStatusColor = () => {
@@ -123,7 +123,7 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
                       sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}
                       variant="caption"
                     >
-                      Дедлайн:{' '}
+                      Дедлайн:&nbsp;
                       <Box component="span" sx={{ color: getStatusColor(), fontWeight: 500 }}>
                         {getStatusText()}
                       </Box>
@@ -182,4 +182,3 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
     </>
   );
 };
-

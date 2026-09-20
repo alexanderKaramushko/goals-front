@@ -76,7 +76,7 @@ const GoalsPage = () => {
           {routeHandle?.title}
         </Typography>
         <Typography color="text.primary" variant="body1">
-          Планируйте, отслеживайте прогресс и достигайте результатов
+          Планируйте, отслеживайте прогресс и&nbsp;достигайте результатов
         </Typography>
       </Grid>
       <Grid>
@@ -199,4 +199,3 @@ const GoalsPage = () => {
 };
 
 export default GoalsPage;
-

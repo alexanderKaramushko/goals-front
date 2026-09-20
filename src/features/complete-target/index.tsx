@@ -59,9 +59,9 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
 
   return (
     <>
-      <Tooltip title={isTargetOutdated ? 'Завершить' : 'Завершить с комментарием'}>
+      <Tooltip title={isTargetOutdated ? 'Завершить' : 'Завершить с\u00A0комментарием'}>
         <IconButton
-          aria-label={isTargetOutdated ? 'Завершить' : 'Завершить с комментарием'}
+          aria-label={isTargetOutdated ? 'Завершить' : 'Завершить с\u00A0комментарием'}
           color="success"
           onClick={async (event) => {
             if (isTargetOutdated) {
@@ -91,7 +91,7 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
               autoFocus
               fullWidth
               id="step-title"
-              label="Пожелания к награде"
+              label={'Пожелания к\u00A0награде'}
               onChange={(event) => {
                 editCompleteTargetData('resultComment', event.currentTarget.value);
               }}

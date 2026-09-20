@@ -164,7 +164,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
                 onChange={(event) => {
                   editTargetData('title', event.currentTarget.value);
                 }}
-                placeholder="Например: Подготовиться к собеседованию"
+                placeholder={'Например: Подготовиться к\u00A0собеседованию'}
                 size="small"
                 sx={{ borderRadius: 2, mt: 1 }}
                 value={targetData.title}
@@ -243,7 +243,7 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
                   stepLabelProps: {
                     optional: dayjs(date).isValid() && (
                       <Typography variant="caption">
-                        Срок: {dayjs(date).format('DD-MM-YYYY')}
+                        Срок:&nbsp;{dayjs(date).format('DD-MM-YYYY')}
                       </Typography>
                     ),
                   },
@@ -371,4 +371,3 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
     </>
   );
 };
-

@@ -41,11 +41,11 @@ const UserCard: FC<{ user: User }> = ({ user }) => {
             </Typography>
             <Stack direction="row" spacing={2}>
               <Typography variant="caption">
-                Выполняемых целей:
+                Выполняемых целей:&nbsp;
                 <Typography
                   color="info"
                   component="span"
-                  sx={{ fontWeight: 'bold', ml: '4px' }}
+                  sx={{ fontWeight: 'bold' }}
                   variant="caption"
                 >
                   {activeTargets.length}
@@ -53,11 +53,11 @@ const UserCard: FC<{ user: User }> = ({ user }) => {
               </Typography>
               <Typography variant="caption">•</Typography>
               <Typography variant="caption">
-                Завершенных целей:
+                Завершенных целей:&nbsp;
                 <Typography
                   color="success"
                   component="span"
-                  sx={{ fontWeight: 'bold', ml: '4px' }}
+                  sx={{ fontWeight: 'bold' }}
                   variant="caption"
                 >
                   {completedTargets.length}
@@ -90,7 +90,7 @@ const UsersPage = () => {
           {routeHandle?.title}
         </Typography>
         <Typography color="text.primary" variant="body1">
-          Отслеживайте прогресс пользователей по целям и назначайте награды
+          Отслеживайте прогресс пользователей по&nbsp;целям и&nbsp;назначайте награды
         </Typography>
       </Grid>
       <Grid size={12}>
@@ -109,4 +109,3 @@ const UsersPage = () => {
 };
 
 export default UsersPage;
-

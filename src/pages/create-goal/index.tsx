@@ -16,7 +16,7 @@ const CreateGoalPage = () => {
           {routeHandle?.title}
         </Typography>
         <Typography color="text.primary" variant="body1">
-          Заполните шаги цели и сохраните
+          Заполните шаги цели и&nbsp;сохраните
         </Typography>
       </Grid>
       <Grid size={12}>
@@ -27,4 +27,3 @@ const CreateGoalPage = () => {
 };
 
 export default CreateGoalPage;
-
