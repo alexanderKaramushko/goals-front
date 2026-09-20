@@ -97,6 +97,10 @@
   top: -20px;
 }
 
+.deleteButtonVisible {
+  display: block;
+}
+
 .completeIcon {
   color: var(--shared-stepper-complete-color, currentcolor);
   display: block;
@@ -107,4 +111,3 @@
   color: var(--shared-stepper-icon-color, currentcolor);
   display: block;
 }
-

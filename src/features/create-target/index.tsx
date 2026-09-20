@@ -1,12 +1,14 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import SaveIcon from '@mui/icons-material/Save';
 import {
+  Box,
   Button,
   FormControl,
   FormLabel,
   Grid,
   OutlinedInput,
   Paper,
+  SwipeableDrawer,
   TextField,
   Typography,
 } from '@mui/material';
@@ -151,6 +153,85 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
     }
   }
 
+  const editStepDrawerTitleId = `edit-step-${editableStepId ?? 'new'}-title`;
+  const editStepForm = (
+    <Grid container spacing={2}>
+      <Grid size={{ laptop: 6, mobile: 12 }}>
+        <TextField
+          autoFocus={Boolean(editedStepEl)}
+          fullWidth
+          id="step-title"
+          label="Название"
+          onChange={(event) => {
+            editStep(editableStepId, 'title', event.currentTarget.value);
+          }}
+          placeholder="Купить весы"
+          size="small"
+          value={editableStepId ? getStepFieldValue(editableStepId, 'title') : ''}
+          variant="outlined"
+        />
+      </Grid>
+      <Grid size={{ laptop: 6, mobile: 12 }}>
+        <DatePicker
+          disablePast
+          format="DD • MM"
+          label="Дата"
+          onChange={(value) => {
+            if (value?.isValid()) {
+              editStep(editableStepId, 'date', value.format('YYYY-MM-DD'));
+            }
+          }}
+          shouldDisableDate={(date) => {
+            const stepIndex = stepsData.findIndex((step) => step.id === editableStepId);
+            const prevStepDate =
+              Reflect.has(stepsData, stepIndex - 1) && stepsData[stepIndex - 1].date;
+            const nextStepDate =
+              Reflect.has(stepsData, stepIndex + 1) && stepsData[stepIndex + 1].date;
+
+            return (
+              (prevStepDate && date.isSameOrBefore(prevStepDate)) ||
+              (nextStepDate && date.isSameOrAfter(nextStepDate)) ||
+              date.isAfter(targetData.shouldBeCompletedAt)
+            );
+          }}
+          slotProps={{
+            field: {
+              readOnly: true,
+            },
+            popper: {
+              disablePortal: true,
+            },
+            textField: {
+              fullWidth: true,
+              size: 'small',
+              variant: 'outlined',
+            },
+          }}
+          value={
+            editableStepId && getStepFieldValue(editableStepId, 'date')
+              ? dayjs(getStepFieldValue(editableStepId, 'date'))
+              : null
+          }
+        />
+      </Grid>
+      <Grid size={12}>
+        <TextField
+          fullWidth
+          id="step-description"
+          label="Описание"
+          minRows={2}
+          multiline
+          onChange={(event) => {
+            editStep(editableStepId, 'description', event.currentTarget.value);
+          }}
+          placeholder="Измерять вес"
+          size="small"
+          value={editableStepId ? getStepFieldValue(editableStepId, 'description') : ''}
+        />
+      </Grid>
+    </Grid>
+  );
+
   return (
     <>
       <Paper sx={{ borderRadius: 5, boxShadow: 4, pb: 2, pt: 4, px: 4 }}>
@@ -285,92 +366,55 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
           </Grid>
         </Grid>
       </Paper>
-      <Popper
-        anchorEl={editedStepEl}
-        id={editedStepEl ? 'edit' : undefined}
-        onClickAway={closeEdit}
-        open={Boolean(editedStepEl)}
-        placement="top"
-        sx={{
-          width: '300px',
-        }}
-      >
-        <Grid container spacing={2}>
-          <Grid size={6}>
-            <TextField
-              autoFocus
-              fullWidth
-              id="step-title"
-              label="Название"
-              onChange={(event) => {
-                editStep(editableStepId, 'title', event.currentTarget.value);
-              }}
-              placeholder="Купить весы"
-              size="small"
-              value={editableStepId ? getStepFieldValue(editableStepId, 'title') : ''}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid size={6}>
-            <DatePicker
-              disablePast
-              format="DD • MM"
-              label="Дата"
-              onChange={(value) => {
-                if (value?.isValid()) {
-                  editStep(editableStepId, 'date', value.format('YYYY-MM-DD'));
-                }
-              }}
-              shouldDisableDate={(date) => {
-                const stepIndex = stepsData.findIndex((step) => step.id === editableStepId);
-                const prevStepDate =
-                  Reflect.has(stepsData, stepIndex - 1) && stepsData[stepIndex - 1].date;
-                const nextStepDate =
-                  Reflect.has(stepsData, stepIndex + 1) && stepsData[stepIndex + 1].date;
-
-                return (
-                  (prevStepDate && date.isSameOrBefore(prevStepDate)) ||
-                  (nextStepDate && date.isSameOrAfter(nextStepDate)) ||
-                  date.isAfter(targetData.shouldBeCompletedAt)
-                );
-              }}
-              slotProps={{
-                field: {
-                  readOnly: true,
-                },
-                popper: {
-                  disablePortal: true,
-                },
-                textField: {
-                  fullWidth: true,
-                  size: 'small',
-                  variant: 'outlined',
-                },
-              }}
-              value={
-                editableStepId && getStepFieldValue(editableStepId, 'date')
-                  ? dayjs(getStepFieldValue(editableStepId, 'date'))
-                  : null
-              }
-            />
-          </Grid>
-          <Grid size={12}>
-            <TextField
-              fullWidth
-              id="step-description"
-              label="Описание"
-              minRows={2}
-              multiline
-              onChange={(event) => {
-                editStep(editableStepId, 'description', event.currentTarget.value);
-              }}
-              placeholder="Измерять вес"
-              size="small"
-              value={editableStepId ? getStepFieldValue(editableStepId, 'description') : ''}
-            />
-          </Grid>
-        </Grid>
-      </Popper>
+      {isMobile ? (
+        <SwipeableDrawer
+          anchor="bottom"
+          onClose={closeEdit}
+          onOpen={() => {}}
+          open={Boolean(editedStepEl)}
+          slotProps={{
+            paper: {
+              'aria-labelledby': editStepDrawerTitleId,
+              sx: {
+                borderRadius: '16px 16px 0 0',
+                maxHeight: '80dvh',
+                overflowY: 'auto',
+                pb: 'max(16px, env(safe-area-inset-bottom))',
+                pt: 1,
+                px: 2,
+              },
+            },
+          }}
+        >
+          <Box
+            aria-hidden
+            sx={{
+              alignItems: 'center',
+              display: 'flex',
+              height: 40,
+              justifyContent: 'center',
+              mt: -1,
+            }}
+          >
+            <Box sx={{ bgcolor: 'divider', borderRadius: 2, height: 4, width: 36 }} />
+          </Box>
+          <Typography component="h2" id={editStepDrawerTitleId} sx={{ mb: 2 }} variant="h6">
+            Редактирование шага
+          </Typography>
+          {editStepForm}
+        </SwipeableDrawer>
+      ) : (
+        <Popper
+          anchorEl={editedStepEl}
+          id={editedStepEl ? 'edit' : undefined}
+          onClickAway={closeEdit}
+          open={Boolean(editedStepEl)}
+          placement="top"
+          sx={{ width: '300px' }}
+        >
+          {editStepForm}
+        </Popper>
+      )}
     </>
   );
 };

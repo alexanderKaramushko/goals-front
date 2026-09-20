@@ -4,6 +4,8 @@ import { Box, IconButton, StepIcon as MuiStepIcon, type StepIconProps } from '@m
 import cn from 'classnames';
 import type { FC } from 'react';
 
+import { useAdaptive } from 'shared/utils';
+
 import styles from './styles.module.css';
 
 export type StepIconSlotProps = StepIconProps & {
@@ -15,10 +17,12 @@ export type StepIconSlotProps = StepIconProps & {
 };
 
 export const StepIcon: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ...props }) => {
+  const { isMobile } = useAdaptive();
+
   return (
     <Box className={styles.stepIconRoot}>
       {onDeleteClick && (
-        <div className={styles.deleteButton}>
+        <div className={cn(styles.deleteButton, isMobile && styles.deleteButtonVisible)}>
           <IconButton
             color="primary"
             onClick={(event) => {
@@ -55,4 +59,3 @@ export const StepIcon: FC<StepIconSlotProps> = ({ isCompleted, onDeleteClick, ..
     </Box>
   );
 };
-
