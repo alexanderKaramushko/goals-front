@@ -13,10 +13,9 @@ export const LandingLayout = () => {
       <Box
         sx={{
           boxSizing: 'border-box',
-          height: '100%',
+          height: '100dvh',
           margin: '0 auto',
           maxWidth: '90%',
-          overflowY: 'auto',
           pb: 4,
         }}
       >
