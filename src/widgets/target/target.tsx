@@ -151,34 +151,34 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
           </Grid>
         </CardContent>
       </Card>
-      {/* {!!rewards.length && ( */}
-      <Popper
-        anchorEl={anchorEl}
-        id={anchorEl ? 'edit' : undefined}
-        onClickAway={() => setAnchorEl(null)}
-        open={Boolean(anchorEl)}
-        placement="right"
-        sx={{
-          width: '300px',
-        }}
-      >
-        <List disablePadding>
-          {rewards.map(({ description, title }) => (
-            <>
-              <ListItem disableGutters key={title}>
-                <ListItemAvatar>
-                  <Avatar sx={{ bgcolor: '#FDF2E2' }}>
-                    <CardGiftcardIcon sx={{ fill: (theme) => theme.palette.warning.main }} />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText primary={title} secondary={description} />
-              </ListItem>
-              <Divider component="li" variant="inset" />
-            </>
-          ))}
-        </List>
-      </Popper>
-      {/* )} */}
+      {!!rewards.length && (
+        <Popper
+          anchorEl={anchorEl}
+          id={anchorEl ? 'edit' : undefined}
+          onClickAway={() => setAnchorEl(null)}
+          open={Boolean(anchorEl)}
+          placement="right"
+          sx={{
+            width: '300px',
+          }}
+        >
+          <List disablePadding>
+            {rewards.map(({ description, title }, index) => (
+              <>
+                <ListItem disableGutters key={title}>
+                  <ListItemAvatar>
+                    <Avatar sx={{ bgcolor: '#FDF2E2' }}>
+                      <CardGiftcardIcon sx={{ fill: (theme) => theme.palette.warning.main }} />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText primary={title} secondary={description} />
+                </ListItem>
+                {index !== rewards.length - 1 && <Divider component="li" variant="fullWidth" />}
+              </>
+            ))}
+          </List>
+        </Popper>
+      )}
     </>
   );
 };
