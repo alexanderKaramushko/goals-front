@@ -17,11 +17,10 @@ export const ProtectedRoute = () => {
           sx={{
             alignItems: 'center',
             display: 'flex',
-            height: '100%',
             justifyContent: 'center',
             margin: '0 auto',
             maxWidth: '90%',
-            overflowY: 'auto',
+            minHeight: '100dvh',
           }}
         >
           <CircularProgress aria-label="Loading…" />
@@ -36,4 +35,3 @@ export const ProtectedRoute = () => {
 
   return <Navigate replace to={unauthorizedRoutes.login.path} />;
 };
-

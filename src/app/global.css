@@ -1,8 +1,10 @@
 html,
 body,
 #root {
-  height: 100vh;
   margin: 0;
-  overflow: hidden;
+  min-height: 100%;
 }
 
+body {
+  min-height: 100dvh;
+}

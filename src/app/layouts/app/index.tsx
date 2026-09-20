@@ -18,17 +18,17 @@ export const AppLayout = () => {
     <Background>
       <Box
         sx={{
+          '-ms-overflow-style': 'none',
           '&::-webkit-scrollbar': {
             display: 'none',
           },
           boxSizing: 'border-box',
-          height: '100%',
           margin: '0 auto',
           maxWidth: '90%',
-          overflowY: 'auto',
+          minHeight: '100dvh',
           pb: 4,
-
           pt: '120px',
+          'scrollbar-width': 'none',
         }}
       >
         <ResponsiveAppBar
