@@ -199,7 +199,7 @@ export interface UserTargetsResponseDto {
   /** @example true */
   canAssignReward: boolean;
   /** @example "Хочу книгу в награду" */
-  resultComment: undefined | null;
+  resultComment: string | null;
   /** Награда, назначенная текущим пользователем */
   reward: CreatedRewardOnTargetResponseDto | null;
   /**

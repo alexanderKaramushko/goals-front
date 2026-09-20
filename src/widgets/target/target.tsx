@@ -151,7 +151,7 @@ export const Target: FC<TargetProps> = ({ actions, onStepComplete, rewards = [],
                       </Box>
                     </Typography>
                   )}
-                  <Box sx={{ mt: ['active', 'created'].includes(status) ? 1.5 : 0 }}>
+                  <Box sx={{ mt: 1.5 }}>
                     <Typography sx={{ color: 'text.secondary' }} variant="body2">
                       {description}
                     </Typography>

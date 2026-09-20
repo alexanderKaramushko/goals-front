@@ -32,7 +32,12 @@ export const CancelTarget: FC<CancelTargetButtonProps> = ({ onSuccess, sx, targe
   }
 
   return (
-    <Tooltip title="Отменить цель">
+    <Tooltip
+      disableFocusListener={isMobile}
+      disableHoverListener={isMobile}
+      disableTouchListener={isMobile}
+      title="Отменить цель"
+    >
       {isMobile ? (
         <Button
           aria-label="Отменить цель"

@@ -32,7 +32,12 @@ export const DeleteTarget: FC<DeleteTargetButtonProps> = ({ onSuccess, sx, targe
   }
 
   return (
-    <Tooltip title="Удалить цель">
+    <Tooltip
+      disableFocusListener={isMobile}
+      disableHoverListener={isMobile}
+      disableTouchListener={isMobile}
+      title="Удалить цель"
+    >
       {isMobile ? (
         <Button
           aria-label="Удалить цель"

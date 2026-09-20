@@ -1,70 +1,171 @@
-import { Box, Card, CardContent, Grid, Typography } from '@mui/material';
-import { type FC, type PropsWithChildren, type ReactNode } from 'react';
+import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import {
+  Avatar,
+  Badge,
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  SwipeableDrawer,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { type FC, type ReactNode, useState } from 'react';
+
+import { Popper } from 'shared/components';
+import { useAdaptive } from 'shared/utils';
 
 import type { RewardTarget as RewardTargetType } from 'entities/api/types';
 
 import { StepProgress } from 'features/step-progress';
 
 type RewardTargetProps = {
+  actions?: ReactNode;
   target: RewardTargetType;
-  reward?: ReactNode;
 };
 
-export const RewardTarget: FC<PropsWithChildren<RewardTargetProps>> = ({
-  children,
-  reward,
-  target,
-}) => {
-  const { description, id, status, title } = target;
+export const RewardTarget: FC<RewardTargetProps> = ({ actions, target }) => {
+  const { description, id, reward, status, title } = target;
+  const [rewardAnchorEl, setRewardAnchorEl] = useState<HTMLElement | null>(null);
+  const { isMobile } = useAdaptive();
+
+  const rewardTitleId = `target-${id}-reward-title`;
+  const rewardContent = reward && (
+    <List disablePadding>
+      <ListItem disableGutters>
+        <ListItemAvatar>
+          <Avatar sx={{ bgcolor: '#FDF2E2' }}>
+            <CardGiftcardIcon sx={{ fill: (theme) => theme.palette.warning.main }} />
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText primary={reward.title} secondary={reward.description} />
+      </ListItem>
+    </List>
+  );
 
   return (
-    <Card
-      key={id}
-      sx={{
-        borderRadius: 4,
-        boxShadow: 5,
-      }}
-    >
-      <CardContent>
-        <Grid container spacing={2}>
-          <Grid size={12}>
-            <Grid container sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
-              <Grid>
-                <Typography
-                  component="span"
-                  gutterBottom
-                  sx={{ margin: 0, position: 'relative' }}
-                  variant="h5"
-                >
-                  {title}
-                  {reward && (
-                    <Box
-                      sx={{
-                        position: 'absolute',
-                        right: '0',
-                        top: '-15px',
-                        transform: 'translateX(105%)',
-                      }}
+    <>
+      <Card
+        key={id}
+        sx={{
+          borderRadius: 4,
+          boxShadow: 5,
+        }}
+      >
+        <CardContent>
+          <Grid container spacing={2}>
+            <Grid size={12}>
+              <Grid container sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+                <Grid sx={{ flex: 1, minWidth: 0 }}>
+                  <Box
+                    sx={{
+                      alignItems: 'flex-start',
+                      display: 'flex',
+                      maxWidth: '100%',
+                      width: 'fit-content',
+                    }}
+                  >
+                    <Typography
+                      component="h3"
+                      gutterBottom
+                      noWrap
+                      sx={{ margin: 0, minWidth: 0 }}
+                      variant={isMobile ? 'h6' : 'h5'}
                     >
-                      {reward}
-                    </Box>
-                  )}
-                </Typography>
-                <Box sx={{ mt: 1.5 }}>
-                  <Typography sx={{ color: 'text.secondary' }} variant="body2">
-                    {description}
-                  </Typography>
-                </Box>
+                      {title}
+                    </Typography>
+                    {reward && (
+                      <Tooltip placement="top" title="Назначенная награда">
+                        <Badge
+                          badgeContent={1}
+                          color="secondary"
+                          onClick={(event) => setRewardAnchorEl(event.currentTarget)}
+                          sx={{ cursor: 'pointer', flexShrink: 0, ml: 0.5, mr: 1, mt: '-5px' }}
+                        >
+                          <WorkspacePremiumIcon
+                            sx={{ fill: (theme) => theme.palette.warning.main }}
+                          />
+                        </Badge>
+                      </Tooltip>
+                    )}
+                  </Box>
+                  <Box sx={{ mt: 1.5 }}>
+                    <Typography sx={{ color: 'text.secondary' }} variant="body2">
+                      {description}
+                    </Typography>
+                  </Box>
+                </Grid>
+                {!isMobile && actions && <Grid>{actions}</Grid>}
               </Grid>
-              <Grid>{children}</Grid>
             </Grid>
+            {!!target.steps.length && (
+              <Grid size={12}>
+                <StepProgress readOnly steps={target.steps} targetId={id} targetStatus={status} />
+              </Grid>
+            )}
           </Grid>
-          <Grid size={12}>
-            <StepProgress readOnly steps={target.steps} targetId={id} targetStatus={status} />
-          </Grid>
-        </Grid>
-      </CardContent>
-    </Card>
+        </CardContent>
+        {isMobile && actions && <CardActions disableSpacing>{actions}</CardActions>}
+      </Card>
+      {reward &&
+        (isMobile ? (
+          <SwipeableDrawer
+            anchor="bottom"
+            onClose={() => setRewardAnchorEl(null)}
+            onOpen={() => {}}
+            open={Boolean(rewardAnchorEl)}
+            slotProps={{
+              paper: {
+                'aria-labelledby': rewardTitleId,
+                sx: {
+                  borderRadius: '16px 16px 0 0',
+                  maxHeight: '80dvh',
+                  overflowY: 'auto',
+                  pb: 'max(16px, env(safe-area-inset-bottom))',
+                  pt: 1,
+                  px: 2,
+                },
+              },
+            }}
+          >
+            <Box
+              aria-hidden
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: 40,
+                justifyContent: 'center',
+                mt: -1,
+              }}
+            >
+              <Box sx={{ bgcolor: 'divider', borderRadius: 2, height: 4, width: 36 }} />
+            </Box>
+            <Typography component="h2" id={rewardTitleId} variant="h6">
+              Назначенная награда
+            </Typography>
+            {rewardContent}
+          </SwipeableDrawer>
+        ) : (
+          <Popper
+            anchorEl={rewardAnchorEl}
+            id={rewardAnchorEl ? `target-${id}-reward` : undefined}
+            onClickAway={() => setRewardAnchorEl(null)}
+            open={Boolean(rewardAnchorEl)}
+            placement="right"
+            sx={{ width: '300px' }}
+          >
+            <Typography component="h2" id={rewardTitleId} variant="subtitle1">
+              Назначенная награда
+            </Typography>
+            {rewardContent}
+          </Popper>
+        ))}
+    </>
   );
 };
-

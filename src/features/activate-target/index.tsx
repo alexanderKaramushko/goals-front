@@ -32,7 +32,12 @@ export const ActivateTarget: FC<ActivateTargetButtonProps> = ({ onSuccess, sx, t
   }
 
   return (
-    <Tooltip title="Начать выполнение">
+    <Tooltip
+      disableFocusListener={isMobile}
+      disableHoverListener={isMobile}
+      disableTouchListener={isMobile}
+      title="Начать выполнение"
+    >
       {isMobile ? (
         <Button
           aria-label="Начать выполнение"

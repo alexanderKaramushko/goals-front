@@ -74,7 +74,12 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
 
   return (
     <>
-      <Tooltip title={label}>
+      <Tooltip
+        disableFocusListener={isMobile}
+        disableHoverListener={isMobile}
+        disableTouchListener={isMobile}
+        title={label}
+      >
         {isMobile ? (
           <Button
             aria-label={label}
