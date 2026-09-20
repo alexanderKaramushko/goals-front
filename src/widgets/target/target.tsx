@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import {
@@ -13,14 +12,15 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
+  SwipeableDrawer,
   Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { type FC, type PropsWithChildren, useState } from 'react';
+import { type FC, Fragment, type PropsWithChildren, useState } from 'react';
 
 import { Popper } from 'shared/components';
-import { decline } from 'shared/utils';
+import { decline, useAdaptive } from 'shared/utils';
 
 import type { Target as TargetType } from 'entities/api/types';
 
@@ -53,6 +53,9 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
 
   const isToday = daysLeft === 0;
   const isActive = status === 'active';
+  const rewardsDrawerTitleId = `target-${id}-rewards-title`;
+
+  const { isMobile } = useAdaptive();
 
   const getStatusText = () => {
     if (!isActive) return `${dayjs(shouldBeCompletedAt).format('DD-MM-YYYY')}`;
@@ -73,6 +76,24 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
     return 'text.secondary';
   };
 
+  const rewardsList = (
+    <List disablePadding>
+      {rewards.map(({ description: rewardDescription, title: rewardTitle }, index) => (
+        <Fragment key={`${rewardTitle}-${index}`}>
+          <ListItem disableGutters>
+            <ListItemAvatar>
+              <Avatar sx={{ bgcolor: '#FDF2E2' }}>
+                <CardGiftcardIcon sx={{ fill: (theme) => theme.palette.warning.main }} />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={rewardTitle} secondary={rewardDescription} />
+          </ListItem>
+          {index !== rewards.length - 1 && <Divider component="li" variant="fullWidth" />}
+        </Fragment>
+      ))}
+    </List>
+  );
+
   return (
     <>
       <Card
@@ -86,38 +107,42 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
           <Grid container spacing={2}>
             <Grid size={12}>
               <Grid container sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
-                <Grid>
-                  <Typography
-                    component="span"
-                    gutterBottom
-                    sx={{ margin: 0, position: 'relative' }}
-                    variant="h5"
+                <Grid sx={{ flex: 1, minWidth: 0 }}>
+                  <Box
+                    sx={{
+                      alignItems: 'flex-start',
+                      display: 'flex',
+                      maxWidth: '100%',
+                      width: 'fit-content',
+                    }}
                   >
-                    {title}
+                    <Typography
+                      component="h3"
+                      gutterBottom
+                      noWrap
+                      sx={{
+                        margin: 0,
+                        minWidth: 0,
+                      }}
+                      variant={isMobile ? 'h6' : 'h5'}
+                    >
+                      {title}
+                    </Typography>
                     {!!rewards.length && (
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          right: '0',
-                          top: '-15px',
-                          transform: 'translateX(100%)',
-                        }}
-                      >
-                        <Tooltip placement="top" title="Ваши награды">
-                          <Badge
-                            badgeContent={rewards.length}
-                            color="secondary"
-                            onClick={(event) => setAnchorEl(event.currentTarget)}
-                            sx={{ cursor: 'pointer' }}
-                          >
-                            <WorkspacePremiumIcon
-                              sx={{ fill: (theme) => theme.palette.warning.main }}
-                            />
-                          </Badge>
-                        </Tooltip>
-                      </Box>
+                      <Tooltip placement="top" title="Ваши награды">
+                        <Badge
+                          badgeContent={rewards.length}
+                          color="secondary"
+                          onClick={(event) => setAnchorEl(event.currentTarget)}
+                          sx={{ cursor: 'pointer', flexShrink: 0, ml: 0.5, mr: 1, mt: '-5px' }}
+                        >
+                          <WorkspacePremiumIcon
+                            sx={{ fill: (theme) => theme.palette.warning.main }}
+                          />
+                        </Badge>
+                      </Tooltip>
                     )}
-                  </Typography>
+                  </Box>
                   {['active', 'created'].includes(status) && (
                     <Typography
                       sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}
@@ -129,7 +154,7 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
                       </Box>
                     </Typography>
                   )}
-                  <Box sx={{ mt: 1.5 }}>
+                  <Box sx={{ mt: ['active', 'created'].includes(status) ? 1.5 : 0 }}>
                     <Typography sx={{ color: 'text.secondary' }} variant="body2">
                       {description}
                     </Typography>
@@ -151,34 +176,58 @@ export const Target: FC<PropsWithChildren<TargetProps>> = ({
           </Grid>
         </CardContent>
       </Card>
-      {!!rewards.length && (
-        <Popper
-          anchorEl={anchorEl}
-          id={anchorEl ? 'edit' : undefined}
-          onClickAway={() => setAnchorEl(null)}
-          open={Boolean(anchorEl)}
-          placement="right"
-          sx={{
-            width: '300px',
-          }}
-        >
-          <List disablePadding>
-            {rewards.map(({ description, title }, index) => (
-              <>
-                <ListItem disableGutters key={title}>
-                  <ListItemAvatar>
-                    <Avatar sx={{ bgcolor: '#FDF2E2' }}>
-                      <CardGiftcardIcon sx={{ fill: (theme) => theme.palette.warning.main }} />
-                    </Avatar>
-                  </ListItemAvatar>
-                  <ListItemText primary={title} secondary={description} />
-                </ListItem>
-                {index !== rewards.length - 1 && <Divider component="li" variant="fullWidth" />}
-              </>
-            ))}
-          </List>
-        </Popper>
-      )}
+      {!!rewards.length &&
+        (isMobile ? (
+          <SwipeableDrawer
+            anchor="bottom"
+            onClose={() => setAnchorEl(null)}
+            onOpen={() => {}}
+            open={Boolean(anchorEl)}
+            slotProps={{
+              paper: {
+                'aria-labelledby': rewardsDrawerTitleId,
+                sx: {
+                  borderRadius: '16px 16px 0 0',
+                  maxHeight: '80dvh',
+                  overflowY: 'auto',
+                  pb: 'max(16px, env(safe-area-inset-bottom))',
+                  pt: 1,
+                  px: 2,
+                },
+              },
+            }}
+          >
+            <Box
+              aria-hidden
+              sx={{
+                alignItems: 'center',
+                display: 'flex',
+                height: 40,
+                justifyContent: 'center',
+                mt: -1,
+              }}
+            >
+              <Box sx={{ bgcolor: 'divider', borderRadius: 2, height: 4, width: 36 }} />
+            </Box>
+            <Typography component="h2" id={rewardsDrawerTitleId} variant="h6">
+              Награды
+            </Typography>
+            {rewardsList}
+          </SwipeableDrawer>
+        ) : (
+          <Popper
+            anchorEl={anchorEl}
+            id={anchorEl ? 'edit' : undefined}
+            onClickAway={() => setAnchorEl(null)}
+            open={Boolean(anchorEl)}
+            placement="right"
+            sx={{
+              width: '300px',
+            }}
+          >
+            {rewardsList}
+          </Popper>
+        ))}
     </>
   );
 };

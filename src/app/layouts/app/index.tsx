@@ -18,12 +18,16 @@ export const AppLayout = () => {
     <Background>
       <Box
         sx={{
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
           boxSizing: 'border-box',
           height: '100%',
           margin: '0 auto',
           maxWidth: '90%',
           overflowY: 'auto',
           pb: 4,
+
           pt: '120px',
         }}
       >
