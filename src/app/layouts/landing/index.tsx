@@ -18,7 +18,6 @@ export const LandingLayout = () => {
           maxWidth: '90%',
           overflowY: 'auto',
           pb: 4,
-          pt: '120px',
         }}
       >
         <ResponsiveAppBar slots={{ right: <ThemeChanger /> }} />
