@@ -35,8 +35,8 @@ const UserCard: FC<{ user: User }> = ({ user }) => {
           <Grid>
             <Avatar />
           </Grid>
-          <Grid sx={{ flex: 1 }}>
-            <Typography color="primary" variant="h5">
+          <Grid size={{ mobile: 12 }} sx={{ flex: 1 }}>
+            <Typography color="primary" noWrap variant="h5">
               {fullName}
             </Typography>
             <Stack direction="row" spacing={2}>
@@ -65,7 +65,10 @@ const UserCard: FC<{ user: User }> = ({ user }) => {
               </Typography>
             </Stack>
           </Grid>
-          <Grid>
+          <Grid
+            size={{ laptop: 'auto', mobile: 12 }}
+            sx={{ textAlign: { laptop: 'right', mobile: 'right' } }}
+          >
             <Button
               endIcon={<ChevronRightIcon />}
               onClick={() => navigate(generatePath(appRoutes.userTargets.path, { userId: id }))}
