@@ -1,24 +1,24 @@
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Alert,
+  Box,
   Chip,
   Grid,
   Stack,
-  Tooltip,
   Typography,
   useColorScheme,
 } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { useId } from 'react';
 import { useParams } from 'react-router';
 
 import { useRouteHandle } from 'app/routing/routes';
 
 import { useGetUser, useGetUserTargets } from 'entities/api';
-import type { Target as TargetType } from 'entities/api/types';
+import type { RewardTarget as RewardTargetType } from 'entities/api/types';
 
 import { CreateReward } from 'features/create-reward';
 
@@ -35,12 +35,24 @@ const UserTargetsPage = () => {
   const user = useGetUser(params.userId);
   const targets = useGetUserTargets(params.userId);
 
-  function getTargets(status: TargetType['status']) {
+  function getTargets(status: RewardTargetType['status']) {
     return targets.data.filter((target) => target.status === status);
   }
 
   const activeTargets = getTargets('active');
   const completedTargets = getTargets('completed');
+
+  const mobileActionSx = {
+    background: (theme) => theme.palette.success.main,
+    borderRadius: 0,
+    color: (theme) => theme.palette.common.white,
+    pb: '8px',
+  } satisfies SxProps<Theme>;
+
+  const actionWrapperSx = {
+    flex: { laptop: '0 0 auto', mobile: 1 },
+    margin: { laptop: 0, mobile: '0 -8px -8px' },
+  } satisfies SxProps<Theme>;
 
   return (
     <Grid container spacing={4} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
@@ -52,7 +64,7 @@ const UserTargetsPage = () => {
           )}
         </Typography>
         <Typography color="text.primary" variant="body1">
-          Отслеживайте прогресс по целям пользователя и назначайте награды
+          Отслеживайте прогресс по&nbsp;целям пользователя и&nbsp;назначайте награды
         </Typography>
       </Grid>
       <Grid size={12}>
@@ -77,7 +89,7 @@ const UserTargetsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {activeTargets.map((target) => (
-                      <RewardTarget target={target} />
+                      <RewardTarget key={target.id} target={target} />
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -99,50 +111,46 @@ const UserTargetsPage = () => {
                   <Stack direction="column" spacing={2}>
                     {completedTargets.map((target) => (
                       <RewardTarget
-                        reward={
-                          target.reward && (
-                            <Tooltip placement="top" title={target.reward.title}>
-                              <Chip
-                                avatar={
-                                  <WorkspacePremiumIcon
-                                    sx={{ fill: (theme) => theme.palette.warning.main }}
-                                  />
-                                }
-                                label={target.reward.title}
-                                size="small"
-                                sx={{ cursor: 'pointer', maxWidth: '150px' }}
-                              />
-                            </Tooltip>
-                          )
-                        }
-                        target={target}
-                      >
-                        {target.canAssignReward && !target.reward && (
-                          <CreateReward
-                            onSuccess={targets.refetch}
-                            slots={{
-                              top: target.resultComment && (
-                                <Alert
-                                  icon={false}
-                                  severity="warning"
-                                  sx={{
-                                    bgcolor: (theme) =>
-                                      mode === 'light' ? 'warning.light' : theme.palette.grey[800],
+                        actions={
+                          target.canAssignReward && !target.reward ? (
+                            <Stack
+                              direction="row"
+                              sx={{ width: { laptop: 'auto', mobile: '100%' } }}
+                            >
+                              <Box sx={actionWrapperSx}>
+                                <CreateReward
+                                  onSuccess={targets.refetch}
+                                  slots={{
+                                    top: target.resultComment && (
+                                      <Alert
+                                        icon={false}
+                                        severity="warning"
+                                        sx={{
+                                          bgcolor: (theme) =>
+                                            mode === 'light'
+                                              ? 'warning.light'
+                                              : theme.palette.grey[800],
+                                        }}
+                                      >
+                                        <Typography variant="subtitle2">
+                                          Пожелание пользователя
+                                        </Typography>
+                                        <Typography sx={{ fontStyle: 'italic' }} variant="body2">
+                                          {target.resultComment}
+                                        </Typography>
+                                      </Alert>
+                                    ),
                                   }}
-                                >
-                                  <Typography variant="subtitle2">
-                                    Пожелание пользователя
-                                  </Typography>
-                                  <Typography sx={{ fontStyle: 'italic' }} variant="body2">
-                                    {target.resultComment}
-                                  </Typography>
-                                </Alert>
-                              ),
-                            }}
-                            targetId={target.id}
-                          />
-                        )}
-                      </RewardTarget>
+                                  sx={mobileActionSx}
+                                  targetId={target.id}
+                                />
+                              </Box>
+                            </Stack>
+                          ) : undefined
+                        }
+                        key={target.id}
+                        target={target}
+                      />
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -156,4 +164,3 @@ const UserTargetsPage = () => {
 };
 
 export default UserTargetsPage;
-

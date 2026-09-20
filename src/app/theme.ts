@@ -1,6 +1,14 @@
 import { createTheme, type Shadows } from '@mui/material';
 
 export const theme = createTheme({
+  breakpoints: {
+    values: {
+      desktop: 1368,
+      laptop: 1024,
+      mobile: 0,
+      tablet: 640,
+    },
+  },
   colorSchemes: {
     dark: true,
   },

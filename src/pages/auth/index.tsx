@@ -2,12 +2,15 @@ import { Grid, Typography } from '@mui/material';
 import { motion } from 'motion/react';
 
 import MelkorDivider from 'shared/icons/melkor-divider-symbol.svg?react';
+import { useAdaptive } from 'shared/utils';
 
 import Auth from 'features/Auth';
 
 import styles from './styles.module.css';
 
 const AuthPage = () => {
+  const isMobile = useAdaptive();
+
   return (
     <div className={styles.root}>
       <Grid container spacing={4} sx={{ alignItems: 'center', flexDirection: 'column' }}>
@@ -19,7 +22,9 @@ const AuthPage = () => {
             transition={{ duration: 0.5 }}
           >
             <MelkorDivider />
-            <Typography variant="h3">{import.meta.env.VITE_APP_TITLE}</Typography>
+            <Typography component="h2" variant={isMobile ? 'h4' : 'h3'}>
+              {import.meta.env.VITE_APP_TITLE}
+            </Typography>
           </motion.div>
         </Grid>
         <Grid>

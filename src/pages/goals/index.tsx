@@ -4,12 +4,14 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
   Button,
   Chip,
   Grid,
   Stack,
   Typography,
 } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { useId } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -43,26 +45,63 @@ const GoalsPage = () => {
   const completedTargets = getTargets('completed');
   const cancelledTargets = getTargets('cancelled');
 
+  const mobileActionSx = {
+    borderRadius: 0,
+    color: (theme) => theme.palette.common.white,
+    pb: '8px',
+  } satisfies SxProps<Theme>;
+
+  const firstActionWrapperSx = {
+    flex: { laptop: '0 0 auto', mobile: 1 },
+    margin: { laptop: 0, mobile: '0 0 -8px -8px' },
+  } satisfies SxProps<Theme>;
+
+  const lastActionWrapperSx = {
+    flex: { laptop: '0 0 auto', mobile: 1 },
+    margin: { laptop: 0, mobile: '0 -8px -8px' },
+  } satisfies SxProps<Theme>;
+
   // eslint-disable-next-line @typescript-eslint/no-shadow
   const renderActions = ({ id, isOutdated, status }: TargetType) => (
-    <>
+    <Stack direction="row" sx={{ width: { laptop: 'auto', mobile: '100%' } }}>
       {status === 'created' && (
         <>
-          <DeleteTarget onSuccess={() => targets.refetch()} targetId={id} />
-          <ActivateTarget onSuccess={() => targets.refetch()} targetId={id} />
+          <Box sx={firstActionWrapperSx}>
+            <DeleteTarget
+              onSuccess={() => targets.refetch()}
+              sx={{ ...mobileActionSx, background: (theme) => theme.palette.error.main }}
+              targetId={id}
+            />
+          </Box>
+          <Box sx={lastActionWrapperSx}>
+            <ActivateTarget
+              onSuccess={() => targets.refetch()}
+              sx={{ ...mobileActionSx, background: (theme) => theme.palette.success.main }}
+              targetId={id}
+            />
+          </Box>
         </>
       )}
       {status === 'active' && (
         <>
-          <CancelTarget onSuccess={() => targets.refetch()} targetId={id} />
-          <CompleteTarget
-            isTargetOutdated={isOutdated}
-            onSuccess={() => targets.refetch()}
-            targetId={id}
-          />
+          <Box sx={firstActionWrapperSx}>
+            <CancelTarget
+              onSuccess={() => targets.refetch()}
+              sx={{ ...mobileActionSx, background: (theme) => theme.palette.warning.main }}
+              targetId={id}
+            />
+          </Box>
+          <Box sx={lastActionWrapperSx}>
+            <CompleteTarget
+              isTargetOutdated={isOutdated}
+              onSuccess={() => targets.refetch()}
+              sx={{ ...mobileActionSx, background: (theme) => theme.palette.success.main }}
+              targetId={id}
+            />
+          </Box>
         </>
       )}
-    </>
+    </Stack>
   );
 
   function refetchTargets() {
@@ -76,7 +115,7 @@ const GoalsPage = () => {
           {routeHandle?.title}
         </Typography>
         <Typography color="text.primary" variant="body1">
-          Планируйте, отслеживайте прогресс и достигайте результатов
+          Планируйте, отслеживайте прогресс и&nbsp;достигайте результатов
         </Typography>
       </Grid>
       <Grid>
@@ -110,9 +149,11 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {activeTargets.map((target) => (
-                      <Target onStepComplete={refetchTargets} target={target}>
-                        {renderActions(target)}
-                      </Target>
+                      <Target
+                        actions={renderActions(target)}
+                        onStepComplete={refetchTargets}
+                        target={target}
+                      />
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -133,9 +174,11 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {createdTargets.map((target) => (
-                      <Target onStepComplete={refetchTargets} target={target}>
-                        {renderActions(target)}
-                      </Target>
+                      <Target
+                        actions={renderActions(target)}
+                        onStepComplete={refetchTargets}
+                        target={target}
+                      />
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -160,9 +203,7 @@ const GoalsPage = () => {
                         onStepComplete={refetchTargets}
                         rewards={target.rewards}
                         target={target}
-                      >
-                        {renderActions(target)}
-                      </Target>
+                      />
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -183,9 +224,7 @@ const GoalsPage = () => {
                 <AccordionDetails sx={{ p: 4, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {cancelledTargets.map((target) => (
-                      <Target onStepComplete={refetchTargets} target={target}>
-                        {renderActions(target)}
-                      </Target>
+                      <Target onStepComplete={refetchTargets} target={target} />
                     ))}
                   </Stack>
                 </AccordionDetails>
@@ -199,4 +238,3 @@ const GoalsPage = () => {
 };
 
 export default GoalsPage;
-

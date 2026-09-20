@@ -3,6 +3,8 @@ import { Outlet } from 'react-router';
 
 import { Background } from 'shared/components';
 
+import { ThemeChanger } from 'features/theme-changer';
+
 import { ResponsiveAppBar } from 'widgets/app-bar/app-bar';
 
 export const LandingLayout = () => {
@@ -19,7 +21,7 @@ export const LandingLayout = () => {
           pt: '120px',
         }}
       >
-        <ResponsiveAppBar />
+        <ResponsiveAppBar slots={{ right: <ThemeChanger /> }} />
         <Outlet />
       </Box>
     </Background>

@@ -17,7 +17,7 @@ import { useSnackbar } from 'notistack';
 import { type FC, useState } from 'react';
 
 import { ConnectorWithInterButton, Popper, StepIcon, Stepper } from 'shared/components';
-import { getErrorMessage } from 'shared/utils';
+import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCreateStep, useCreateTarget } from 'entities/api';
 
@@ -55,6 +55,8 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
 
   const [editedStepEl, setEditedStepEl] = useState<HTMLElement | null>(null);
   const [editableStepId, setEditableStepId] = useState<string | null>(null);
+
+  const { isMobile } = useAdaptive();
 
   function closeEdit() {
     setEditedStepEl(null);
@@ -152,8 +154,8 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
   return (
     <>
       <Paper sx={{ borderRadius: 5, boxShadow: 4, pb: 2, pt: 4, px: 4 }}>
-        <Grid container spacing={3} sx={{ justifyContent: 'flex-end' }}>
-          <Grid size={6}>
+        <Grid container spacing={{ laptop: 3, mobile: 2 }} sx={{ justifyContent: 'flex-end' }}>
+          <Grid size={{ laptop: 6, mobile: 12 }}>
             <FormControl fullWidth>
               <FormLabel htmlFor="goal-title" sx={{ fontWeight: 500 }}>
                 Название цели
@@ -164,14 +166,14 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
                 onChange={(event) => {
                   editTargetData('title', event.currentTarget.value);
                 }}
-                placeholder="Например: Подготовиться к собеседованию"
+                placeholder={'Например: Подготовиться к\u00A0собеседованию'}
                 size="small"
                 sx={{ borderRadius: 2, mt: 1 }}
                 value={targetData.title}
               />
             </FormControl>
           </Grid>
-          <Grid size={6}>
+          <Grid size={{ laptop: 6, mobile: 12 }}>
             <FormControl fullWidth>
               <FormLabel htmlFor="goal-end-date" sx={{ fontWeight: 500 }}>
                 Дата завершения цели
@@ -221,42 +223,9 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
               />
             </FormControl>
           </Grid>
-          {!!stepsData.length && (
-            <Grid size={12}>
-              <Typography sx={{ fontWeigh: 500 }} variant="body1">
-                Шаги цели
-              </Typography>
-              <Stepper
-                connector={<ConnectorWithInterButton onConnectorClick={addInterStep} />}
-                items={stepsData.map(({ date, id, title }) => ({
-                  id,
-                  isSelected: editableStepId === id,
-                  label: title,
-                  onClick: (event) => openEdit(event.currentTarget, id),
-                  StepIcon: StepIcon,
-                  stepIconProps: {
-                    isCompleted: isComplete(id),
-                    onDeleteClick: () => {
-                      setStepsDate(stepsData.filter((step) => step.id !== id));
-                    },
-                  },
-                  stepLabelProps: {
-                    optional: dayjs(date).isValid() && (
-                      <Typography variant="caption">
-                        Срок: {dayjs(date).format('DD-MM-YYYY')}
-                      </Typography>
-                    ),
-                  },
-                  stepProps: {
-                    active: true,
-                  },
-                }))}
-                sx={{ mt: 2 }}
-              />
-            </Grid>
-          )}
-          <Grid>
+          <Grid size={12}>
             <Button
+              fullWidth={isMobile}
               onClick={() => {
                 setStepsDate((prevSteps) => [
                   ...prevSteps,
@@ -268,13 +237,47 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
             >
               Добавить шаг
             </Button>
+            {!!stepsData.length && (
+              <Grid size={12}>
+                <Stepper
+                  connector={<ConnectorWithInterButton onConnectorClick={addInterStep} />}
+                  items={stepsData.map(({ date, id, title }) => ({
+                    id,
+                    isSelected: editableStepId === id,
+                    label: title,
+                    onClick: (event) => openEdit(event.currentTarget, id),
+                    StepIcon: StepIcon,
+                    stepIconProps: {
+                      isCompleted: isComplete(id),
+                      onDeleteClick: () => {
+                        setStepsDate(stepsData.filter((step) => step.id !== id));
+                      },
+                    },
+                    stepLabelProps: {
+                      optional: dayjs(date).isValid() && (
+                        <Typography variant="caption">
+                          Срок:&nbsp;{dayjs(date).format('DD-MM-YYYY')}
+                        </Typography>
+                      ),
+                    },
+                    stepProps: {
+                      active: true,
+                    },
+                  }))}
+                  sx={{ mt: 2 }}
+                />
+              </Grid>
+            )}
+          </Grid>
+          <Grid size={12} sx={{ textAlign: { laptop: 'right' } }}>
             <Button
               color="success"
               disabled={!isFormFilled()}
+              fullWidth={isMobile}
               loading={createTarget.loading || stepCreation.loading}
               onClick={save}
               startIcon={<SaveIcon />}
-              sx={{ ml: 2 }}
+              sx={{ mt: 2 }}
               variant="contained"
             >
               Сохранить
@@ -371,4 +374,3 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
     </>
   );
 };
-

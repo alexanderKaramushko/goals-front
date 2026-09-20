@@ -154,19 +154,19 @@ export const StepProgress: FC<StepProgressProps> = ({
       const isActive = uncompletedStepIndex === stepIndex;
 
       const getStatusLabel = () => {
-        if (!isTargetActive) return `Срок: ${dayjs(shouldBeCompletedAt).format('DD-MM-YYYY')}`;
+        if (!isTargetActive) return `Срок:\u00A0${dayjs(shouldBeCompletedAt).format('DD-MM-YYYY')}`;
         if (isCompleted) {
-          return `Завершен: ${dayjs(completedAt).format('DD-MM-YYYY')}`;
+          return `Завершен:\u00A0${dayjs(completedAt).format('DD-MM-YYYY')}`;
         }
         if (!dayjs(shouldBeCompletedAt).isValid()) return null;
         if (isOutdated) return 'Просрочено';
         if (isToday) return 'Ожидает завершения';
-        if (isDeadlineSoon) return 'Остался 1 день';
+        if (isDeadlineSoon) return 'Остался 1\u00A0день';
 
         const verb = decline(daysLeft, ['Осталось', 'Остался', 'Осталось']);
         const days = decline(daysLeft, ['дней', 'день', 'дня']);
 
-        return `${verb} ${daysLeft} ${days}`;
+        return `${verb}\u00A0${daysLeft}\u00A0${days}`;
       };
 
       const getStepLabelColor = () => {
@@ -280,4 +280,3 @@ export const StepProgress: FC<StepProgressProps> = ({
     </>
   );
 };
-

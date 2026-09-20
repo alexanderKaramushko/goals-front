@@ -31,7 +31,10 @@ function App() {
             </LocalizationProvider>
           </SnackbarProvider>
           <Box sx={{ bottom: 24, cursor: 'pointer', position: 'fixed', right: 24 }}>
-            <Tooltip placement="left" title={`Версия: ${import.meta.env.VITE_VERSION.slice(0, 7)}`}>
+            <Tooltip
+              placement="left"
+              title={`Версия:\u00A0${import.meta.env.VITE_VERSION.slice(0, 7)}`}
+            >
               <HelpIcon sx={{ color: (theme) => theme.palette.grey['600'] }} />
             </Tooltip>
           </Box>

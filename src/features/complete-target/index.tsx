@@ -1,12 +1,13 @@
 import DoneIcon from '@mui/icons-material/Done';
 import MarkChatReadIcon from '@mui/icons-material/MarkChatRead';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import { Grid, IconButton, TextField, Tooltip } from '@mui/material';
+import { Button, Grid, IconButton, TextField, Tooltip } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
-import { type FC, useState } from 'react';
+import { type FC, type MouseEvent, useState } from 'react';
 
 import { Popper } from 'shared/components';
-import { getErrorMessage } from 'shared/utils';
+import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCompleteTarget } from 'entities/api';
 
@@ -18,11 +19,13 @@ interface CompleteTargetButtonProps {
   targetId: number;
   isTargetOutdated: boolean;
   onSuccess?: () => void;
+  sx?: SxProps<Theme>;
 }
 
 export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
   isTargetOutdated,
   onSuccess,
+  sx,
   targetId,
 }) => {
   const completeTarget = useCompleteTarget();
@@ -33,6 +36,10 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
   });
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const { isMobile } = useAdaptive();
+
+  const label = isTargetOutdated ? 'Завершить' : 'Завершить с\u00A0комментарием';
+  const icon = isTargetOutdated ? <TaskAltIcon /> : <MarkChatReadIcon />;
 
   function editCompleteTargetData<Name extends keyof CompleteTargetData>(
     name: Name,
@@ -57,23 +64,38 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
     }
   }
 
+  const handleClick = async (event: MouseEvent<HTMLButtonElement>) => {
+    if (isTargetOutdated) {
+      await save('-');
+    } else {
+      setAnchorEl(event.currentTarget);
+    }
+  };
+
   return (
     <>
-      <Tooltip title={isTargetOutdated ? 'Завершить' : 'Завершить с комментарием'}>
-        <IconButton
-          aria-label={isTargetOutdated ? 'Завершить' : 'Завершить с комментарием'}
-          color="success"
-          onClick={async (event) => {
-            if (isTargetOutdated) {
-              save('-');
-            } else {
-              setAnchorEl(event.currentTarget);
-            }
-          }}
-          size="large"
-        >
-          {isTargetOutdated ? <TaskAltIcon /> : <MarkChatReadIcon />}
-        </IconButton>
+      <Tooltip
+        disableFocusListener={isMobile}
+        disableHoverListener={isMobile}
+        disableTouchListener={isMobile}
+        title={label}
+      >
+        {isMobile ? (
+          <Button
+            aria-label={label}
+            color="success"
+            fullWidth
+            onClick={handleClick}
+            size="large"
+            sx={sx}
+          >
+            {icon}
+          </Button>
+        ) : (
+          <IconButton aria-label={label} color="success" onClick={handleClick} size="large">
+            {icon}
+          </IconButton>
+        )}
       </Tooltip>
       <Popper
         anchorEl={anchorEl}
@@ -91,7 +113,7 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
               autoFocus
               fullWidth
               id="step-title"
-              label="Пожелания к награде"
+              label={'Пожелания к\u00A0награде'}
               onChange={(event) => {
                 editCompleteTargetData('resultComment', event.currentTarget.value);
               }}
