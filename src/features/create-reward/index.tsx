@@ -1,10 +1,10 @@
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import { Button, Grid, IconButton, TextField, Tooltip, Typography } from '@mui/material';
+import { Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { type FC, type ReactNode, useState } from 'react';
 
-import { Popper, SwipeableDrawer } from 'shared/components';
+import { Popper, SwipeableDrawer, Tooltip } from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCreateReward } from 'entities/api/rewards';
@@ -110,12 +110,7 @@ export const CreateReward: FC<CreateRewardProps> = ({ onSuccess, slots, sx, targ
 
   return (
     <>
-      <Tooltip
-        disableFocusListener={isMobile}
-        disableHoverListener={isMobile}
-        disableTouchListener={isMobile}
-        title="Назначить награду"
-      >
+      <Tooltip title="Назначить награду">
         {isMobile ? (
           <Button
             aria-label="Назначить награду"

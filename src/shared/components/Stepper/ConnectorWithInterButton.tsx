@@ -1,7 +1,8 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import { Grid, IconButton, StepContext, Tooltip, type TooltipProps } from '@mui/material';
+import { Grid, IconButton, StepContext } from '@mui/material';
 import { type FC, type ReactNode, useContext } from 'react';
 
+import { Tooltip, type TooltipProps } from '../Tooltip/Tooltip';
 import styles from './styles.module.css';
 
 export type ConnectorWithInterButtonProps = {
@@ -44,4 +45,3 @@ export const ConnectorWithInterButton: FC<ConnectorWithInterButtonProps> = ({
     </Grid>
   );
 };
-

@@ -1,9 +1,10 @@
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Button, IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import type { FC } from 'react';
 
+import { Tooltip } from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useDeleteTarget } from 'entities/api';
@@ -32,12 +33,7 @@ export const DeleteTarget: FC<DeleteTargetButtonProps> = ({ onSuccess, sx, targe
   }
 
   return (
-    <Tooltip
-      disableFocusListener={isMobile}
-      disableHoverListener={isMobile}
-      disableTouchListener={isMobile}
-      title="Удалить цель"
-    >
+    <Tooltip title="Удалить цель">
       {isMobile ? (
         <Button
           aria-label="Удалить цель"

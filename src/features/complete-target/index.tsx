@@ -1,12 +1,12 @@
 import DoneIcon from '@mui/icons-material/Done';
 import MarkChatReadIcon from '@mui/icons-material/MarkChatRead';
 import TaskAltIcon from '@mui/icons-material/TaskAlt';
-import { Button, Grid, IconButton, TextField, Tooltip } from '@mui/material';
+import { Button, Grid, IconButton, TextField } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { type FC, type MouseEvent, useState } from 'react';
 
-import { Popper, SwipeableDrawer } from 'shared/components';
+import { Popper, SwipeableDrawer, Tooltip } from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCompleteTarget } from 'entities/api';
@@ -110,12 +110,7 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
 
   return (
     <>
-      <Tooltip
-        disableFocusListener={isMobile}
-        disableHoverListener={isMobile}
-        disableTouchListener={isMobile}
-        title={label}
-      >
+      <Tooltip title={label}>
         {isMobile ? (
           <Button
             aria-label={label}

@@ -13,13 +13,12 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { type FC, Fragment, type ReactNode, useState } from 'react';
 
-import { Popper, SwipeableDrawer } from 'shared/components';
+import { Popper, SwipeableDrawer, Tooltip } from 'shared/components';
 import { decline, useAdaptive } from 'shared/utils';
 
 import type { Target as TargetType } from 'entities/api/types';

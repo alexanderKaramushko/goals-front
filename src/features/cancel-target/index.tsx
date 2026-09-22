@@ -1,9 +1,10 @@
 import CancelIcon from '@mui/icons-material/Cancel';
-import { Button, IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import type { FC } from 'react';
 
+import { Tooltip } from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCancelTarget } from 'entities/api';
@@ -32,12 +33,7 @@ export const CancelTarget: FC<CancelTargetButtonProps> = ({ onSuccess, sx, targe
   }
 
   return (
-    <Tooltip
-      disableFocusListener={isMobile}
-      disableHoverListener={isMobile}
-      disableTouchListener={isMobile}
-      title="Отменить цель"
-    >
+    <Tooltip title="Отменить цель">
       {isMobile ? (
         <Button
           aria-label="Отменить цель"

@@ -1,9 +1,10 @@
 import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
-import { Button, IconButton, Tooltip } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import type { FC } from 'react';
 
+import { Tooltip } from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useActivateTarget } from 'entities/api';
@@ -32,12 +33,7 @@ export const ActivateTarget: FC<ActivateTargetButtonProps> = ({ onSuccess, sx, t
   }
 
   return (
-    <Tooltip
-      disableFocusListener={isMobile}
-      disableHoverListener={isMobile}
-      disableTouchListener={isMobile}
-      title="Начать выполнение"
-    >
+    <Tooltip title="Начать выполнение">
       {isMobile ? (
         <Button
           aria-label="Начать выполнение"

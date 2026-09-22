@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 import HelpIcon from '@mui/icons-material/Help';
-import { Box, CssBaseline, Tooltip } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -8,6 +8,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'notistack';
 import { RouterProvider } from 'react-router';
 
+import { Tooltip } from 'shared/components';
 import { queryClient } from 'shared/libs/query-client';
 
 import './global.css';

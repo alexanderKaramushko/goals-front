@@ -4,3 +4,4 @@ export * from './Popper/Popper';
 export * from './Stepper';
 export * from './Switch/Switch';
 export * from './SwipeableDrawer/SwipeableDrawer';
+export * from './Tooltip/Tooltip';

@@ -12,12 +12,11 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Tooltip,
   Typography,
 } from '@mui/material';
 import { type FC, type ReactNode, useState } from 'react';
 
-import { Popper, SwipeableDrawer } from 'shared/components';
+import { Popper, SwipeableDrawer, Tooltip } from 'shared/components';
 import { useAdaptive } from 'shared/utils';
 
 import type { RewardTarget as RewardTargetType } from 'entities/api/types';
