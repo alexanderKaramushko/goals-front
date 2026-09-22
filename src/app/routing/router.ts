@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, redirect } from 'react-router';
 
 import { AppLayout } from 'app/layouts/app';
 import { LandingLayout } from 'app/layouts/landing';
@@ -50,6 +50,10 @@ export const router = createBrowserRouter([
         Component: LandingLayout,
       },
     ],
+  },
+  {
+    loader: () => redirect(appRoutes.app.path),
+    path: '/',
   },
 ]);
 
