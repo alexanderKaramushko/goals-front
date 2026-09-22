@@ -6,7 +6,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { type FC, type MouseEvent, useState } from 'react';
 
-import { Popper } from 'shared/components';
+import { Popper, SwipeableDrawer } from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCompleteTarget } from 'entities/api';
@@ -40,6 +40,7 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
 
   const label = isTargetOutdated ? 'Завершить' : 'Завершить с\u00A0комментарием';
   const icon = isTargetOutdated ? <TaskAltIcon /> : <MarkChatReadIcon />;
+  const drawerTitleId = `target-${targetId}-complete-title`;
 
   function editCompleteTargetData<Name extends keyof CompleteTargetData>(
     name: Name,
@@ -72,6 +73,41 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
     }
   };
 
+  const handleSave = () => save(completeTargetData.resultComment);
+
+  const form = (
+    <Grid container spacing={1}>
+      <Grid size={{ laptop: 'grow', mobile: 12 }}>
+        <TextField
+          autoFocus
+          fullWidth
+          id="step-title"
+          label={'Пожелания к\u00A0награде'}
+          onChange={(event) => {
+            editCompleteTargetData('resultComment', event.currentTarget.value);
+          }}
+          placeholder=""
+          size="small"
+          value={completeTargetData.resultComment}
+          variant="outlined"
+        />
+      </Grid>
+      {isMobile ? (
+        <Grid size={12} sx={{ mt: 3 }}>
+          <Button color="success" fullWidth onClick={handleSave} variant="contained">
+            Сохранить
+          </Button>
+        </Grid>
+      ) : (
+        <Grid>
+          <IconButton aria-label="Завершить цель" color="success" onClick={handleSave}>
+            <DoneIcon />
+          </IconButton>
+        </Grid>
+      )}
+    </Grid>
+  );
+
   return (
     <>
       <Tooltip
@@ -97,43 +133,29 @@ export const CompleteTarget: FC<CompleteTargetButtonProps> = ({
           </IconButton>
         )}
       </Tooltip>
-      <Popper
-        anchorEl={anchorEl}
-        id={anchorEl ? 'complete' : undefined}
-        onClickAway={() => setAnchorEl(null)}
-        open={Boolean(anchorEl)}
-        placement="top"
-        sx={{
-          width: '300px',
-        }}
-      >
-        <Grid container spacing={1}>
-          <Grid sx={{ flex: 1 }}>
-            <TextField
-              autoFocus
-              fullWidth
-              id="step-title"
-              label={'Пожелания к\u00A0награде'}
-              onChange={(event) => {
-                editCompleteTargetData('resultComment', event.currentTarget.value);
-              }}
-              placeholder=""
-              size="small"
-              value={completeTargetData.resultComment}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid>
-            <IconButton
-              aria-label="Завершить цель"
-              color="success"
-              onClick={() => save(completeTargetData.resultComment)}
-            >
-              <DoneIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </Popper>
+      {isMobile ? (
+        <SwipeableDrawer
+          onClose={() => setAnchorEl(null)}
+          open={Boolean(anchorEl)}
+          title="Завершение цели"
+          titleId={drawerTitleId}
+        >
+          {form}
+        </SwipeableDrawer>
+      ) : (
+        <Popper
+          anchorEl={anchorEl}
+          id={anchorEl ? 'complete' : undefined}
+          onClickAway={() => setAnchorEl(null)}
+          open={Boolean(anchorEl)}
+          placement="top"
+          sx={{
+            width: '300px',
+          }}
+        >
+          {form}
+        </Popper>
+      )}
     </>
   );
 };

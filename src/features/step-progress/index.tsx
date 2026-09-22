@@ -1,11 +1,11 @@
 import DoneIcon from '@mui/icons-material/Done';
-import { Grid, IconButton, TextField, Typography, useTheme } from '@mui/material';
+import { Button, Grid, IconButton, TextField, Typography, useTheme } from '@mui/material';
 import dayjs from 'dayjs';
 import { useSnackbar } from 'notistack';
 import { type FC, useMemo, useState } from 'react';
 
-import { Connector, Popper, StepIcon, Stepper } from 'shared/components';
-import { decline, getErrorMessage } from 'shared/utils';
+import { Connector, Popper, StepIcon, Stepper, SwipeableDrawer } from 'shared/components';
+import { decline, getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCompleteStep } from 'entities/api';
 import type { Target, TargetId } from 'entities/api/types';
@@ -30,6 +30,7 @@ export const StepProgress: FC<StepProgressProps> = ({
 }) => {
   const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
+  const { isMobile } = useAdaptive();
 
   // TODO возвращать с бэка поле createdAt и сортировать по нему
   const sortedSteps = [...steps].sort((stepA, stepB) =>
@@ -99,7 +100,15 @@ export const StepProgress: FC<StepProgressProps> = ({
     }
   }
 
+  async function saveCompleteStep() {
+    if (completeStepData.resultComment && editableStepId !== null) {
+      await handleCompleteStep(editableStepId);
+      closeEdit();
+    }
+  }
+
   const isTargetActive = targetStatus === 'active';
+  const drawerTitleId = `step-${editableStepId ?? 'unknown'}-complete-title`;
 
   const connectorColors = useMemo(() => {
     return sortedSteps.reduce<string[]>((acc, step, index, currentSteps) => {
@@ -227,6 +236,39 @@ export const StepProgress: FC<StepProgressProps> = ({
     },
   );
 
+  const form = (
+    <Grid container spacing={1}>
+      <Grid size={{ laptop: 'grow', mobile: 12 }}>
+        <TextField
+          autoFocus
+          fullWidth
+          id="step-title"
+          label="Что сделано"
+          onChange={(event) => {
+            editCompleteStepData('resultComment', event.currentTarget.value);
+          }}
+          placeholder="Сдал теорию"
+          size="small"
+          value={completeStepData.resultComment}
+          variant="outlined"
+        />
+      </Grid>
+      {isMobile ? (
+        <Grid size={12} sx={{ mt: 3 }}>
+          <Button color="success" fullWidth onClick={saveCompleteStep} variant="contained">
+            Сохранить
+          </Button>
+        </Grid>
+      ) : (
+        <Grid>
+          <IconButton aria-label="Завершить шаг" color="success" onClick={saveCompleteStep}>
+            <DoneIcon />
+          </IconButton>
+        </Grid>
+      )}
+    </Grid>
+  );
+
   return (
     <>
       <Stepper
@@ -235,48 +277,29 @@ export const StepProgress: FC<StepProgressProps> = ({
         items={stepperItems}
         sx={{ mt: 2 }}
       />
-      <Popper
-        anchorEl={editedStepEl}
-        id={editedStepEl ? 'edit' : undefined}
-        onClickAway={closeEdit}
-        open={Boolean(editedStepEl)}
-        placement="top"
-        sx={{
-          width: '300px',
-        }}
-      >
-        <Grid container spacing={1}>
-          <Grid sx={{ flex: 1 }}>
-            <TextField
-              autoFocus
-              fullWidth
-              id="step-title"
-              label="Что сделано"
-              onChange={(event) => {
-                editCompleteStepData('resultComment', event.currentTarget.value);
-              }}
-              placeholder="Сдал теорию"
-              size="small"
-              value={completeStepData.resultComment}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid>
-            <IconButton
-              aria-label="Завершить шаг"
-              color="success"
-              onClick={async () => {
-                if (completeStepData.resultComment && editableStepId !== null) {
-                  await handleCompleteStep(editableStepId);
-                  closeEdit();
-                }
-              }}
-            >
-              <DoneIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </Popper>
+      {isMobile ? (
+        <SwipeableDrawer
+          onClose={closeEdit}
+          open={Boolean(editedStepEl)}
+          title="Завершение шага"
+          titleId={drawerTitleId}
+        >
+          {form}
+        </SwipeableDrawer>
+      ) : (
+        <Popper
+          anchorEl={editedStepEl}
+          id={editedStepEl ? 'edit' : undefined}
+          onClickAway={closeEdit}
+          open={Boolean(editedStepEl)}
+          placement="top"
+          sx={{
+            width: '300px',
+          }}
+        >
+          {form}
+        </Popper>
+      )}
     </>
   );
 };

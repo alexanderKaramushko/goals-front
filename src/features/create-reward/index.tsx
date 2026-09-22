@@ -100,7 +100,7 @@ export const CreateReward: FC<CreateRewardProps> = ({ onSuccess, slots, sx, targ
           value={rewardData.description}
         />
       </Grid>
-      <Grid size={{ laptop: 'auto', mobile: 12 }}>
+      <Grid size={{ laptop: 'auto', mobile: 12 }} sx={{ mt: { laptop: 0, mobile: 2 } }}>
         <Button color="primary" fullWidth={isMobile} onClick={save} variant="contained">
           Сохранить
         </Button>
