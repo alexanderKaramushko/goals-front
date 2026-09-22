@@ -1,19 +1,10 @@
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
-import {
-  Box,
-  Button,
-  Grid,
-  IconButton,
-  SwipeableDrawer,
-  TextField,
-  Tooltip,
-  Typography,
-} from '@mui/material';
+import { Button, Grid, IconButton, TextField, Tooltip, Typography } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import { useSnackbar } from 'notistack';
 import { type FC, type ReactNode, useState } from 'react';
 
-import { Popper } from 'shared/components';
+import { Popper, SwipeableDrawer } from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCreateReward } from 'entities/api/rewards';
@@ -78,11 +69,6 @@ export const CreateReward: FC<CreateRewardProps> = ({ onSuccess, slots, sx, targ
 
   const form = (
     <Grid container spacing={2} sx={{ justifyContent: 'flex-end' }}>
-      <Grid size={12}>
-        <Typography component="h2" id={drawerTitleId} variant={isMobile ? 'h6' : 'subtitle1'}>
-          Назначение награды
-        </Typography>
-      </Grid>
       {slots?.top && <Grid size={12}>{slots.top}</Grid>}
       <Grid size={12}>
         <TextField
@@ -154,36 +140,11 @@ export const CreateReward: FC<CreateRewardProps> = ({ onSuccess, slots, sx, targ
       </Tooltip>
       {isMobile ? (
         <SwipeableDrawer
-          anchor="bottom"
           onClose={() => setAnchorEl(null)}
-          onOpen={() => {}}
           open={Boolean(anchorEl)}
-          slotProps={{
-            paper: {
-              'aria-labelledby': drawerTitleId,
-              sx: {
-                borderRadius: '16px 16px 0 0',
-                maxHeight: '80dvh',
-                overflowY: 'auto',
-                pb: 'max(16px, env(safe-area-inset-bottom))',
-                pt: 1,
-                px: 2,
-              },
-            },
-          }}
+          title="Назначение награды"
+          titleId={drawerTitleId}
         >
-          <Box
-            aria-hidden
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              height: 40,
-              justifyContent: 'center',
-              mt: -1,
-            }}
-          >
-            <Box sx={{ bgcolor: 'divider', borderRadius: 2, height: 4, width: 36 }} />
-          </Box>
           {form}
         </SwipeableDrawer>
       ) : (
@@ -195,6 +156,9 @@ export const CreateReward: FC<CreateRewardProps> = ({ onSuccess, slots, sx, targ
           placement="left"
           sx={{ width: '300px' }}
         >
+          <Typography component="h2" id={drawerTitleId} sx={{ mb: 2 }} variant="subtitle1">
+            Назначение награды
+          </Typography>
           {form}
         </Popper>
       )}

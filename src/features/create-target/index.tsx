@@ -1,14 +1,12 @@
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import SaveIcon from '@mui/icons-material/Save';
 import {
-  Box,
   Button,
   FormControl,
   FormLabel,
   Grid,
   OutlinedInput,
   Paper,
-  SwipeableDrawer,
   TextField,
   Typography,
 } from '@mui/material';
@@ -18,7 +16,13 @@ import { nanoid } from 'nanoid';
 import { useSnackbar } from 'notistack';
 import { type FC, useState } from 'react';
 
-import { ConnectorWithInterButton, Popper, StepIcon, Stepper } from 'shared/components';
+import {
+  ConnectorWithInterButton,
+  Popper,
+  StepIcon,
+  Stepper,
+  SwipeableDrawer,
+} from 'shared/components';
 import { getErrorMessage, useAdaptive } from 'shared/utils';
 
 import { useCreateStep, useCreateTarget } from 'entities/api';
@@ -368,39 +372,11 @@ export const CreateTarget: FC<CreateTargetProps> = ({ onSuccess }) => {
       </Paper>
       {isMobile ? (
         <SwipeableDrawer
-          anchor="bottom"
           onClose={closeEdit}
-          onOpen={() => {}}
           open={Boolean(editedStepEl)}
-          slotProps={{
-            paper: {
-              'aria-labelledby': editStepDrawerTitleId,
-              sx: {
-                borderRadius: '16px 16px 0 0',
-                maxHeight: '80dvh',
-                overflowY: 'auto',
-                pb: 'max(16px, env(safe-area-inset-bottom))',
-                pt: 1,
-                px: 2,
-              },
-            },
-          }}
+          title="Редактирование шага"
+          titleId={editStepDrawerTitleId}
         >
-          <Box
-            aria-hidden
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              height: 40,
-              justifyContent: 'center',
-              mt: -1,
-            }}
-          >
-            <Box sx={{ bgcolor: 'divider', borderRadius: 2, height: 4, width: 36 }} />
-          </Box>
-          <Typography component="h2" id={editStepDrawerTitleId} sx={{ mb: 2 }} variant="h6">
-            Редактирование шага
-          </Typography>
           {editStepForm}
         </SwipeableDrawer>
       ) : (

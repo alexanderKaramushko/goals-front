@@ -12,13 +12,12 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  SwipeableDrawer,
   Tooltip,
   Typography,
 } from '@mui/material';
 import { type FC, type ReactNode, useState } from 'react';
 
-import { Popper } from 'shared/components';
+import { Popper, SwipeableDrawer } from 'shared/components';
 import { useAdaptive } from 'shared/utils';
 
 import type { RewardTarget as RewardTargetType } from 'entities/api/types';
@@ -116,39 +115,11 @@ export const RewardTarget: FC<RewardTargetProps> = ({ actions, target }) => {
       {reward &&
         (isMobile ? (
           <SwipeableDrawer
-            anchor="bottom"
             onClose={() => setRewardAnchorEl(null)}
-            onOpen={() => {}}
             open={Boolean(rewardAnchorEl)}
-            slotProps={{
-              paper: {
-                'aria-labelledby': rewardTitleId,
-                sx: {
-                  borderRadius: '16px 16px 0 0',
-                  maxHeight: '80dvh',
-                  overflowY: 'auto',
-                  pb: 'max(16px, env(safe-area-inset-bottom))',
-                  pt: 1,
-                  px: 2,
-                },
-              },
-            }}
+            title="Назначенная награда"
+            titleId={rewardTitleId}
           >
-            <Box
-              aria-hidden
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: 40,
-                justifyContent: 'center',
-                mt: -1,
-              }}
-            >
-              <Box sx={{ bgcolor: 'divider', borderRadius: 2, height: 4, width: 36 }} />
-            </Box>
-            <Typography component="h2" id={rewardTitleId} variant="h6">
-              Назначенная награда
-            </Typography>
             {rewardContent}
           </SwipeableDrawer>
         ) : (

@@ -13,14 +13,13 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  SwipeableDrawer,
   Tooltip,
   Typography,
 } from '@mui/material';
 import dayjs from 'dayjs';
 import { type FC, Fragment, type ReactNode, useState } from 'react';
 
-import { Popper } from 'shared/components';
+import { Popper, SwipeableDrawer } from 'shared/components';
 import { decline, useAdaptive } from 'shared/utils';
 
 import type { Target as TargetType } from 'entities/api/types';
@@ -177,39 +176,11 @@ export const Target: FC<TargetProps> = ({ actions, onStepComplete, rewards = [],
       {!!rewards.length &&
         (isMobile ? (
           <SwipeableDrawer
-            anchor="bottom"
             onClose={() => setAnchorEl(null)}
-            onOpen={() => {}}
             open={Boolean(anchorEl)}
-            slotProps={{
-              paper: {
-                'aria-labelledby': rewardsDrawerTitleId,
-                sx: {
-                  borderRadius: '16px 16px 0 0',
-                  maxHeight: '80dvh',
-                  overflowY: 'auto',
-                  pb: 'max(16px, env(safe-area-inset-bottom))',
-                  pt: 1,
-                  px: 2,
-                },
-              },
-            }}
+            title="Награды"
+            titleId={rewardsDrawerTitleId}
           >
-            <Box
-              aria-hidden
-              sx={{
-                alignItems: 'center',
-                display: 'flex',
-                height: 40,
-                justifyContent: 'center',
-                mt: -1,
-              }}
-            >
-              <Box sx={{ bgcolor: 'divider', borderRadius: 2, height: 4, width: 36 }} />
-            </Box>
-            <Typography component="h2" id={rewardsDrawerTitleId} variant="h6">
-              Награды
-            </Typography>
             {rewardsList}
           </SwipeableDrawer>
         ) : (
