@@ -146,7 +146,7 @@ const GoalsPage = () => {
                     <Chip label={activeTargets.length} />
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                <AccordionDetails sx={{ p: { laptop: 4, mobile: 2 }, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {activeTargets.map((target) => (
                       <Target
@@ -171,7 +171,7 @@ const GoalsPage = () => {
                     <Chip label={createdTargets.length} />
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                <AccordionDetails sx={{ p: { laptop: 4, mobile: 2 }, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {createdTargets.map((target) => (
                       <Target
@@ -196,7 +196,7 @@ const GoalsPage = () => {
                     <Chip label={completedTargets.length} />
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                <AccordionDetails sx={{ p: { laptop: 4, mobile: 2 }, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {completedTargets.map((target) => (
                       <Target
@@ -221,7 +221,7 @@ const GoalsPage = () => {
                     <Chip label={cancelledTargets.length} />
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                <AccordionDetails sx={{ p: { laptop: 4, mobile: 2 }, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {cancelledTargets.map((target) => (
                       <Target onStepComplete={refetchTargets} target={target} />

@@ -275,7 +275,6 @@ export const StepProgress: FC<StepProgressProps> = ({
         activeStep={uncompletedStepIndex}
         connector={<Connector colors={connectorColors} />}
         items={stepperItems}
-        sx={{ mt: 2 }}
       />
       {isMobile ? (
         <SwipeableDrawer

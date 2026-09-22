@@ -30,9 +30,13 @@ export const theme = createTheme({
     },
     MuiCardContent: {
       styleOverrides: {
-        root: {
-          padding: '24px 32px !important',
-        },
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        root: ({ theme }) => ({
+          padding: '28px',
+          [theme.breakpoints.down('laptop')]: {
+            padding: '24px',
+          },
+        }),
       },
     },
   },

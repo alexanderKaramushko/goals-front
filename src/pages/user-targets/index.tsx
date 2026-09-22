@@ -86,7 +86,7 @@ const UserTargetsPage = () => {
                     <Chip label={activeTargets.length} />
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                <AccordionDetails sx={{ p: { laptop: 4, mobile: 2 }, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {activeTargets.map((target) => (
                       <RewardTarget key={target.id} target={target} />
@@ -107,7 +107,7 @@ const UserTargetsPage = () => {
                     <Chip label={completedTargets.length} />
                   </Stack>
                 </AccordionSummary>
-                <AccordionDetails sx={{ p: 4, pt: 0 }}>
+                <AccordionDetails sx={{ p: { laptop: 4, mobile: 2 }, pt: 0 }}>
                   <Stack direction="column" spacing={2}>
                     {completedTargets.map((target) => (
                       <RewardTarget
