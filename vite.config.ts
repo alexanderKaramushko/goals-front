@@ -28,7 +28,10 @@ export default defineConfig(({ mode }) => {
         manifestFilename: 'manifest',
         srcDir: 'src',
         workbox: {
+          cleanupOutdatedCaches: true,
           globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+          navigateFallback: '/index.html',
+          navigateFallbackAllowlist: [/^(?!\/(api|auth)).*$/],
           navigateFallbackDenylist: [/^\/api/, /^\/auth/],
         },
       }),
