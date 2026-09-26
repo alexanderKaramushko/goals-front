@@ -1,6 +1,7 @@
 import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 import svgr from 'vite-plugin-svgr';
 
 const aliasRoots = ['app', 'entities', 'features', 'pages', 'shared', 'widgets'] as const;
@@ -15,6 +16,18 @@ export default defineConfig(({ mode }) => {
         svgrOptions: {
           exportType: 'default',
           ref: true,
+        },
+      }),
+      VitePWA({
+        devOptions: {
+          enabled: true,
+        },
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+        injectRegister: 'auto',
+        manifest: false,
+        srcDir: 'src',
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         },
       }),
     ],
