@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => {
         includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
         injectRegister: 'auto',
         manifest: false,
+        manifestFilename: 'manifest',
         srcDir: 'src',
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
