@@ -3,6 +3,7 @@
   "description": "Создавайте цели и получайте награды",
   "short_name": "Цели",
   "start_url": "/app",
+  "scope": "/",
   "display": "standalone",
   "icons": [
     {
