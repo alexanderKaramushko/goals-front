@@ -28,6 +28,7 @@ export default defineConfig(({ mode }) => {
         srcDir: 'src',
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+          navigateFallbackDenylist: [/^\/api/, /^\/auth/],
         },
       }),
     ],
