@@ -36,14 +36,14 @@ export const AuthProvider: FC<PropsWithChildren> = ({ children }) => {
       }));
     }
 
-    if (userProfile.data) {
+    if (userProfile.isSuccess) {
       setAuth((payload) => ({
         ...payload,
         isAuthorized: true,
         loading: false,
       }));
     }
-  }, [userProfile.error, userProfile.data]);
+  }, [userProfile.error, userProfile.isSuccess]);
 
   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
