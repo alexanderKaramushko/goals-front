@@ -33,6 +33,12 @@ export default defineConfig(({ mode }) => {
           navigateFallback: '/index.html',
           navigateFallbackAllowlist: [/^(?!\/(api|auth|logs)).*$/],
           navigateFallbackDenylist: [/^\/api/, /^\/auth/, /^\/logs/],
+          runtimeCaching: [
+            {
+              handler: 'NetworkOnly',
+              urlPattern: /^\/(api|auth|logs)/,
+            },
+          ],
         },
       }),
     ],
